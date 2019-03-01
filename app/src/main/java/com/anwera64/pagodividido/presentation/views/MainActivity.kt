@@ -1,5 +1,6 @@
 package com.anwera64.pagodividido.presentation.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -28,7 +29,8 @@ class MainActivity: AppCompatActivity(), MainPresenter.MainDelegate, AdapterTrip
     }
 
     private fun createNewTrip() {
-
+        val intent = Intent(this, NewTripActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onTripPressed(uid: String) {

@@ -1,12 +1,12 @@
 package com.anwera64.pagodividido.presentation.presenters
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
+import com.anwera64.pagodividido.domain.FirebaseAdapter
 
 class MainPresenter(private val view: MainDelegate) {
 
-    private val dbRef = FirebaseDatabase.getInstance().reference
-    private val userId = FirebaseAuth.getInstance().currentUser!!.uid
+    private val firebase = FirebaseAdapter.instance
+    private val db = firebase.db.reference
+    private val userUID = firebase.mAuth.currentUser!!.uid
 
     fun getTrips() {
 
