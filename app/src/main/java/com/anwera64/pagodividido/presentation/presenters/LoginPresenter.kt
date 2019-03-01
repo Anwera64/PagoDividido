@@ -1,11 +1,11 @@
 package com.anwera64.pagodividido.presentation.presenters
 
-import com.google.firebase.auth.FirebaseAuth
+import com.anwera64.pagodividido.domain.FirebaseAdapter
 
 class LoginPresenter(private val view: LoginDelegate) {
 
     private val TAG = "LoginPresenter"
-    private var mAuth = FirebaseAuth.getInstance()
+    private var mAuth = FirebaseAdapter.instance.mAuth
 
     fun doLogin(): Boolean {
         mAuth.currentUser?.let {

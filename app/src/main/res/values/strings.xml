@@ -14,4 +14,8 @@
         completions."
     </string>
     <string name="amount_spent">Amount Spent: </string>
+    <string name="companion_name">Companion name</string>
+    <string name="new_str">New Companion</string>
+    <string name="trip_name">Name of the trip</string>
+    <string name="create">Create</string>
 </resources>
