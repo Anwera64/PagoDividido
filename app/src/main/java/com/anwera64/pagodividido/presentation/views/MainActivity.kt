@@ -34,7 +34,9 @@ class MainActivity: AppCompatActivity(), MainPresenter.MainDelegate, AdapterTrip
     }
 
     override fun onTripPressed(uid: String) {
-
+        val intent = Intent(this, TripActivity::class.java)
+        intent.putExtra("tripUid", uid)
+        startActivity(intent)
     }
 
 
