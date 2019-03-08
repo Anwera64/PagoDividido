@@ -9,7 +9,8 @@ import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Trip
 import kotlinx.android.synthetic.main.list_item_trip.view.*
 
-class AdapterTripItem(private val trips: ArrayList<Trip>, private val context: Context, private val view: AdapterTripDelegate) : RecyclerView.Adapter<AdapterTripItem.ViewHolder>() {
+class AdapterTripItem(private val trips: ArrayList<Trip>, private val context: Context,
+                      private val view: AdapterTripDelegate) : RecyclerView.Adapter<AdapterTripItem.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_trip, p0, false))

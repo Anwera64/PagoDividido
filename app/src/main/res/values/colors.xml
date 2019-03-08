@@ -3,4 +3,45 @@
     <color name="colorPrimary">#2AC6D6</color>
     <color name="colorPrimaryDark">#009685</color>
     <color name="colorAccent">#73EE7A</color>
+
+
+    <color name="black_a40">#66000000</color>
+    <color name="black_a35">#59000000</color>
+    <color name="black_a30">#4D000000</color>
+    <color name="black_a25">#40000000</color>
+    <color name="black_a20">#33000000</color>
+    <color name="black_a15">#26000000</color>
+    <color name="black_a10">#1A000000</color>
+    <color name="black_a05">#0D000000</color>
+
+    <!--WHITE-->
+    <color name="white">#FFFFFF</color>
+    <color name="white_text">#FFFFFF</color>
+    <color name="white_secondary_text">#B2FFFFFF</color>
+    <color name="white_icons">#FFFFFF</color>
+    <color name="white_disabled">#4CFFFFFF</color>
+    <color name="white_hint_text">#4CFFFFFF</color>
+    <color name="white_view_disabled">#3CFFFFFF</color>
+    <color name="white_dividers">#1EFFFFFF</color>
+
+    <color name="white_a95">#F2FFFFFF</color>
+    <color name="white_a90">#E6FFFFFF</color>
+    <color name="white_a80">#CCFFFFFF</color>
+    <color name="white_a75">#BFFFFFFF</color>
+    <color name="white_a70">#B3FFFFFF</color>
+    <color name="white_a65">#A6FFFFFF</color>
+    <color name="white_a60">#99FFFFFF</color>
+    <color name="white_a55">#8CFFFFFF</color>
+    <color name="white_a50">#80FFFFFF</color>
+    <color name="white_a45">#73FFFFFF</color>
+    <color name="white_a40">#66FFFFFF</color>
+    <color name="white_a35">#59FFFFFF</color>
+    <color name="white_a30">#4DFFFFFF</color>
+    <color name="white_a25">#40FFFFFF</color>
+    <color name="white_a20">#33FFFFFF</color>
+    <color name="white_a15">#26FFFFFF</color>
+    <color name="white_a10">#1AFFFFFF</color>
+    <color name="white_a05">#0DFFFFFF</color>
+
+    <color name="transparent">#00FFFFFF</color>
 </resources>
