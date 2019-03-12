@@ -12,20 +12,20 @@ class NewTripActivityPresenter(private val view: NewTripActivityDelegate) {
     private val userUID = firebase.mAuth.currentUser!!.uid
 
     fun createTrip(companions: HashMap<String, Companion>, name: String) {
-        val uuid = UUID.randomUUID().toString()
+        val uid = UUID.randomUUID().toString()
 
         val values = HashMap<String, Any>()
         values["companions"] = companions
         values["totalSpent"] = 0
         values["name"] = name
 
-        db.child("$userUID/$uuid").setValue(values)
-                .addOnSuccessListener { view.onTripCreated() }
+        db.child("$userUID/$uid").setValue(values)
+                .addOnSuccessListener { view.onTripCreated(uid, name) }
                 .addOnFailureListener { view.onTripFailed() }
     }
 
     interface NewTripActivityDelegate {
-        fun onTripCreated()
+        fun onTripCreated(uid: String, name: String)
 
         fun onTripFailed()
     }

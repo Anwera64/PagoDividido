@@ -9,7 +9,7 @@ import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Trip
 import kotlinx.android.synthetic.main.list_item_trip.view.*
 
-class AdapterTripItem(private val trips: ArrayList<Trip>, private val context: Context,
+class AdapterTripItem(var trips: ArrayList<Trip>, private val context: Context,
                       private val view: AdapterTripDelegate) : RecyclerView.Adapter<AdapterTripItem.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
@@ -35,7 +35,7 @@ class AdapterTripItem(private val trips: ArrayList<Trip>, private val context: C
         }
 
         p0.companions.text = companions
-        p0.itemView.setOnClickListener { view.onTripPressed(trip.uid) }
+        p0.itemView.setOnClickListener { view.onTripPressed(trip.uid, trip.name) }
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -44,6 +44,6 @@ class AdapterTripItem(private val trips: ArrayList<Trip>, private val context: C
     }
 
     interface AdapterTripDelegate {
-        fun onTripPressed(uid: String)
+        fun onTripPressed(uid: String, name: String)
     }
 }
