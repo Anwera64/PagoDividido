@@ -1,5 +1,6 @@
 package com.anwera64.pagodividido.presentation.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.design.widget.TextInputLayout
@@ -102,14 +103,17 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
             }
 
             val uid = UUID.randomUUID().toString()
-            companions[uid] = Companion(uid, companionName, 0, 0)
+            companions[uid] = Companion(uid, companionName, 0.0f, 0.0f)
         }
 
         mPresenter.createTrip(companions, name)
     }
 
-    override fun onTripCreated() {
-        //TODO
+    override fun onTripCreated(uid: String, name: String) {
+        val intent = Intent(this, TripActivity::class.java)
+        intent.putExtra("tripUid", uid)
+        intent.putExtra("name", name)
+        startActivity(intent)
     }
 
     override fun onTripFailed() {

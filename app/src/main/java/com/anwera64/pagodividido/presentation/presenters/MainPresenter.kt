@@ -3,6 +3,8 @@ package com.anwera64.pagodividido.presentation.presenters
 import android.util.Log
 import com.anwera64.pagodividido.domain.FirebaseAdapter
 import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.domain.models.Expenditure
+import com.anwera64.pagodividido.domain.models.Trip
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -20,18 +22,31 @@ class MainPresenter(private val view: MainDelegate) {
             }
 
             override fun onDataChange(p0: DataSnapshot) {
+                val trips = ArrayList<Trip>()
                 p0.children.forEach{ tripSnap ->
-                    val uid = tripSnap.key!!
-                    val totalSpent = tripSnap.child("totalSpent").value as String
+                    val uid = tripSnap.key as String
+                    val totalSpent = tripSnap.child("totalSpent").getValue(Float::class.java)!!
                     val name = tripSnap.child("name").value as String
-                    val companions = ArrayList<Companion>()
+                    val companions = HashMap<String, Companion>()
+                    tripSnap.child("companions").children.forEach { childSnap ->
+                        val cName = childSnap.child("name").value as String
+                        val cTotalDebt = childSnap.child("totalDebt").getValue(Float::class.java)!!
+                        val cTotalOwned = childSnap.child("totalOwed").getValue(Float::class.java)!!
+
+                        val companion = Companion(childSnap.key.toString(), cName, cTotalDebt, cTotalOwned)
+                        companions[companion.uid] = companion
+                    }
+                    val expenditures = ArrayList<Expenditure>()
+                    val trip = Trip(uid, totalSpent, name,  companions, expenditures)
+                    trips.add(trip)
                 }
+                view.onTripsLoaded(trips)
             }
 
         })
     }
 
     interface MainDelegate {
-        fun onTripsLoaded()
+        fun onTripsLoaded(trips: ArrayList<Trip>)
     }
 }
