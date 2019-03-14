@@ -26,5 +26,5 @@
     <string name="monto">Monto</string>
     <string name="quien_pago">Quien pago?</string>
     <string name="detalle">Detalle</string>
-    <string name="quien_debe">Quien debe?</string>
+    <string name="quien_debe">Quien se beneficio?</string>
 </resources>
