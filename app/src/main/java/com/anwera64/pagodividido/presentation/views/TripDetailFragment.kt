@@ -1,5 +1,6 @@
 package com.anwera64.pagodividido.presentation.views
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -39,9 +40,18 @@ class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate, A
 
         tripUid?.let {
             mPresenter.getTripDetails(it)
+            btnNewExpenditure.setOnClickListener { createNewTrip() }
         }
+
+
     }
 
+
+    private fun createNewTrip() {
+        val intent = Intent(context, NewExpenditureActivity::class.java)
+        intent.putExtra("tripUid", tripUid!!)
+        startActivity(intent)
+    }
     override fun onTripDetailsReady(details: ArrayList<Expenditure>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

@@ -2,6 +2,7 @@ package com.anwera64.pagodividido.presentation.views
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.utils.viewPager.SimplePagerAdapter
 import com.anwera64.pagodividido.utils.viewPager.TabLayoutHelper
@@ -37,6 +38,14 @@ class TripActivity: AppCompatActivity() {
 
         updatePagerAdapter()
         updatetabs()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> finish()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     private fun updatePagerAdapter() {

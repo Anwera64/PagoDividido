@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Companion
 import com.anwera64.pagodividido.presentation.presenters.NewTripActivityPresenter
+import com.anwera64.pagodividido.utils.ViewUtils
 import kotlinx.android.synthetic.main.activity_new_trip.*
 import java.util.*
 
@@ -61,9 +62,7 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
         val tilParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT)
 
-        val dpValue = 16 // margin in dips
-        val d = resources.displayMetrics.density
-        val margin = (dpValue * d).toInt() // margin in pixels
+        val margin = ViewUtils.gerMarginInDP(16, resources)
 
         tilParams.setMargins(margin, margin, margin, margin)
         textInputLayout.layoutParams = tilParams
