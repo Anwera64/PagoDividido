@@ -7,30 +7,27 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.data.entities.Trip
 import com.anwera64.pagodividido.databinding.ActivityNewTripBinding
-import com.anwera64.pagodividido.presentation.PagoDividioApp
-import com.anwera64.pagodividido.presentation.base.BaseActivity
+import com.anwera64.pagodividido.presentation.base.BaseViewModelActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 
-class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
+class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripBinding>(NewTripViewModel::class) {
 
     companion object {
         const val TEXT_INPUT_TAG = "tiCompanion"
     }
 
     override val layout: Int = R.layout.activity_new_trip
-    private val viewModel: NewTripViewModel by viewModels {
-        val app = (application as PagoDividioApp)
-        NewTripViewModelFactory(app.tripRepository, app.companionRepository)
-    }
+    override val viewModelValue: Int?
+        get() = null
+
     private var count = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,8 +69,8 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
     private fun createTextInputLayout(): TextInputLayout {
         val textInputLayout = TextInputLayout(this)
         val tilParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         )
 
         val margin = ViewUtils.gerMarginInDP(16, resources)
@@ -88,12 +85,12 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
     private fun createTextInputEditText(): TextInputEditText {
         val textInputEditText = TextInputEditText(this)
         val tiParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         )
         textInputEditText.layoutParams = tiParams
         textInputEditText.hint =
-            resources.getString(R.string.companion_name)
+                resources.getString(R.string.companion_name)
 
         return textInputEditText
     }
@@ -110,7 +107,7 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
             val textInputLayout = llCompanions.findViewWithTag<TextInputLayout>("$TEXT_INPUT_TAG$i")
 
             val textInputEditText = (textInputLayout.getChildAt(0) as ViewGroup)
-                .getChildAt(0) as TextInputEditText
+                    .getChildAt(0) as TextInputEditText
 
             val companionName = textInputEditText.text.toString()
             if (companionName.isEmpty() || companionName.isBlank()) {
@@ -137,5 +134,9 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
 
     private fun onTripFailed() {
         Log.e("New Trip", "We failed to create the trip")
+    }
+
+    override fun setupObservers() {
+        //TODO("Not yet implemented")
     }
 }

@@ -2,26 +2,23 @@ package com.anwera64.pagodividido.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityMainBinding
 import com.anwera64.pagodividido.domain.models.TripModel
-import com.anwera64.pagodividido.presentation.PagoDividioApp
-import com.anwera64.pagodividido.presentation.base.BaseActivity
+import com.anwera64.pagodividido.presentation.base.BaseViewModelActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.SwipeToDeleteCallback
 
-class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delegate {
+class MainActivity : BaseViewModelActivity<MainViewModel, ActivityMainBinding>(MainViewModel::class), TripItemAdapter.Delegate {
     override val layout: Int
-        get() {
-            return R.layout.activity_main
-        }
-    private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as PagoDividioApp).tripRepository)
-    }
+        get() = R.layout.activity_main
+
+    override val viewModelValue: Int?
+        get() = null
+
     private val adapter: TripItemAdapter = TripItemAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,5 +55,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delega
 
     private fun onTripsLoaded(trips: List<TripModel>) {
         adapter.trips = trips
+    }
+
+    override fun setupObservers() {
+        //TODO("Not yet implemented")
     }
 }
