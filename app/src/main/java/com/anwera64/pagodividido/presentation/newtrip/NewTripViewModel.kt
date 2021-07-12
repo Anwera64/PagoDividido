@@ -1,6 +1,9 @@
 package com.anwera64.pagodividido.presentation.newtrip
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.anwera64.pagodividido.data.entities.Companion
 import com.anwera64.pagodividido.data.entities.Trip
 import com.anwera64.pagodividido.domain.repository.CompanionRepository
@@ -9,8 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NewTripViewModel(
-    private val tripRepository: TripRepository,
-    private val companionRepository: CompanionRepository
+        private val tripRepository: TripRepository,
+        private val companionRepository: CompanionRepository
 ) : ViewModel() {
 
     private val _createdTrip = MutableLiveData<Trip>()
