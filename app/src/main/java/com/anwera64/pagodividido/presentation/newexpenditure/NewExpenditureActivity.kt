@@ -1,54 +1,48 @@
 package com.anwera64.pagodividido.presentation.newexpenditure
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.LinearLayout
+import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityNewExpenditureBinding
 import com.anwera64.pagodividido.domain.models.CompanionModel
-import com.anwera64.pagodividido.presentation.base.BaseActivity
+import com.anwera64.pagodividido.presentation.base.BaseViewModelActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 
-class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), NewExpenditurePresenter.NewExpenditureDelegate {
-    override val layout: Int = R.layout.activity_new_expenditure
+class NewExpenditureActivity :
+    BaseViewModelActivity<NewExpenditureViewModel, ActivityNewExpenditureBinding>(
+        NewExpenditureViewModel::class
+    ) {
 
-    private var mPresenter: NewExpenditurePresenter? = null
+    override val viewModelValue: Int? = null
+    override val layout: Int = R.layout.activity_new_expenditure
     private val checkBoxes = ArrayList<CheckBox>()
-    private var ownerUid: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_expenditure)
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        if (intent.hasExtra(TripActivity.TRIP_ID)) {
-            val tripUid = intent.getStringExtra(TripActivity.TRIP_ID)
-            mPresenter = NewExpenditurePresenter(this)
-
-            mPresenter?.getCompanions()
-        }
+        setupUi()
+        viewModel.getCompanions(getTripId())
     }
 
-    private fun loadSpinnerData(nameList: ArrayList<SpecialPair>) {
-        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, nameList)
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+    override fun setupObservers() {
+        viewModel.companions.observe(this, Observer(::onCompanionsObtained))
+    }
 
-        binding.spOwner.adapter = arrayAdapter
-        binding.spOwner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
+    private fun getTripId() = intent.getIntExtra(TripActivity.TRIP_ID, -1)
 
-            }
+    private fun setupUi() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
 
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                val selected = p0?.getItemAtPosition(p2) as SpecialPair
-                ownerUid = selected.first
-            }
-        }
+    private fun loadSpinnerData(nameList: List<String>) {
+        val arrayAdapter = ArrayAdapter(this, R.layout.list_metrial_drop_down_item, nameList)
+        binding.tiPayer.setAdapter(arrayAdapter)
     }
 
     private fun createCompanionCheckBox(companion: CompanionModel) {
@@ -63,7 +57,7 @@ class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), Ne
 
         checkBox.layoutParams = layoutParams
         checkBox.text = companion.name
-        checkBox.tag = companion.uid
+        checkBox.tag = companion.uid.toInt()
 
         checkBoxes.add(checkBox)
 
@@ -84,15 +78,14 @@ class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), Ne
         return super.onOptionsItemSelected(item)
     }
 
-    private fun getSelectedDebtors(): ArrayList<String>? {
-        if (checkBoxes.isEmpty()) {
-            Toast.makeText(this, "No companions", Toast.LENGTH_LONG).show()
-            return null
-        }
+    private fun getSelectedDebtors(): ArrayList<Int>? {
+        if (checkBoxes.isEmpty()) return null
 
-        val result = ArrayList<String>()
+        val result = ArrayList<Int>()
         checkBoxes.forEach { button ->
-            if (button.isSelected) result.add(button.tag as String)
+            if (button.isChecked) {
+                result.add(button.tag as Int)
+            }
         }
 
         return result
@@ -104,52 +97,42 @@ class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), Ne
         val amountString = binding.tiAmount.text.toString()
 
         if (amountString.isEmpty()) {
-            tilAmount.error = "Tienes que ingresar un monto."
+            tilAmount.error = getString(R.string.error_empty_amount)
             tilAmount.isErrorEnabled = true
             return
         }
-
         if (amountString.toFloatOrNull() == null) {
-            tilAmount.error = "Tienes que ingresar un numero"
+            tilAmount.error = getString(R.string.error_non_numeral_amount)
             tilAmount.isErrorEnabled = true
             return
         }
+        tilAmount.isErrorEnabled = false
 
         val detail = tiDetail.text.toString()
-
-        if (detail.isEmpty()) {
-            tilDetail.isErrorEnabled = true
+        val payerId = tiPayer.text.toString()
+        if (payerId.isEmpty()) {
+            tilPayer.error = getString(R.string.error_no_payer_selected)
+            tilPayer.isErrorEnabled = true
             return
         }
-
-        ownerUid?.let { id -> mPresenter?.createExpenditure(id, debtors, detail, amountString.toFloat()) }
-    }
-
-    override fun onExpenditureCreated() {
+        tilPayer.isErrorEnabled = false
+        viewModel.createExpenditure(
+            getTripId(),
+            payerId,
+            debtors,
+            detail,
+            amountString.toDouble()
+        )
         onBackPressed()
     }
 
-    override fun onError(e: String) {
-        Log.e(this.localClassName, e)
-    }
+    private fun onCompanionsObtained(companions: List<CompanionModel>?) {
+        if (companions == null) return
 
-    override fun onCompanionsObtained(companions: ArrayList<CompanionModel>) {
-        val namesList = ArrayList<SpecialPair>()
-        namesList.add(SpecialPair("", "Select a companion"))
-
-        companions.forEach { companion ->
+        val namesList = companions.map { companion ->
             createCompanionCheckBox(companion)
-
-            namesList.add(SpecialPair(companion.uid, companion.name))
+            companion.name
         }
-
         loadSpinnerData(namesList)
-        //Tal vez se debe implementar un loading.
-    }
-
-    class SpecialPair(val first: String, private val second: String) {
-        override fun toString(): String {
-            return second
-        }
     }
 }

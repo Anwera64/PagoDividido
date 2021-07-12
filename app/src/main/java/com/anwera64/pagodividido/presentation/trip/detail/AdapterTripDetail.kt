@@ -1,6 +1,7 @@
 package com.anwera64.pagodividido.presentation.trip.detail
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -40,8 +41,19 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
         fun onBind(expenditure: ExpenditureModel) = with(binding) {
             tvWhoPayed.text = expenditure.payer.name
             tvAmountSpentDetail.text = expenditure.amountSpent.toString()
-            tvDetail.text = expenditure.detail
-            tvWhosInDebt.text = companionsToStrings(expenditure.debtors)
+            if (expenditure.detail.isNullOrEmpty()) {
+                tvDetail.visibility = View.GONE
+                tvDetailTitle.visibility = View.GONE
+            } else {
+                tvDetail.text = expenditure.detail
+            }
+            val debtors = companionsToStrings(expenditure.debtors)
+            if (debtors.isEmpty()) {
+                tvWhosInDebt.visibility = View.GONE
+                tvDebtorsTitle.visibility = View.GONE
+            } else {
+                tvWhosInDebt.text = debtors
+            }
             tvDate.text = DateFormatter.formatDate(expenditure.date)
         }
 
