@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.trip.companionresult
 
 import android.support.v4.app.Fragment
 

@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.presentation.presenters
+package com.anwera64.pagodividido.presentation.newexpenditure
 
 import com.anwera64.pagodividido.domain.FirebaseAdapter
 import com.anwera64.pagodividido.domain.models.Companion

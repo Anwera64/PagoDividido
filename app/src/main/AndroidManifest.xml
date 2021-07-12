@@ -11,21 +11,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".presentation.views.LoginActivity"
+            android:name=".presentation.login.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.views.MainActivity">
+        <activity android:name=".presentation.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.views.NewTripActivity" />
-        <activity android:name=".presentation.views.TripActivity" />
-        <activity android:name=".presentation.views.NewExpenditureActivity" />
+        <activity android:name=".presentation.newtrip.NewTripActivity" />
+        <activity android:name=".presentation.trip.TripActivity" />
+        <activity android:name=".presentation.newexpenditure.NewExpenditureActivity" />
     </application>
 
 </manifest>
