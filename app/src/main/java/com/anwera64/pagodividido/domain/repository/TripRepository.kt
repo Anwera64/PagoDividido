@@ -13,7 +13,9 @@ class TripRepository(private val tripDao: TripDao) {
     val allTrips: Flow<List<TripModel>> = tripDao.getAll().map { list -> list.map(::toModel) }
 
     @WorkerThread
-    suspend fun insert(trip: Trip) {
-        tripDao.insertAll(trip)
+    suspend fun insert(trip: Trip): Long {
+        return tripDao.insertAll(trip)
     }
+
+    fun getTripById(id: Int) = tripDao.getTripById(id)
 }

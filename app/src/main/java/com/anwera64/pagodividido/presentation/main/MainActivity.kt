@@ -18,7 +18,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delega
             return R.layout.activity_main
         }
     private val viewModel: MainViewModel by viewModels {
-        MainViewModelFactory((application as PagoDividioApp).repository)
+        MainViewModelFactory((application as PagoDividioApp).tripRepository)
     }
     private val adapter: TripItemAdapter = TripItemAdapter(this)
 

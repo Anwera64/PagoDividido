@@ -17,7 +17,9 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.newtrip.NewTripActivity" />
+        <activity
+            android:name=".presentation.newtrip.NewTripActivity"
+            android:noHistory="true" />
         <activity android:name=".presentation.trip.TripActivity" />
         <activity android:name=".presentation.newexpenditure.NewExpenditureActivity" />
     </application>
