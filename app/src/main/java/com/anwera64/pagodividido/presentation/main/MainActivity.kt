@@ -2,50 +2,52 @@ package com.anwera64.pagodividido.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityMainBinding
-import com.anwera64.pagodividido.domain.models.Trip
+import com.anwera64.pagodividido.domain.models.TripModel
+import com.anwera64.pagodividido.presentation.PagoDividioApp
 import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 
-class MainActivity : BaseActivity<ActivityMainBinding>(), MainPresenter.MainDelegate,
-    AdapterTripItem.AdapterTripDelegate {
+class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delegate {
     override val layout: Int
         get() {
             return R.layout.activity_main
         }
-    private val mPresenter = MainPresenter(this)
-    private lateinit var adapter: AdapterTripItem
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModelFactory((application as PagoDividioApp).repository)
+    }
+    private val adapter: TripItemAdapter = TripItemAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(binding.toolbar)
+        setupUi()
+        viewModel.trips.observe(this, Observer(this::onTripsLoaded))
+    }
 
-        binding.rvTrips.layoutManager = LinearLayoutManager(this)
-        adapter = AdapterTripItem(ArrayList(), this)
-        binding.rvTrips.adapter = adapter
-        binding.btnNewTrip.setOnClickListener { createNewTrip() }
-
-        mPresenter.getTrips()
+    private fun setupUi() = with(binding) {
+        setSupportActionBar(toolbar)
+        rvTrips.adapter = adapter
+        btnNewTrip.setOnClickListener { createNewTrip() }
     }
 
     private fun createNewTrip() {
-        val intent = Intent(this, NewTripActivity::class.java)
-        startActivity(intent)
+        Intent(this, NewTripActivity::class.java).also(this::startActivity)
     }
 
     override fun onTripPressed(uid: String, name: String) {
-        val intent = Intent(this, TripActivity::class.java)
-        intent.putExtra("tripUid", uid)
-        intent.putExtra("name", name)
-        startActivity(intent)
+        Intent(this, TripActivity::class.java).run {
+            putExtra("tripUid", uid)
+            putExtra("name", name)
+            startActivity(this)
+        }
     }
 
 
-    override fun onTripsLoaded(trips: ArrayList<Trip>) {
+    private fun onTripsLoaded(trips: List<TripModel>) {
         adapter.trips = trips
-        adapter.notifyDataSetChanged()
     }
 }

@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Trip(
-    @PrimaryKey val id: String,
-    @ColumnInfo(name = "name") val name: String
+    @ColumnInfo(name = "name") val name: String,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0
 )

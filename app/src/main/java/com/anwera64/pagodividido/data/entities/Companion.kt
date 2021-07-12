@@ -16,5 +16,5 @@ import androidx.room.PrimaryKey
 data class Companion(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "trip_id") val tripId: String
+    @ColumnInfo(name = "trip_id") val tripId: Int
 )
