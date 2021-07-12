@@ -73,7 +73,7 @@
                 android:id="@+id/tiDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/detalle" />
+                android:hint="@string/detail" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

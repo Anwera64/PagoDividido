@@ -23,8 +23,7 @@
     <string name="who_payed">Who payed:</string>
     <string name="from_whom">From whom:</string>
     <string name="detail">Detail:</string>
-    <string name="monto">Monto</string>
-    <string name="quien_pago">Quien pago?</string>
-    <string name="detalle">Detalle</string>
-    <string name="quien_debe">Quien se beneficio?</string>
+    <string name="monto">Amount</string>
+    <string name="quien_debe">Who benefitted?</string>
+    <string name="result">Result</string>
 </resources>
