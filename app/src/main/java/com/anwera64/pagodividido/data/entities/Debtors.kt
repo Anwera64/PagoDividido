@@ -5,6 +5,6 @@ import androidx.room.Entity
 
 @Entity(primaryKeys = ["companion_id", "expenditure_id"])
 data class Debtors(
-    @ColumnInfo(name = "companion_id") val companionId: String,
-    @ColumnInfo(name = "expenditure_id") val expenditureId: String
+    @ColumnInfo(name = "companion_id") val companionId: Int,
+    @ColumnInfo(name = "expenditure_id") val expenditureId: Int
 )

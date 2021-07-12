@@ -1,16 +1,14 @@
 package com.anwera64.pagodividido.presentation.newexpenditure
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
-import androidx.databinding.DataBindingUtil
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityNewExpenditureBinding
-import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.domain.models.CompanionModel
 import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 
@@ -52,7 +50,7 @@ class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), Ne
         }
     }
 
-    private fun createCompanionCheckBox(companion: Companion) {
+    private fun createCompanionCheckBox(companion: CompanionModel) {
         val checkBox = CheckBox(this)
         val layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -134,7 +132,7 @@ class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), Ne
         Log.e(this.localClassName, e)
     }
 
-    override fun onCompanionsObtained(companions: ArrayList<Companion>) {
+    override fun onCompanionsObtained(companions: ArrayList<CompanionModel>) {
         val namesList = ArrayList<SpecialPair>()
         namesList.add(SpecialPair("", "Select a companion"))
 

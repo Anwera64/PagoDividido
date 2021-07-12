@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.FragmentTripDetailsBinding
-import com.anwera64.pagodividido.domain.models.Expenditure
+import com.anwera64.pagodividido.domain.models.ExpenditureModel
 import com.anwera64.pagodividido.presentation.base.BaseFragment
 import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.presentation.trip.TripDetailPresenter
@@ -22,7 +22,7 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailsBinding>(),
     }
 
     override val layout: Int = R.layout.fragment_trip_details
-    private var expenditures = ArrayList<Expenditure>()
+    private var expenditures = ArrayList<ExpenditureModel>()
     private val mPresenter = TripDetailPresenter(this)
     var tripUid: String? = null
 
@@ -51,7 +51,7 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailsBinding>(),
         startActivity(intent)
     }
 
-    override fun onTripDetailsReady(details: ArrayList<Expenditure>) {
+    override fun onTripDetailsReady(details: ArrayList<ExpenditureModel>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

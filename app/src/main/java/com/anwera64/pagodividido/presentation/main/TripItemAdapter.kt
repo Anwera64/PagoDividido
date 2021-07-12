@@ -44,7 +44,7 @@ class TripItemAdapter(private val view: Delegate) :
             tvTotalSpentPreview.text = trip.totalSpent.toString()
 
             var companions = String()
-            ArrayList(trip.companions.values).forEachIndexed { i, companion ->
+            trip.companions.forEachIndexed { i, companion ->
                 when {
                     i > 0 -> companions += ", ${companion.name}"
                     i == trip.companions.size - 1 -> companions += " and ${companion.name}"

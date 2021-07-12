@@ -1,10 +1,10 @@
 package com.anwera64.pagodividido.presentation.newtrip
 
-import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.domain.models.CompanionModel
 
 class NewTripActivityPresenter(private val view: NewTripActivityDelegate) {
 
-    fun createTrip(companions: HashMap<String, Companion>, name: String) {
+    fun createTrip(companions: HashMap<String, CompanionModel>, name: String) {
         val values = HashMap<String, Any>()
         values["companions"] = companions
         values["totalSpent"] = 0

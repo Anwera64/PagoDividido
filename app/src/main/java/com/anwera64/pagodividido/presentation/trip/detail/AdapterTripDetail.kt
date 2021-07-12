@@ -6,10 +6,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ListItemDetailBinding
-import com.anwera64.pagodividido.domain.models.Companion
-import com.anwera64.pagodividido.domain.models.Expenditure
+import com.anwera64.pagodividido.domain.models.CompanionModel
+import com.anwera64.pagodividido.domain.models.ExpenditureModel
 
-class AdapterTripDetail(private val details: ArrayList<Expenditure>) :
+class AdapterTripDetail(private val details: ArrayList<ExpenditureModel>) :
     RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,13 +27,13 @@ class AdapterTripDetail(private val details: ArrayList<Expenditure>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val detail = details[position]
-        holder.whoPayed.text = detail.owner.name
+        holder.whoPayed.text = detail.payer.name
         holder.amount.text = detail.amountSpent.toString()
         holder.detail.text = detail.detail
         holder.debtors.text = companionsToStrings(detail.debtors)
     }
 
-    private fun companionsToStrings(companions: ArrayList<Companion>): String {
+    private fun companionsToStrings(companions: ArrayList<CompanionModel>): String {
         var result = ""
 
         companions.forEach { companion ->

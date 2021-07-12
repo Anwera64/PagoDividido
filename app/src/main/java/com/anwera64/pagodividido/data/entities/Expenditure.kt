@@ -15,16 +15,17 @@ import java.util.*
         ForeignKey(
             entity = Companion::class,
             parentColumns = arrayOf("id"),
-            childColumns = arrayOf("payer"),
+            childColumns = arrayOf("payer_id"),
             onDelete = ForeignKey.CASCADE
         )]
 )
 @TypeConverters(DateConverter::class)
 data class Expenditure(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "expense") val expense: Double,
     @ColumnInfo(name = "image_ref") val imageRef: String,
     @ColumnInfo(name = "date") val date: Date,
     @ColumnInfo(name = "trip_id") val tripId: Int,
-    @ColumnInfo(name = "payer") val payer: String
+    @ColumnInfo(name = "payer_id") val payerId: Int,
+    @ColumnInfo(name = "detail") val detail: String
 )

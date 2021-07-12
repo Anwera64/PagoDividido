@@ -1,6 +1,6 @@
 package com.anwera64.pagodividido.presentation.newexpenditure
 
-import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.domain.models.CompanionModel
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -38,6 +38,6 @@ class NewExpenditurePresenter(val view: NewExpenditureDelegate, val tripUid: Str
 
         fun onError(e: String)
 
-        fun onCompanionsObtained(companions: ArrayList<Companion>)
+        fun onCompanionsObtained(companions: ArrayList<CompanionModel>)
     }
 }
