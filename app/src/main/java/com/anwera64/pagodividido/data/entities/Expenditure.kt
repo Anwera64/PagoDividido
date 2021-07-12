@@ -1,9 +1,7 @@
 package com.anwera64.pagodividido.data.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
+import com.anwera64.pagodividido.data.helpers.DateConverter
 import java.util.*
 
 @Entity(
@@ -21,11 +19,12 @@ import java.util.*
             onDelete = ForeignKey.CASCADE
         )]
 )
+@TypeConverters(DateConverter::class)
 data class Expenditure(
     @PrimaryKey val id: String,
     @ColumnInfo(name = "expense") val expense: Double,
     @ColumnInfo(name = "image_ref") val imageRef: String,
     @ColumnInfo(name = "date") val date: Date,
-    @ColumnInfo(name = "trip_id") val tripId: String,
+    @ColumnInfo(name = "trip_id") val tripId: Int,
     @ColumnInfo(name = "payer") val payer: String
 )
