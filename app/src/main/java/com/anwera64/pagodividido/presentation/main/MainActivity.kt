@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityMainBinding
 import com.anwera64.pagodividido.domain.models.TripModel
@@ -11,6 +12,7 @@ import com.anwera64.pagodividido.presentation.PagoDividioApp
 import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
+import com.anwera64.pagodividido.utils.SwipeToDeleteCallback
 
 class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delegate {
     override val layout: Int
@@ -31,7 +33,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delega
     private fun setupUi() = with(binding) {
         setSupportActionBar(toolbar)
         rvTrips.adapter = adapter
+        val swipeCallback = SwipeToDeleteCallback(::onSwipeToDelete)
+        val itemTouchHelper = ItemTouchHelper(swipeCallback)
+        itemTouchHelper.attachToRecyclerView(rvTrips)
         btnNewTrip.setOnClickListener { createNewTrip() }
+    }
+
+    private fun onSwipeToDelete(position: Int) {
+        viewModel.delete(adapter.trips[position].uid.toInt())
     }
 
     private fun createNewTrip() {
