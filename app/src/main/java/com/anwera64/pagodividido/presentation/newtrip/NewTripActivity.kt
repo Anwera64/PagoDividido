@@ -52,7 +52,6 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> finish()
             R.id.create -> prepareToCreate()
         }
 
@@ -130,8 +129,8 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
 
     private fun onTripCreated(uid: Int, name: String) {
         Intent(this, TripActivity::class.java).run {
-            putExtra("tripUid", uid)
-            putExtra("name", name)
+            putExtra(TripActivity.TRIP_ID, uid)
+            putExtra(TripActivity.NAME, name)
             startActivity(this)
         }
     }
