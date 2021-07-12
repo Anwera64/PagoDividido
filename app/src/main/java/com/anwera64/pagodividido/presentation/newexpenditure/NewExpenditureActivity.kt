@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.newexpenditure
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.*
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Companion
-import com.anwera64.pagodividido.presentation.presenters.NewExpenditurePresenter
 import com.anwera64.pagodividido.utils.ViewUtils
 import kotlinx.android.synthetic.main.activity_new_expenditure.*
 

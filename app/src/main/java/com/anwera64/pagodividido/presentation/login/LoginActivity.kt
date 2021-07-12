@@ -1,11 +1,11 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.anwera64.pagodividido.R
-import com.anwera64.pagodividido.presentation.presenters.LoginPresenter
+import com.anwera64.pagodividido.presentation.main.MainActivity
 import com.anwera64.pagodividido.utils.StringUtils
 import kotlinx.android.synthetic.main.activity_login.*
 

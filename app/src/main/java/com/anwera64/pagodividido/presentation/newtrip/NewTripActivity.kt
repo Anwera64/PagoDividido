@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.newtrip
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Companion
-import com.anwera64.pagodividido.presentation.presenters.NewTripActivityPresenter
+import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 import kotlinx.android.synthetic.main.activity_new_trip.*
 import java.util.*

@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.trip.detail
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Expenditure
-import com.anwera64.pagodividido.presentation.adapters.AdapterTripDetail
-import com.anwera64.pagodividido.presentation.presenters.TripDetailPresenter
+import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
+import com.anwera64.pagodividido.presentation.trip.TripDetailPresenter
 import kotlinx.android.synthetic.main.fragment_trip_details.*
 
 class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate, AdapterTripDetail.AdapterTripDetailDelegate {

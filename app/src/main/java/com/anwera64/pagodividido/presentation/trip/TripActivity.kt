@@ -1,9 +1,11 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.trip
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.presentation.trip.companionresult.TripCompanionResultFragment
+import com.anwera64.pagodividido.presentation.trip.detail.TripDetailFragment
 import com.anwera64.pagodividido.utils.viewPager.SimplePagerAdapter
 import com.anwera64.pagodividido.utils.viewPager.TabLayoutHelper
 import kotlinx.android.synthetic.main.activity_trip.*

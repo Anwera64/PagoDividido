@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.presentation.views
+package com.anwera64.pagodividido.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Trip
-import com.anwera64.pagodividido.presentation.adapters.AdapterTripItem
-import com.anwera64.pagodividido.presentation.presenters.MainPresenter
+import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
+import com.anwera64.pagodividido.presentation.trip.TripActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: AppCompatActivity(), MainPresenter.MainDelegate, AdapterTripItem.AdapterTripDelegate {
