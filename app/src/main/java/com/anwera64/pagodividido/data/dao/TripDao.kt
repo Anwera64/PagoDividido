@@ -1,13 +1,14 @@
 package com.anwera64.pagodividido.data.dao
 
 import androidx.room.*
+import com.anwera64.pagodividido.data.composedclasses.TripWithCompanions
 import com.anwera64.pagodividido.data.entities.Trip
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TripDao {
     @Query("SELECT * FROM trip")
-    fun getAll(): Flow<List<Trip>>
+    fun getAll(): Flow<List<TripWithCompanions>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(vararg trips: Trip)

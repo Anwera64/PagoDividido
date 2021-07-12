@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityNewTripBinding
-import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.domain.models.CompanionModel
 import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
@@ -94,7 +94,7 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
             return
         }
 
-        val companions = HashMap<String, Companion>()
+        val companions = HashMap<String, CompanionModel>()
         for (i in 1..count) {
             val textInputLayout = llCompanions.findViewWithTag<TextInputLayout>("tiCompanion$i")
 
@@ -108,7 +108,7 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
             }
 
             val uid = UUID.randomUUID().toString()
-            companions[uid] = Companion(uid, companionName, 0.0f, 0.0f)
+            companions[uid] = CompanionModel(uid, companionName)
         }
 
         mPresenter.createTrip(companions, name)

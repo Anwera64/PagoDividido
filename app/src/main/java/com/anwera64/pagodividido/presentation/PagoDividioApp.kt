@@ -8,8 +8,6 @@ import kotlinx.coroutines.SupervisorJob
 
 class PagoDividioApp : Application() {
 
-    private val applicationScope = CoroutineScope(SupervisorJob())
-
-    val database by lazy { AppDatabase.getDatabase(this, applicationScope) }
+    val database by lazy { AppDatabase.getDatabase(this) }
     val repository by lazy { TripRepository(database.tripDao()) }
 }

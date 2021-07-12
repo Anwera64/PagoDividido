@@ -1,6 +1,6 @@
 package com.anwera64.pagodividido.presentation.trip
 
-import com.anwera64.pagodividido.domain.models.Expenditure
+import com.anwera64.pagodividido.domain.models.ExpenditureModel
 
 class TripDetailPresenter(val view: TripDetailDelegate) {
 
@@ -10,7 +10,7 @@ class TripDetailPresenter(val view: TripDetailDelegate) {
 
     interface TripDetailDelegate {
 
-        fun onTripDetailsReady(details: ArrayList<Expenditure>);
+        fun onTripDetailsReady(details: ArrayList<ExpenditureModel>);
 
         fun onError(e: String)
     }
