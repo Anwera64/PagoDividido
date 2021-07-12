@@ -54,6 +54,7 @@ class TripItemAdapter(private val view: Delegate) :
 
             tvCompanions.text = companions
             itemView.setOnClickListener { view.onTripPressed(trip.uid, trip.name) }
+            tvTitle.text = trip.name
         }
     }
 
