@@ -2,11 +2,13 @@ package com.anwera64.pagodividido.presentation.newtrip
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.children
 import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.data.entities.Trip
@@ -14,32 +16,26 @@ import com.anwera64.pagodividido.databinding.ActivityNewTripBinding
 import com.anwera64.pagodividido.presentation.base.BaseViewModelActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
 
 class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripBinding>(NewTripViewModel::class) {
 
-    companion object {
-        const val TEXT_INPUT_TAG = "tiCompanion"
-    }
-
     override val layout: Int = R.layout.activity_new_trip
-    override val viewModelValue: Int?
-        get() = null
-
-    private var count = 1
+    override val viewModelValue: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUi()
-        viewModel.createdTrip.observe(this, Observer(::observeCreatedTrip))
     }
 
     private fun setupUi() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.btnNewCompanion.setOnClickListener { addNewCompanionTextBox() }
+        binding.inInputFields.btnNewCompanion.setOnClickListener { addNewCompanionTextBox() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -55,67 +51,42 @@ class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripB
         return super.onOptionsItemSelected(item)
     }
 
-    private fun addNewCompanionTextBox() = with(binding) {
-        val textInputLayout = createTextInputLayout()
-        val textInputEditText = createTextInputEditText()
-
-        textInputLayout.addView(textInputEditText)
-        llCompanions.addView(textInputLayout, llCompanions.childCount - 1)
-
-        textInputEditText.requestFocus()
-        count++
+    private fun createCompanionChip(name: String): Chip {
+        return Chip(this).apply {
+            text = name
+            isCloseIconVisible = true
+            ellipsize = TextUtils.TruncateAt.END
+            setOnCloseIconClickListener { (parent as? ChipGroup)?.removeView(this) }
+        }
     }
 
-    private fun createTextInputLayout(): TextInputLayout {
-        val textInputLayout = TextInputLayout(this)
-        val tilParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        val margin = ViewUtils.gerMarginInDP(16, resources)
-
-        tilParams.setMargins(margin, margin, margin, margin)
-        textInputLayout.layoutParams = tilParams
-        textInputLayout.tag = "$TEXT_INPUT_TAG${count + 1}"
-
-        return textInputLayout
+    private fun addNewCompanionTextBox() = with(binding.inInputFields) {
+        if (tiCompanion.text.isNullOrEmpty()) {
+            tilCompanion.error = getString(R.string.input_error_companion_name)
+            tilCompanion.isErrorEnabled = true
+            return
+        }
+        tilCompanion.isErrorEnabled = false
+        cpCompanions.addView(createCompanionChip(tiCompanion.text.toString().trim()))
+        tiCompanion.setText("")
     }
 
-    private fun createTextInputEditText(): TextInputEditText {
-        val textInputEditText = TextInputEditText(this)
-        val tiParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        textInputEditText.layoutParams = tiParams
-        textInputEditText.hint =
-                resources.getString(R.string.companion_name)
-
-        return textInputEditText
-    }
-
-    private fun prepareToCreate() = with(binding) {
-        val name = tiName.text.toString()
+    private fun prepareToCreate() = with(binding.inInputFields) {
+        val name = tiName.text.toString().trim()
         if (name.isEmpty() || name.isBlank()) {
             tilName.isErrorEnabled = true
             return
         }
 
-        val companions = arrayListOf<String>()
-        for (i in 1..count) {
-            val textInputLayout = llCompanions.findViewWithTag<TextInputLayout>("$TEXT_INPUT_TAG$i")
-
-            val textInputEditText = (textInputLayout.getChildAt(0) as ViewGroup)
-                    .getChildAt(0) as TextInputEditText
-
-            val companionName = textInputEditText.text.toString()
-            if (companionName.isEmpty() || companionName.isBlank()) {
-                textInputLayout.isErrorEnabled = true
-                return
-            }
-            companions.add(companionName)
+        val companions = cpCompanions.children.mapNotNull { view ->
+            if (view is Chip) view.text.toString() else null
+        }.toList()
+        if (companions.isEmpty() || companions.size < 2) {
+            tilCompanion.isErrorEnabled = true
+            tilCompanion.error = getString(R.string.input_error_no_companions)
+            return
         }
+        tilCompanion.isErrorEnabled = false
 
         viewModel.createTrip(companions, name)
     }
@@ -126,7 +97,7 @@ class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripB
 
     private fun onTripCreated(uid: Int, name: String) {
         Intent(this, TripActivity::class.java).run {
-            putExtra(TripActivity.TRIP_ID, uid)
+            putExtra(TripActivity.TRIP_ID, uid.toString())
             putExtra(TripActivity.NAME, name)
             startActivity(this)
         }
@@ -137,6 +108,6 @@ class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripB
     }
 
     override fun setupObservers() {
-        //TODO("Not yet implemented")
+        viewModel.createdTrip.observe(this, Observer(::observeCreatedTrip))
     }
 }

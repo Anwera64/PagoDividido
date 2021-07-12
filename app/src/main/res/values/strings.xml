@@ -29,4 +29,6 @@
     <string name="error_empty_amount">Tienes que ingresar un monto.</string>
     <string name="error_non_numeral_amount">Tienes que ingresar un numero</string>
     <string name="error_no_payer_selected">Selecciona a quien pago el gasto</string>
+    <string name="input_error_companion_name">Tienes que ingresar el nombre del compañero de viaje</string>
+    <string name="input_error_no_companions">Tienes que agregar al menos dos compañeros al viaje</string>
 </resources>
