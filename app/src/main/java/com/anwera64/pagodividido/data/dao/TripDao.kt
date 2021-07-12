@@ -16,8 +16,8 @@ interface TripDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(trips: Trip): Long
 
-    @Delete
-    suspend fun delete(trip: Trip)
+    @Query("DELETE FROM trip where id == :id")
+    suspend fun deleteById(id: Int)
 
     @Query("DELETE FROM trip")
     suspend fun deleteAll()

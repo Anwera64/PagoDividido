@@ -18,4 +18,7 @@ class TripRepository(private val tripDao: TripDao) {
     }
 
     fun getTripById(id: Int) = tripDao.getTripById(id)
+
+    @WorkerThread
+    suspend fun deleteTrip(tripId: Int) = tripDao.deleteById(tripId)
 }
