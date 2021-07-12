@@ -7,29 +7,41 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.data.entities.Trip
 import com.anwera64.pagodividido.databinding.ActivityNewTripBinding
-import com.anwera64.pagodividido.domain.models.CompanionModel
+import com.anwera64.pagodividido.presentation.PagoDividioApp
 import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import java.util.*
 
 
-class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
-    NewTripActivityPresenter.NewTripActivityDelegate {
+class NewTripActivity : BaseActivity<ActivityNewTripBinding>() {
+
+    companion object {
+        const val TEXT_INPUT_TAG = "tiCompanion"
+    }
 
     override val layout: Int = R.layout.activity_new_trip
-    private val mPresenter = NewTripActivityPresenter(this)
+    private val viewModel: NewTripViewModel by viewModels {
+        val app = (application as PagoDividioApp)
+        NewTripViewModelFactory(app.tripRepository, app.companionRepository)
+    }
     private var count = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupUi()
+        viewModel.createdTrip.observe(this, Observer(::observeCreatedTrip))
+    }
+
+    private fun setupUi() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         binding.btnNewCompanion.setOnClickListener { addNewCompanionTextBox() }
     }
 
@@ -69,7 +81,7 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
 
         tilParams.setMargins(margin, margin, margin, margin)
         textInputLayout.layoutParams = tilParams
-        textInputLayout.tag = "tiCompanion${count + 1}"
+        textInputLayout.tag = "$TEXT_INPUT_TAG${count + 1}"
 
         return textInputLayout
     }
@@ -94,9 +106,9 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
             return
         }
 
-        val companions = HashMap<String, CompanionModel>()
+        val companions = arrayListOf<String>()
         for (i in 1..count) {
-            val textInputLayout = llCompanions.findViewWithTag<TextInputLayout>("tiCompanion$i")
+            val textInputLayout = llCompanions.findViewWithTag<TextInputLayout>("$TEXT_INPUT_TAG$i")
 
             val textInputEditText = (textInputLayout.getChildAt(0) as ViewGroup)
                 .getChildAt(0) as TextInputEditText
@@ -106,22 +118,25 @@ class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
                 textInputLayout.isErrorEnabled = true
                 return
             }
-
-            val uid = UUID.randomUUID().toString()
-            companions[uid] = CompanionModel(uid, companionName)
+            companions.add(companionName)
         }
 
-        mPresenter.createTrip(companions, name)
+        viewModel.createTrip(companions, name)
     }
 
-    override fun onTripCreated(uid: String, name: String) {
-        val intent = Intent(this, TripActivity::class.java)
-        intent.putExtra("tripUid", uid)
-        intent.putExtra("name", name)
-        startActivity(intent)
+    private fun observeCreatedTrip(trip: Trip?) {
+        trip?.run { onTripCreated(id, name) } ?: onTripFailed()
     }
 
-    override fun onTripFailed() {
+    private fun onTripCreated(uid: Int, name: String) {
+        Intent(this, TripActivity::class.java).run {
+            putExtra("tripUid", uid)
+            putExtra("name", name)
+            startActivity(this)
+        }
+    }
+
+    private fun onTripFailed() {
         Log.e("New Trip", "We failed to create the trip")
     }
 }

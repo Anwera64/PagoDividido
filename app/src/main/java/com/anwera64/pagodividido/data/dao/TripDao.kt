@@ -10,8 +10,11 @@ interface TripDao {
     @Query("SELECT * FROM trip")
     fun getAll(): Flow<List<TripWithCompanions>>
 
+    @Query("SELECT * FROM trip WHERE id == :id")
+    fun getTripById(id: Int): Flow<Trip>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertAll(vararg trips: Trip)
+    suspend fun insertAll(trips: Trip): Long
 
     @Delete
     suspend fun delete(trip: Trip)
