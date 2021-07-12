@@ -2,9 +2,9 @@ package com.anwera64.pagodividido.presentation.newtrip
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
-import android.support.design.widget.TextInputLayout
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -25,7 +25,7 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.anwera64.pagodividido.R.layout.activity_new_trip)
+        setContentView(R.layout.activity_new_trip)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -33,12 +33,12 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(com.anwera64.pagodividido.R.menu.menu_create, menu)
+        menuInflater.inflate(R.menu.menu_create, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> finish()
             R.id.create -> prepareToCreate()
         }
@@ -59,8 +59,10 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
 
     private fun createTextInputLayout(): TextInputLayout {
         val textInputLayout = TextInputLayout(this)
-        val tilParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT)
+        val tilParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
 
         val margin = ViewUtils.gerMarginInDP(16, resources)
 
@@ -73,10 +75,13 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
 
     private fun createTextInputEditText(): TextInputEditText {
         val textInputEditText = TextInputEditText(this)
-        val tiParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT)
+        val tiParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
         textInputEditText.layoutParams = tiParams
-        textInputEditText.hint = resources.getString(com.anwera64.pagodividido.R.string.companion_name)
+        textInputEditText.hint =
+            resources.getString(R.string.companion_name)
 
         return textInputEditText
     }
@@ -93,7 +98,7 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
             val textInputLayout = llCompanions.findViewWithTag<TextInputLayout>("tiCompanion$i")
 
             val textInputEditText = (textInputLayout.getChildAt(0) as ViewGroup)
-                    .getChildAt(0) as TextInputEditText
+                .getChildAt(0) as TextInputEditText
 
             val companionName = textInputEditText.text.toString()
             if (companionName.isEmpty() || companionName.isBlank()) {

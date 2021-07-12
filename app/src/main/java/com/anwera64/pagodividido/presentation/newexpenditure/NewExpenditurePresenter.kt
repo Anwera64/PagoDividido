@@ -4,9 +4,14 @@ import com.anwera64.pagodividido.domain.models.Companion
 import java.util.*
 import kotlin.collections.HashMap
 
-class NewExpenditurePresenter(val view: NewExpenditureDelegate, val tripUid: String) {
+class NewExpenditurePresenter(val view: NewExpenditureDelegate) {
 
-    fun createExpenditure(ownerId: String, debtors: ArrayList<String>, detail: String, amountSpent: Float) {
+    fun createExpenditure(
+        ownerId: String,
+        debtors: ArrayList<String>,
+        detail: String,
+        amountSpent: Float
+    ) {
         val values = HashMap<String, Any>()
         values["ownerId"] = ownerId
         values["debtors"] = debtors

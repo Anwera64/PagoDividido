@@ -1,7 +1,7 @@
 package com.anwera64.pagodividido.presentation.trip
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.presentation.trip.companionresult.TripCompanionResultFragment
@@ -10,7 +10,7 @@ import com.anwera64.pagodividido.utils.viewPager.SimplePagerAdapter
 import com.anwera64.pagodividido.utils.viewPager.TabLayoutHelper
 import kotlinx.android.synthetic.main.activity_trip.*
 
-class TripActivity: AppCompatActivity() {
+class TripActivity : AppCompatActivity() {
 
     private val pagerAdapter = SimplePagerAdapter(supportFragmentManager)
 
@@ -35,15 +35,23 @@ class TripActivity: AppCompatActivity() {
         }
 
         //Add Fragments
-        pagerAdapter.addFragment(TripDetailFragment.instance, resources.getString(R.string.detalle), R.drawable.ic_money)
-        pagerAdapter.addFragment(TripCompanionResultFragment.instance, "Resultado", R.drawable.ic_people)
+        pagerAdapter.addFragment(
+            TripDetailFragment.instance,
+            resources.getString(R.string.detalle),
+            R.drawable.ic_money
+        )
+        pagerAdapter.addFragment(
+            TripCompanionResultFragment.instance,
+            "Resultado",
+            R.drawable.ic_people
+        )
 
         updatePagerAdapter()
         updatetabs()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> finish()
         }
 

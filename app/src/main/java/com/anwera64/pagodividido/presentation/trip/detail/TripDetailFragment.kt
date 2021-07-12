@@ -2,8 +2,8 @@ package com.anwera64.pagodividido.presentation.trip.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +14,7 @@ import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActiv
 import com.anwera64.pagodividido.presentation.trip.TripDetailPresenter
 import kotlinx.android.synthetic.main.fragment_trip_details.*
 
-class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate, AdapterTripDetail.AdapterTripDetailDelegate {
+class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate {
 
     companion object {
         val instance = TripDetailFragment()
@@ -24,7 +24,11 @@ class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate, A
     private val mPresenter = TripDetailPresenter(this)
     var tripUid: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_trip_details, container, false)
         setHasOptionsMenu(true)
         return view
@@ -34,7 +38,7 @@ class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate, A
         super.onViewCreated(view, savedInstanceState)
         context?.let {
             recyclerViewDetails.layoutManager = LinearLayoutManager(context)
-            val adapter = AdapterTripDetail(expenditures, it, this)
+            val adapter = AdapterTripDetail(expenditures, it)
             recyclerViewDetails.adapter = adapter
         }
 
@@ -52,6 +56,7 @@ class TripDetailFragment : Fragment(), TripDetailPresenter.TripDetailDelegate, A
         intent.putExtra("tripUid", tripUid!!)
         startActivity(intent)
     }
+
     override fun onTripDetailsReady(details: ArrayList<Expenditure>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

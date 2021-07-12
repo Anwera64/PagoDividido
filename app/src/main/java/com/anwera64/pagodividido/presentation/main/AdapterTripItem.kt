@@ -1,7 +1,7 @@
 package com.anwera64.pagodividido.presentation.main
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +9,10 @@ import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Trip
 import kotlinx.android.synthetic.main.list_item_trip.view.*
 
-class AdapterTripItem(var trips: ArrayList<Trip>, private val context: Context,
-                      private val view: AdapterTripDelegate) : RecyclerView.Adapter<AdapterTripItem.ViewHolder>() {
+class AdapterTripItem(
+    var trips: ArrayList<Trip>, private val context: Context,
+    private val view: AdapterTripDelegate
+) : RecyclerView.Adapter<AdapterTripItem.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_trip, p0, false))

@@ -1,11 +1,12 @@
 package com.anwera64.pagodividido.utils.viewPager
 
-import android.support.annotation.DrawableRes
-import android.support.design.widget.TabLayout
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.content.res.AppCompatResources
+import android.graphics.drawable.Drawable
+import androidx.annotation.DrawableRes
+import com.google.android.material.tabs.TabLayout
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.content.res.AppCompatResources
 
 object TabLayoutHelper {
 
@@ -27,16 +28,14 @@ object TabLayoutHelper {
         val tabColors = tabLayout.tabTextColors
         for (i in 0 until pagerAdapter.count) {
             val iconRes = (pagerAdapter as IconPagerAdapter).getTabIconRes(i)
-            var icon = AppCompatResources.getDrawable(tabLayout.context, iconRes)
-            if (icon != null) {
-                icon = DrawableCompat.wrap(icon)
-                DrawableCompat.setTintList(icon!!, tabColors)
-                tabLayout.addTab(
-                        tabLayout.newTab()
-                                .setText(pagerAdapter.getPageTitle(i))
-                                .setIcon(icon)
-                )
-            }
+            var icon = AppCompatResources.getDrawable(tabLayout.context, iconRes) ?: continue
+            icon = DrawableCompat.wrap(icon)
+            DrawableCompat.setTintList(icon, tabColors)
+            tabLayout.addTab(
+                tabLayout.newTab()
+                    .setText(pagerAdapter.getPageTitle(i))
+                    .setIcon(icon)
+            )
         }
     }
 

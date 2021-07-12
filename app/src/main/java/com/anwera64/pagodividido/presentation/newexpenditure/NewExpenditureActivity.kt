@@ -1,43 +1,46 @@
 package com.anwera64.pagodividido.presentation.newexpenditure
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.databinding.DataBindingUtil
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.databinding.ActivityNewExpenditureBinding
 import com.anwera64.pagodividido.domain.models.Companion
 import com.anwera64.pagodividido.utils.ViewUtils
-import kotlinx.android.synthetic.main.activity_new_expenditure.*
 
 class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewExpenditureDelegate {
 
     private var mPresenter: NewExpenditurePresenter? = null
     private val checkBoxes = ArrayList<CheckBox>()
     private var ownerUid = ""
+    private lateinit var binding: ActivityNewExpenditureBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_expenditure)
         setContentView(R.layout.activity_new_expenditure)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (intent.hasExtra("tripUid")) {
             val tripUid = intent.getStringExtra("tripUid")
-            mPresenter = NewExpenditurePresenter(this, tripUid)
+            mPresenter = NewExpenditurePresenter(this)
 
             mPresenter?.getCompanions()
         }
     }
 
     private fun loadSpinnerData(nameList: ArrayList<SpecialPair>) {
-        val arrayAdapter = ArrayAdapter<SpecialPair>(this, android.R.layout.simple_spinner_item, nameList)
+        val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, nameList)
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-        spOwner.adapter = arrayAdapter
-        spOwner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spOwner.adapter = arrayAdapter
+        binding.spOwner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {
 
             }
@@ -51,8 +54,10 @@ class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewE
 
     private fun createCompanionCheckBox(companion: Companion) {
         val checkBox = CheckBox(this)
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
 
         val margin = ViewUtils.gerMarginInDP(8, resources)
         layoutParams.setMargins(0, 0, 0, margin)
@@ -63,16 +68,16 @@ class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewE
 
         checkBoxes.add(checkBox)
 
-        llDebtors.addView(checkBox)
+        binding.llDebtors.addView(checkBox)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(com.anwera64.pagodividido.R.menu.menu_create, menu)
+        menuInflater.inflate(R.menu.menu_create, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> finish()
             R.id.create -> createExpenditure()
         }
@@ -94,10 +99,10 @@ class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewE
         return result
     }
 
-    private fun createExpenditure() {
+    private fun createExpenditure(): Unit = with(binding) {
         val debtors = getSelectedDebtors() ?: return
 
-        val amountString = tiAmount.text.toString()
+        val amountString = binding.tiAmount.text.toString()
 
         if (amountString.isEmpty()) {
             tilAmount.error = "Tienes que ingresar un monto."
@@ -143,7 +148,7 @@ class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewE
         //Tal vez se debe implementar un loading.
     }
 
-     class SpecialPair(val first: String, val second: String) {
+    class SpecialPair(val first: String, private val second: String) {
         override fun toString(): String {
             return second
         }

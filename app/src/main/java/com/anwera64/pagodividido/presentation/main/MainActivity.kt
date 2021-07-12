@@ -2,15 +2,16 @@ package com.anwera64.pagodividido.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.domain.models.Trip
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity: AppCompatActivity(), MainPresenter.MainDelegate, AdapterTripItem.AdapterTripDelegate {
+class MainActivity : AppCompatActivity(), MainPresenter.MainDelegate,
+    AdapterTripItem.AdapterTripDelegate {
 
     private val mPresenter = MainPresenter(this)
     private lateinit var adapter: AdapterTripItem
@@ -24,7 +25,7 @@ class MainActivity: AppCompatActivity(), MainPresenter.MainDelegate, AdapterTrip
         adapter = AdapterTripItem(ArrayList(), this, this)
         rvTrips.adapter = adapter
 
-        btnNewTrip.setOnClickListener{ createNewTrip() }
+        btnNewTrip.setOnClickListener { createNewTrip() }
 
         mPresenter.getTrips()
     }

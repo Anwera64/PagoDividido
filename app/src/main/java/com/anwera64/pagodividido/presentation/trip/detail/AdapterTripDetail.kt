@@ -1,7 +1,7 @@
 package com.anwera64.pagodividido.presentation.trip.detail
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,11 +10,14 @@ import com.anwera64.pagodividido.domain.models.Companion
 import com.anwera64.pagodividido.domain.models.Expenditure
 import kotlinx.android.synthetic.main.list_item_detail.view.*
 
-class AdapterTripDetail(private val details: ArrayList<Expenditure>, private val context: Context,
-                        view: AdapterTripDetailDelegate): RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
+class AdapterTripDetail(
+    private val details: ArrayList<Expenditure>, private val context: Context
+) : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item_detail, p0, false))
+        return ViewHolder(
+            LayoutInflater.from(context).inflate(R.layout.list_item_detail, p0, false)
+        )
     }
 
     override fun getItemCount(): Int {
@@ -45,7 +48,4 @@ class AdapterTripDetail(private val details: ArrayList<Expenditure>, private val
         val debtors = view.tvWhosInDebt!!
         val detail = view.tvDetail!!
     }
-
-    //Por si alguna vez quiero hacer una pantalla de detalle y manejar el onClick
-    interface AdapterTripDetailDelegate
 }
