@@ -2,34 +2,35 @@ package com.anwera64.pagodividido.presentation.newtrip
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.databinding.ActivityNewTripBinding
 import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
-import kotlinx.android.synthetic.main.activity_new_trip.*
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import java.util.*
 
 
-class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripActivityDelegate {
+class NewTripActivity : BaseActivity<ActivityNewTripBinding>(),
+    NewTripActivityPresenter.NewTripActivityDelegate {
 
+    override val layout: Int = R.layout.activity_new_trip
     private val mPresenter = NewTripActivityPresenter(this)
     private var count = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_new_trip)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        btnNewCompanion.setOnClickListener { addNewCompanionTextBox() }
+        binding.btnNewCompanion.setOnClickListener { addNewCompanionTextBox() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -46,7 +47,7 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
         return super.onOptionsItemSelected(item)
     }
 
-    private fun addNewCompanionTextBox() {
+    private fun addNewCompanionTextBox() = with(binding) {
         val textInputLayout = createTextInputLayout()
         val textInputEditText = createTextInputEditText()
 
@@ -86,7 +87,7 @@ class NewTripActivity : AppCompatActivity(), NewTripActivityPresenter.NewTripAct
         return textInputEditText
     }
 
-    private fun prepareToCreate() {
+    private fun prepareToCreate() = with(binding) {
         val name = tiName.text.toString()
         if (name.isEmpty() || name.isBlank()) {
             tilName.isErrorEnabled = true

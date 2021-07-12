@@ -1,35 +1,36 @@
 package com.anwera64.pagodividido.presentation.trip.detail
 
-import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.databinding.ListItemDetailBinding
 import com.anwera64.pagodividido.domain.models.Companion
 import com.anwera64.pagodividido.domain.models.Expenditure
-import kotlinx.android.synthetic.main.list_item_detail.view.*
 
-class AdapterTripDetail(
-    private val details: ArrayList<Expenditure>, private val context: Context
-) : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
+class AdapterTripDetail(private val details: ArrayList<Expenditure>) :
+    RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(context).inflate(R.layout.list_item_detail, p0, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return DataBindingUtil.inflate<ListItemDetailBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.list_item_detail,
+            parent,
+            false
+        ).let(::ViewHolder)
     }
 
     override fun getItemCount(): Int {
         return details.size
     }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        val detail = details[p1]
-        p0.whoPayed.text = detail.owner.name
-        p0.amount.text = detail.amountSpent.toString()
-        p0.detail.text = detail.detail
-        p0.debtors.text = companionsToStrings(detail.debtors)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val detail = details[position]
+        holder.whoPayed.text = detail.owner.name
+        holder.amount.text = detail.amountSpent.toString()
+        holder.detail.text = detail.detail
+        holder.debtors.text = companionsToStrings(detail.debtors)
     }
 
     private fun companionsToStrings(companions: ArrayList<Companion>): String {
@@ -42,10 +43,10 @@ class AdapterTripDetail(
         return result.trim()
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val amount = view.tvAmountSpentDetail!!
-        val whoPayed = view.tvWhoPayed!!
-        val debtors = view.tvWhosInDebt!!
-        val detail = view.tvDetail!!
+    class ViewHolder(binding: ListItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
+        val amount = binding.tvAmountSpentDetail
+        val whoPayed = binding.tvWhoPayed
+        val debtors = binding.tvWhosInDebt
+        val detail = binding.tvDetail
     }
 }

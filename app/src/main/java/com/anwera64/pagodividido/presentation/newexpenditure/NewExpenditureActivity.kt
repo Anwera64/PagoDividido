@@ -11,18 +11,18 @@ import androidx.databinding.DataBindingUtil
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityNewExpenditureBinding
 import com.anwera64.pagodividido.domain.models.Companion
+import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 
-class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewExpenditureDelegate {
+class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), NewExpenditurePresenter.NewExpenditureDelegate {
+    override val layout: Int = R.layout.activity_new_expenditure
 
     private var mPresenter: NewExpenditurePresenter? = null
     private val checkBoxes = ArrayList<CheckBox>()
-    private var ownerUid = ""
-    private lateinit var binding: ActivityNewExpenditureBinding
+    private var ownerUid: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_new_expenditure)
         setContentView(R.layout.activity_new_expenditure)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -123,7 +123,7 @@ class NewExpenditureActivity : AppCompatActivity(), NewExpenditurePresenter.NewE
             return
         }
 
-        mPresenter?.createExpenditure(ownerUid, debtors, detail, amountString.toFloat())
+        ownerUid?.let { id -> mPresenter?.createExpenditure(id, debtors, detail, amountString.toFloat()) }
     }
 
     override fun onExpenditureCreated() {

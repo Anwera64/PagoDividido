@@ -2,30 +2,31 @@ package com.anwera64.pagodividido.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.databinding.ActivityMainBinding
 import com.anwera64.pagodividido.domain.models.Trip
+import com.anwera64.pagodividido.presentation.base.BaseActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MainPresenter.MainDelegate,
+class MainActivity : BaseActivity<ActivityMainBinding>(), MainPresenter.MainDelegate,
     AdapterTripItem.AdapterTripDelegate {
-
+    override val layout: Int
+        get() {
+            return R.layout.activity_main
+        }
     private val mPresenter = MainPresenter(this)
     private lateinit var adapter: AdapterTripItem
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
-        rvTrips.layoutManager = LinearLayoutManager(this)
-        adapter = AdapterTripItem(ArrayList(), this, this)
-        rvTrips.adapter = adapter
-
-        btnNewTrip.setOnClickListener { createNewTrip() }
+        binding.rvTrips.layoutManager = LinearLayoutManager(this)
+        adapter = AdapterTripItem(ArrayList(), this)
+        binding.rvTrips.adapter = adapter
+        binding.btnNewTrip.setOnClickListener { createNewTrip() }
 
         mPresenter.getTrips()
     }
