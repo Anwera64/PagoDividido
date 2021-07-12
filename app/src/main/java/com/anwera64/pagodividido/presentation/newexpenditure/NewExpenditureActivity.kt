@@ -10,6 +10,7 @@ import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityNewExpenditureBinding
 import com.anwera64.pagodividido.domain.models.CompanionModel
 import com.anwera64.pagodividido.presentation.base.BaseActivity
+import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.ViewUtils
 
 class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), NewExpenditurePresenter.NewExpenditureDelegate {
@@ -25,8 +26,8 @@ class NewExpenditureActivity : BaseActivity<ActivityNewExpenditureBinding>(), Ne
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (intent.hasExtra("tripUid")) {
-            val tripUid = intent.getStringExtra("tripUid")
+        if (intent.hasExtra(TripActivity.TRIP_ID)) {
+            val tripUid = intent.getStringExtra(TripActivity.TRIP_ID)
             mPresenter = NewExpenditurePresenter(this)
 
             mPresenter?.getCompanions()

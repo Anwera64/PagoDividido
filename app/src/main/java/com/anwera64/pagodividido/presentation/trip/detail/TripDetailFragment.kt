@@ -12,6 +12,7 @@ import com.anwera64.pagodividido.databinding.FragmentTripDetailsBinding
 import com.anwera64.pagodividido.domain.models.ExpenditureModel
 import com.anwera64.pagodividido.presentation.base.BaseFragment
 import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
+import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.presentation.trip.TripDetailPresenter
 
 class TripDetailFragment : BaseFragment<FragmentTripDetailsBinding>(),
@@ -32,22 +33,19 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailsBinding>(),
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return view
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerViewDetails.layoutManager = LinearLayoutManager(context)
-        val adapter = AdapterTripDetail(expenditures)
-        binding.recyclerViewDetails.adapter = adapter
+        binding.recyclerViewDetails.adapter = AdapterTripDetail(expenditures)
         tripUid?.let(mPresenter::getTripDetails)
         binding.btnNewExpenditure.setOnClickListener { createNewTrip() }
-
     }
 
     private fun createNewTrip() {
         val intent = Intent(context, NewExpenditureActivity::class.java)
-        intent.putExtra("tripUid", tripUid!!)
+        intent.putExtra(TripActivity.TRIP_ID, tripUid)
         startActivity(intent)
     }
 

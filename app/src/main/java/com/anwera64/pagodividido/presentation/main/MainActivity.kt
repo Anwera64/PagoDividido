@@ -49,8 +49,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), TripItemAdapter.Delega
 
     override fun onTripPressed(uid: String, name: String) {
         Intent(this, TripActivity::class.java).run {
-            putExtra("tripUid", uid)
-            putExtra("name", name)
+            putExtra(TripActivity.TRIP_ID, uid)
+            putExtra(TripActivity.NAME, name)
             startActivity(this)
         }
     }
