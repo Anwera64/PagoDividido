@@ -2,24 +2,18 @@ package com.anwera64.pagodividido.presentation.trip.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.FragmentTripDetailsBinding
 import com.anwera64.pagodividido.domain.models.ExpenditureModel
-import com.anwera64.pagodividido.presentation.PagoDividioApp
-import com.anwera64.pagodividido.presentation.base.BaseFragment
 import com.anwera64.pagodividido.presentation.base.BaseViewModelFragment
-import com.anwera64.pagodividido.presentation.main.MainViewModel
 import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.presentation.trip.TripViewModel
-import com.anwera64.pagodividido.presentation.trip.TripViewModelFactory
 
 class TripDetailFragment :
     BaseViewModelFragment<TripViewModel, FragmentTripDetailsBinding>(TripViewModel::class) {
