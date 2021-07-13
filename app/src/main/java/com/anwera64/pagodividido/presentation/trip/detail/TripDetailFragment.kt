@@ -6,26 +6,35 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.FragmentTripDetailsBinding
 import com.anwera64.pagodividido.domain.models.ExpenditureModel
+import com.anwera64.pagodividido.presentation.PagoDividioApp
 import com.anwera64.pagodividido.presentation.base.BaseFragment
+import com.anwera64.pagodividido.presentation.base.BaseViewModelFragment
+import com.anwera64.pagodividido.presentation.main.MainViewModel
 import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
-import com.anwera64.pagodividido.presentation.trip.TripDetailPresenter
+import com.anwera64.pagodividido.presentation.trip.TripViewModel
+import com.anwera64.pagodividido.presentation.trip.TripViewModelFactory
 
-class TripDetailFragment : BaseFragment<FragmentTripDetailsBinding>(),
-    TripDetailPresenter.TripDetailDelegate {
+class TripDetailFragment :
+    BaseViewModelFragment<TripViewModel, FragmentTripDetailsBinding>(TripViewModel::class) {
 
     companion object {
-        val instance = TripDetailFragment()
+        fun getInstance(tripId: Int): TripDetailFragment = TripDetailFragment().apply {
+            arguments = bundleOf(
+                TripActivity.TRIP_ID to tripId
+            )
+        }
     }
 
+    override val viewModelValue: Int? = null
     override val layout: Int = R.layout.fragment_trip_details
-    private var expenditures = ArrayList<ExpenditureModel>()
-    private val mPresenter = TripDetailPresenter(this)
-    var tripUid: String? = null
+    var tripUid: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,22 +47,30 @@ class TripDetailFragment : BaseFragment<FragmentTripDetailsBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.recyclerViewDetails.adapter = AdapterTripDetail(expenditures)
-        tripUid?.let(mPresenter::getTripDetails)
-        binding.btnNewExpenditure.setOnClickListener { createNewTrip() }
+        setupUi()
+    }
+
+    override fun setupObservers() {
+        arguments?.getInt(TripActivity.TRIP_ID)?.let { id ->
+            tripUid = id
+            viewModel.getTripDetails(id).observe(viewLifecycleOwner, Observer(::onTripDetailsReady))
+        }
+    }
+
+    private fun setupUi() = with(binding) {
+        btnNewExpenditure.setOnClickListener { createNewTrip() }
+        rvDetails.adapter = AdapterTripDetail()
     }
 
     private fun createNewTrip() {
-        val intent = Intent(context, NewExpenditureActivity::class.java)
-        intent.putExtra(TripActivity.TRIP_ID, tripUid)
-        startActivity(intent)
+        Intent(context, NewExpenditureActivity::class.java).run {
+            putExtra(TripActivity.TRIP_ID, tripUid)
+            startActivity(this)
+        }
     }
 
-    override fun onTripDetailsReady(details: ArrayList<ExpenditureModel>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onError(e: String) {
-        Log.e(this.javaClass.name, e)
+    private fun onTripDetailsReady(details: List<ExpenditureModel>?) {
+        if (details == null) return
+        (binding.rvDetails.adapter as AdapterTripDetail).details = details
     }
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CompanionDao {
     @Query("SELECT * FROM companion WHERE trip_id = :tripId")
-    fun getAllFromTrip(tripId: String): Flow<List<Companion>>
+    fun getAllFromTrip(tripId: Int): Flow<List<Companion>>
 
     @Insert
     suspend fun insertAll(vararg companion: Companion)

@@ -5,8 +5,8 @@ import java.util.*
 class ExpenditureModel(
     val uid: String,
     val payer: CompanionModel,
-    val debtors: ArrayList<CompanionModel>,
+    val debtors: List<CompanionModel>,
     val detail: String,
-    val amountSpent: Float,
+    val amountSpent: Double,
     val date: Date
 )

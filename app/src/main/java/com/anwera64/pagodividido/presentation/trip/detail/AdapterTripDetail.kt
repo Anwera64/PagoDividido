@@ -1,16 +1,23 @@
 package com.anwera64.pagodividido.presentation.trip.detail
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ListItemDetailBinding
 import com.anwera64.pagodividido.domain.models.CompanionModel
 import com.anwera64.pagodividido.domain.models.ExpenditureModel
+import com.anwera64.pagodividido.utils.DateFormatter
 
-class AdapterTripDetail(private val details: ArrayList<ExpenditureModel>) :
-    RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
+class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
+
+    var details: List<ExpenditureModel> = emptyList()
+        set(value) {
+            field = value
+            //TODO update to use DiffResult
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return DataBindingUtil.inflate<ListItemDetailBinding>(
@@ -21,32 +28,30 @@ class AdapterTripDetail(private val details: ArrayList<ExpenditureModel>) :
         ).let(::ViewHolder)
     }
 
-    override fun getItemCount(): Int {
-        return details.size
-    }
+    override fun getItemCount(): Int = details.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val detail = details[position]
-        holder.whoPayed.text = detail.payer.name
-        holder.amount.text = detail.amountSpent.toString()
-        holder.detail.text = detail.detail
-        holder.debtors.text = companionsToStrings(detail.debtors)
+        holder.onBind(details[position])
     }
 
-    private fun companionsToStrings(companions: ArrayList<CompanionModel>): String {
-        var result = ""
+    inner class ViewHolder(private val binding: ListItemDetailBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        companions.forEach { companion ->
-            result += companion.name + " "
+        fun onBind(expenditure: ExpenditureModel) = with(binding) {
+            tvWhoPayed.text = expenditure.payer.name
+            tvAmountSpentDetail.text = expenditure.amountSpent.toString()
+            tvDetail.text = expenditure.detail
+            tvWhosInDebt.text = companionsToStrings(expenditure.debtors)
+            tvDate.text = DateFormatter.formatDate(expenditure.date)
         }
 
-        return result.trim()
-    }
-
-    class ViewHolder(binding: ListItemDetailBinding) : RecyclerView.ViewHolder(binding.root) {
-        val amount = binding.tvAmountSpentDetail
-        val whoPayed = binding.tvWhoPayed
-        val debtors = binding.tvWhosInDebt
-        val detail = binding.tvDetail
+        private fun companionsToStrings(companions: List<CompanionModel>): String {
+            var result = ""
+            companions.forEachIndexed { index, companion ->
+                val separator = if (index < companions.size - 1) ", " else ""
+                result += "${companion.name}$separator"
+            }
+            return result.trim()
+        }
     }
 }
