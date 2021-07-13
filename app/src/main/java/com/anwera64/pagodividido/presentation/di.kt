@@ -7,6 +7,8 @@ import com.anwera64.pagodividido.domain.repository.ExpenditureRepository
 import com.anwera64.pagodividido.domain.repository.TripRepository
 import com.anwera64.pagodividido.presentation.main.MainActivity
 import com.anwera64.pagodividido.presentation.main.MainViewModel
+import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
+import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureViewModel
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripViewModel
 import com.anwera64.pagodividido.presentation.trip.TripViewModel
@@ -34,16 +36,18 @@ private val serviceModule = module {
     single { provideTripDao(get()) }
     single { provideCompanionDao(get()) }
     single { provideExpenditureDao(get()) }
+    single { provideDebtsDao(get()) }
 }
 
 private fun provideTripDao(database: AppDatabase) = database.tripDao()
 private fun provideCompanionDao(database: AppDatabase) = database.companionDao()
 private fun provideExpenditureDao(database: AppDatabase) = database.expenditureDao()
+private fun provideDebtsDao(database: AppDatabase) = database.debtorsDao()
 
 private val dataModule = module {
     single { TripRepository(get()) }
     single { CompanionRepository(get()) }
-    single { ExpenditureRepository(get()) }
+    single { ExpenditureRepository(get(), get()) }
 }
 
 private val scopeModule = module {
@@ -55,5 +59,8 @@ private val scopeModule = module {
     }
     scope(named<TripDetailFragment>()) {
         viewModel { TripViewModel(get(), get(), get()) }
+    }
+    scope(named<NewExpenditureActivity>()) {
+        viewModel { NewExpenditureViewModel(get(), get()) }
     }
 }

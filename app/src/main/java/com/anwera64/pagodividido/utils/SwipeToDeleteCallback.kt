@@ -22,7 +22,7 @@ class SwipeToDeleteCallback(private val onDelete: (position: Int) -> Unit) :
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-        onDelete(viewHolder.adapterPosition)
+        onDelete(viewHolder.absoluteAdapterPosition)
     }
 
     override fun onChildDraw(

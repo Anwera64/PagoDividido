@@ -21,11 +21,11 @@ import java.util.*
 )
 @TypeConverters(DateConverter::class)
 data class Expenditure(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @ColumnInfo(name = "expense") val expense: Double,
-    @ColumnInfo(name = "image_ref") val imageRef: String,
+    @ColumnInfo(name = "image_ref") val imageRef: String?,
     @ColumnInfo(name = "date") val date: Date,
     @ColumnInfo(name = "trip_id") val tripId: Int,
     @ColumnInfo(name = "payer_id") val payerId: Int,
-    @ColumnInfo(name = "detail") val detail: String
+    @ColumnInfo(name = "detail") val detail: String?
 )
