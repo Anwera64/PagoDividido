@@ -4,7 +4,6 @@ import android.os.Bundle
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ActivityTripBinding
 import com.anwera64.pagodividido.presentation.base.BaseActivity
-import com.anwera64.pagodividido.presentation.trip.detail.TripDetailFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -22,17 +21,12 @@ class TripActivity : BaseActivity<ActivityTripBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        if (intent.hasExtra(TRIP_ID)) {
-            TripDetailFragment.instance.tripUid = intent.getStringExtra(TRIP_ID)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            title = intent.getStringExtra(NAME)
         }
-
-        if (intent.hasExtra(NAME)) {
-            supportActionBar?.title = intent.getStringExtra(NAME)
-        }
-
-        binding.vpTrip.adapter = TripFragmentAdapter(this)
+        val tripId = intent.getStringExtra(TRIP_ID) ?: return
+        binding.vpTrip.adapter = TripFragmentAdapter(this, tripId)
         TabLayoutMediator(binding.tabLayoutTrips, binding.vpTrip, this::setupTabs).attach()
     }
 

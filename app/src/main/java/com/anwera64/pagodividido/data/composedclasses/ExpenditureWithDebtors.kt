@@ -11,8 +11,17 @@ data class ExpenditureWithDebtors(
     @Embedded val expenditure: Expenditure,
     @Relation(
         parentColumn = "id",
-        entityColumn = "companion_id",
-        associateBy = Junction(Debtors::class)
+        entityColumn = "id",
+        associateBy = Junction(
+            Debtors::class,
+            parentColumn = "expenditure_id",
+            entityColumn = "companion_id"
+        )
     )
-    val debtors: List<Companion>
+    val debtors: List<Companion>,
+    @Relation(
+        parentColumn = "payer_id",
+        entityColumn = "id"
+    )
+    val payer: Companion
 )

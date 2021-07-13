@@ -12,7 +12,10 @@ import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.utils.SwipeToDeleteCallback
 
-class MainActivity : BaseViewModelActivity<MainViewModel, ActivityMainBinding>(MainViewModel::class), TripItemAdapter.Delegate {
+class MainActivity :
+    BaseViewModelActivity<MainViewModel, ActivityMainBinding>(MainViewModel::class),
+    TripItemAdapter.Delegate {
+
     override val layout: Int
         get() = R.layout.activity_main
 
