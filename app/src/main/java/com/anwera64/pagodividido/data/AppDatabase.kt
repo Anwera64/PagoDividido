@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.anwera64.pagodividido.data.dao.CompanionDao
+import com.anwera64.pagodividido.data.dao.ExpenditureDao
 import com.anwera64.pagodividido.data.dao.TripDao
 import com.anwera64.pagodividido.data.entities.Companion
 import com.anwera64.pagodividido.data.entities.Debtors
@@ -20,6 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun tripDao(): TripDao
     abstract fun companionDao(): CompanionDao
+    abstract fun expenditureDao(): ExpenditureDao
 
     //TODO Temporal. Migrate to Dagger next
     companion object {
