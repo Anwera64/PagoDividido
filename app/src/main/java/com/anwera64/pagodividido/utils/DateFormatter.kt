@@ -5,10 +5,10 @@ import java.util.*
 
 object DateFormatter {
 
-    const val DEFAULT_FORMAT = "dd/MM/yyyy"
+    private const val DEFAULT_FORMAT = "dd/MM/yyyy"
 
     fun formatDate(date: Date, format: String = DEFAULT_FORMAT): String {
-        val df = SimpleDateFormat(DEFAULT_FORMAT, Locale.getDefault())
+        val df = SimpleDateFormat(format, Locale.getDefault())
         return df.format(date)
     }
 }

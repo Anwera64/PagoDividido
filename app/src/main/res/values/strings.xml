@@ -26,4 +26,7 @@
     <string name="monto">Amount</string>
     <string name="quien_debe">Who benefitted?</string>
     <string name="result">Result</string>
+    <string name="error_empty_amount">Tienes que ingresar un monto.</string>
+    <string name="error_non_numeral_amount">Tienes que ingresar un numero</string>
+    <string name="error_no_payer_selected">Selecciona a quien pago el gasto</string>
 </resources>

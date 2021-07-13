@@ -1,8 +1,6 @@
 package com.anwera64.pagodividido.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.anwera64.pagodividido.data.composedclasses.ExpenditureWithDebtors
 import com.anwera64.pagodividido.data.entities.Expenditure
 import kotlinx.coroutines.flow.Flow
@@ -13,5 +11,5 @@ interface ExpenditureDao {
     fun getAllFromTrip(tripId: Int): Flow<List<ExpenditureWithDebtors>>
 
     @Insert
-    suspend fun insert(expenditure: Expenditure)
+    suspend fun insert(expenditure: Expenditure): Long
 }

@@ -126,7 +126,7 @@ class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripB
 
     private fun onTripCreated(uid: Int, name: String) {
         Intent(this, TripActivity::class.java).run {
-            putExtra(TripActivity.TRIP_ID, uid)
+            putExtra(TripActivity.TRIP_ID, uid.toString())
             putExtra(TripActivity.NAME, name)
             startActivity(this)
         }
