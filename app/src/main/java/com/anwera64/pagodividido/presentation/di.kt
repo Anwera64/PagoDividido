@@ -12,6 +12,8 @@ import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureViewM
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripViewModel
 import com.anwera64.pagodividido.presentation.trip.TripViewModel
+import com.anwera64.pagodividido.presentation.trip.companionresult.CompanionResultViewModel
+import com.anwera64.pagodividido.presentation.trip.companionresult.CompanionResultFragment
 import com.anwera64.pagodividido.presentation.trip.detail.TripDetailFragment
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -62,5 +64,8 @@ private val scopeModule = module {
     }
     scope(named<NewExpenditureActivity>()) {
         viewModel { NewExpenditureViewModel(get(), get()) }
+    }
+    scope(named<CompanionResultFragment>()) {
+        viewModel { CompanionResultViewModel(get()) }
     }
 }
