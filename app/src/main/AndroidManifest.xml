@@ -21,7 +21,9 @@
             android:name=".presentation.newtrip.NewTripActivity"
             android:noHistory="true" />
         <activity android:name=".presentation.trip.TripActivity" />
-        <activity android:name=".presentation.newexpenditure.NewExpenditureActivity" />
+        <activity
+            android:name=".presentation.newexpenditure.NewExpenditureActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -21,22 +21,19 @@ class NewExpenditureViewModel(
 
     fun createExpenditure(
         tripId: Int,
-        payerName: String,
-        debtors: ArrayList<Int>,
+        payerId: Int,
+        debtors:  HashMap<Int, Double>,
         detail: String?,
         amountSpent: Double
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val payer = companions.value?.find { companionModel ->
-                companionModel.name.equals(payerName, ignoreCase = true)
-            } ?: return@launch
             expenditureRepository.addExpenditure(
                 Expenditure(
                     expense = amountSpent,
                     imageRef = null,
                     date = Date(),
                     tripId = tripId,
-                    payerId = payer.uid.toInt(),
+                    payerId = payerId,
                     detail = if (detail.isNullOrEmpty()) null else detail
                 ),
                 debtorIds = debtors

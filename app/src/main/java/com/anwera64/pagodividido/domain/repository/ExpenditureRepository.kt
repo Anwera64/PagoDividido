@@ -22,9 +22,9 @@ class ExpenditureRepository(
     }
 
     @WorkerThread
-    suspend fun addExpenditure(expenditure: Expenditure, debtorIds: List<Int>) {
+    suspend fun addExpenditure(expenditure: Expenditure, debtorIds:  HashMap<Int, Double>) {
         val id = expenditureDao.insert(expenditure)
-        debtorIds.map { debtorId -> Debtors(debtorId, id.toInt()) }
+        debtorIds.map { entry -> Debtors(entry.key, id.toInt(), entry.value) }
             .forEach(debtorsDao::insert)
     }
 }
