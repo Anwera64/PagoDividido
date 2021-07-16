@@ -29,6 +29,13 @@
     <string name="error_empty_amount">Tienes que ingresar un monto.</string>
     <string name="error_non_numeral_amount">Tienes que ingresar un numero</string>
     <string name="error_no_payer_selected">Selecciona a quien pago el gasto</string>
+    <string name="hint_amount_owed">Amount owed</string>
+    <string name="error_debtor_amount_0">Tienes que ingresar un monto mayor a 0</string>
+    <string name="error_debtor_amount_over_max">No puedes ingresar una deuda mayor al gasto total</string>
+    <string name="error_debtor_total_amount_maxed">La deuda total no puede superar el gasto total</string>
+    <string name="dialog_title_amount_not_reached">No llegaste al monto total</string>
+    <string name="dialog_message_amount_not_reached">La suma total de las deudas no es igual al gasto realizado. Te faltaron %.2f</string>
+    <string name="ok">Ok</string>
     <string name="input_error_companion_name">Tienes que ingresar el nombre del compañero de viaje</string>
     <string name="input_error_no_companions">Tienes que agregar al menos dos compañeros al viaje</string>
 </resources>
