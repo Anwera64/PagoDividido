@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_trip_details" />
     <fragment
         android:id="@+id/tripCompanionResultFragment"
-        android:name="com.anwera64.pagodividido.presentation.trip.companionresult.TripCompanionResultFragment"
+        android:name="com.anwera64.pagodividido.presentation.trip.companionresult.CompanionResultFragment"
         android:label="TripCompanionResultFragment"
         tools:layout="@layout/fragment_trip_companion_result" />
 </navigation>

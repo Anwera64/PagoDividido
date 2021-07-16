@@ -1,14 +1,15 @@
 package com.anwera64.pagodividido.utils
 
 import android.content.res.Resources
+import android.util.TypedValue
 
 class ViewUtils {
 
     companion object {
-        fun gerMarginInDP(dpValue: Int, resources: Resources): Int {
-            val d = resources.displayMetrics.density
-
-            return (dpValue * d).toInt()
+        fun gerMarginInDP(dpValue: Float, resources: Resources): Int {
+            return TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, dpValue, resources.displayMetrics
+            ).toInt()
         }
     }
 }

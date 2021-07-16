@@ -75,7 +75,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/tvTotalSpentPreview"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/chevron_right"
+            app:srcCompat="@drawable/ic_chevron_right"
             app:tint="@color/colorAccent" />
 
         <View
