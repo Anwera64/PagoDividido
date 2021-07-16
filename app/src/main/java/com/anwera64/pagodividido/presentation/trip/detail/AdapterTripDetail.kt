@@ -52,6 +52,8 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
                 tvWhosInDebt.visibility = View.GONE
                 tvDebtorsTitle.visibility = View.GONE
             } else {
+                tvWhosInDebt.visibility = View.VISIBLE
+                tvDebtorsTitle.visibility = View.VISIBLE
                 tvWhosInDebt.text = debtors
             }
             tvDate.text = DateFormatter.formatDate(expenditure.date)

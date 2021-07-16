@@ -63,7 +63,7 @@ class NewExpenditureActivity :
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
-            val margin = ViewUtils.gerMarginInDP(8, resources)
+            val margin = ViewUtils.gerMarginInDP(8f, resources)
             setMargins(0, 0, 0, margin)
         }
         DebtorInputView(this).apply {
