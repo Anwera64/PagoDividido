@@ -22,10 +22,10 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return DataBindingUtil.inflate<ListItemDetailBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.list_item_detail,
-            parent,
-            false
+                LayoutInflater.from(parent.context),
+                R.layout.list_item_detail,
+                parent,
+                false
         ).let(::ViewHolder)
     }
 
@@ -36,7 +36,7 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
     }
 
     inner class ViewHolder(private val binding: ListItemDetailBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+            RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(expenditure: ExpenditureModel) = with(binding) {
             tvWhoPayed.text = expenditure.payer.name

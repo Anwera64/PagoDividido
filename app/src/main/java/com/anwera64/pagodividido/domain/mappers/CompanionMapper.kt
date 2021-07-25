@@ -4,10 +4,6 @@ import com.anwera64.pagodividido.data.composedclasses.PayerWithExpendituresAndDe
 import com.anwera64.pagodividido.data.entities.Companion
 import com.anwera64.pagodividido.domain.models.CompanionModel
 import com.anwera64.pagodividido.domain.models.ResultModel
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.math.exp
 
 object CompanionMapper {
 
@@ -16,17 +12,17 @@ object CompanionMapper {
     }
 
     fun toModel(payerComposite: PayerWithExpendituresAndDebtors): ResultModel =
-        with(payerComposite) {
-            return ResultModel(
-                companion = toModel(payer),
-                totalPayed = getTotalPayment(),
-                debts = getDebts()
-            )
-        }
+            with(payerComposite) {
+                return ResultModel(
+                        companion = toModel(payer),
+                        totalPayed = getTotalPayment(),
+                        debts = getDebts()
+                )
+            }
 
     fun makeCalculation(results: List<ResultModel>): List<ResultModel> {
         val resultMap = toHashMap(results.map(ResultModel::clone))
-        results.forEachIndexed() { index, result ->
+        results.forEachIndexed { index, result ->
             result.debts.entries.forEach { entry ->
                 //key -> name, value -> amount
                 val amount = resultMap[entry.key]?.debts?.get(result.companion.name) ?: 0.0

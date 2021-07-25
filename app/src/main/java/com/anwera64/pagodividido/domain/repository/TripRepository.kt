@@ -1,7 +1,6 @@
 package com.anwera64.pagodividido.domain.repository
 
 import androidx.annotation.WorkerThread
-import com.anwera64.pagodividido.data.AppDatabase
 import com.anwera64.pagodividido.data.dao.TripDao
 import com.anwera64.pagodividido.data.entities.Trip
 import com.anwera64.pagodividido.domain.mappers.TripMapper.toModel

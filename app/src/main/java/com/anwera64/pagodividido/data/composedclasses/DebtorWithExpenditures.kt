@@ -8,11 +8,11 @@ import com.anwera64.pagodividido.data.entities.Debtors
 import com.anwera64.pagodividido.data.entities.Expenditure
 
 data class DebtorWithExpenditures(
-    @Embedded val debtor: Companion,
-    @Relation(
-        parentColumn = "id",
-        entityColumn = "expenditure_id",
-        associateBy = Junction(Debtors::class)
-    )
-    val expenditures: List<Expenditure>
+        @Embedded val debtor: Companion,
+        @Relation(
+                parentColumn = "id",
+                entityColumn = "expenditure_id",
+                associateBy = Junction(Debtors::class)
+        )
+        val expenditures: List<Expenditure>
 )
