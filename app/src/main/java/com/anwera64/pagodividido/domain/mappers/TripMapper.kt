@@ -16,10 +16,10 @@ object TripMapper {
 
     fun toModel(entity: TripWithCompanions): TripModel = with(entity) {
         return TripModel(
-            uid = trip.id.toString(),
-            name = trip.name,
-            totalSpent = getTotalSpent(expenditures),
-            companions = companions.map(CompanionMapper::toModel)
+                uid = trip.id.toString(),
+                name = trip.name,
+                totalSpent = getTotalSpent(expenditures),
+                companions = companions.map(CompanionMapper::toModel)
         )
     }
 }

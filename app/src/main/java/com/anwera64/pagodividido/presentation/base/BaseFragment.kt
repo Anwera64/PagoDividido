@@ -13,9 +13,9 @@ abstract class BaseFragment<B : ViewDataBinding> : Fragment() {
     protected abstract val layout: Int
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(layoutInflater, layout, container, false)
         return binding.root

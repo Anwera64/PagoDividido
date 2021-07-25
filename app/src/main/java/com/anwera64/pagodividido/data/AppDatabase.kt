@@ -14,9 +14,9 @@ import com.anwera64.pagodividido.data.entities.Expenditure
 import com.anwera64.pagodividido.data.entities.Trip
 
 @Database(
-    entities = [Trip::class, Companion::class, Expenditure::class, Debtors::class],
-    version = 1,
-    exportSchema = false
+        entities = [Trip::class, Companion::class, Expenditure::class, Debtors::class],
+        version = 1,
+        exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -36,11 +36,11 @@ abstract class AppDatabase : RoomDatabase() {
         fun getDatabase(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDatabase::class.java,
-                    DATABASE_NAME
+                        context.applicationContext,
+                        AppDatabase::class.java,
+                        DATABASE_NAME
                 )
-                    .build()
+                        .build()
                 INSTANCE = instance
                 instance
             }

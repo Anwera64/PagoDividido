@@ -16,12 +16,12 @@ import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.presentation.trip.TripViewModel
 
 class TripDetailFragment :
-    BaseViewModelFragment<TripViewModel, FragmentTripDetailsBinding>(TripViewModel::class) {
+        BaseViewModelFragment<TripViewModel, FragmentTripDetailsBinding>(TripViewModel::class) {
 
     companion object {
         fun getInstance(tripId: Int): TripDetailFragment = TripDetailFragment().apply {
             arguments = bundleOf(
-                TripActivity.TRIP_ID to tripId
+                    TripActivity.TRIP_ID to tripId
             )
         }
     }
@@ -31,9 +31,9 @@ class TripDetailFragment :
     var tripUid: Int? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)

@@ -17,9 +17,9 @@ import com.anwera64.pagodividido.utils.ViewUtils
 import com.anwera64.pagodividido.utils.uicomponents.DebtorInputView
 
 class NewExpenditureActivity :
-    BaseViewModelActivity<NewExpenditureViewModel, ActivityNewExpenditureBinding>(
-        NewExpenditureViewModel::class
-    ) {
+        BaseViewModelActivity<NewExpenditureViewModel, ActivityNewExpenditureBinding>(
+                NewExpenditureViewModel::class
+        ) {
 
     companion object {
         private const val NOT_FOUND = -1
@@ -52,16 +52,16 @@ class NewExpenditureActivity :
         setAdapter(arrayAdapter)
         doOnTextChanged { text, _, _, _ ->
             nameList.find { companion -> companion.name == text.toString() }
-                ?.uid
-                ?.toInt()
-                ?.let { id -> payerId = id }
+                    ?.uid
+                    ?.toInt()
+                    ?.let { id -> payerId = id }
         }
     }
 
     private fun createCompanionCheckBox(companion: CompanionModel) {
         val layoutParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
         ).apply {
             val margin = ViewUtils.gerMarginInDP(8f, resources)
             setMargins(0, 0, 0, margin)
@@ -124,11 +124,11 @@ class NewExpenditureActivity :
         if (totalDebt != maxAmount) {
             val missingAmount = maxAmount - totalDebt
             AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_title_amount_not_reached)
-                .setMessage(getString(R.string.dialog_message_amount_not_reached, missingAmount))
-                .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
+                    .setTitle(R.string.dialog_title_amount_not_reached)
+                    .setMessage(getString(R.string.dialog_message_amount_not_reached, missingAmount))
+                    .setPositiveButton(R.string.ok) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
             return null
         }
         return result
@@ -156,11 +156,11 @@ class NewExpenditureActivity :
         tilPayer.isErrorEnabled = false
         val debtors = getSelectedDebtors(amountString.toDouble()) ?: return
         viewModel.createExpenditure(
-            getTripId(),
-            payerId,
-            debtors,
-            detail,
-            amountString.toDouble()
+                getTripId(),
+                payerId,
+                debtors,
+                detail,
+                amountString.toDouble()
         )
         onBackPressed()
     }

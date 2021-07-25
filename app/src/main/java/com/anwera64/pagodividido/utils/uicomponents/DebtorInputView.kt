@@ -3,7 +3,6 @@ package com.anwera64.pagodividido.utils.uicomponents
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
