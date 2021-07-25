@@ -6,8 +6,6 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.core.view.children
 import androidx.lifecycle.Observer
 import com.anwera64.pagodividido.R
@@ -15,11 +13,8 @@ import com.anwera64.pagodividido.data.entities.Trip
 import com.anwera64.pagodividido.databinding.ActivityNewTripBinding
 import com.anwera64.pagodividido.presentation.base.BaseViewModelActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
-import com.anwera64.pagodividido.utils.ViewUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
 
 
 class NewTripActivity : BaseViewModelActivity<NewTripViewModel, ActivityNewTripBinding>(NewTripViewModel::class) {

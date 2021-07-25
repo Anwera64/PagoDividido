@@ -1,6 +1,5 @@
 package com.anwera64.pagodividido.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.anwera64.pagodividido.data.composedclasses.PayerWithExpendituresAndDebtors
 import com.anwera64.pagodividido.data.entities.Companion

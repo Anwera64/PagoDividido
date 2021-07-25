@@ -8,7 +8,7 @@ class ViewUtils {
     companion object {
         fun gerMarginInDP(dpValue: Float, resources: Resources): Int {
             return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP, dpValue, resources.displayMetrics
+                    TypedValue.COMPLEX_UNIT_DIP, dpValue, resources.displayMetrics
             ).toInt()
         }
     }

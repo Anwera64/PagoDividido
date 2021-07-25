@@ -25,10 +25,10 @@ class CompanionResultAdapter : RecyclerView.Adapter<CompanionResultAdapter.ViewH
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return DataBindingUtil.inflate<ListItemResultBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.list_item_result,
-            parent,
-            false
+                LayoutInflater.from(parent.context),
+                R.layout.list_item_result,
+                parent,
+                false
         ).let(this::ViewHolder)
     }
 
@@ -44,7 +44,7 @@ class CompanionResultAdapter : RecyclerView.Adapter<CompanionResultAdapter.ViewH
     }
 
     inner class ViewHolder(private val binding: ListItemResultBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+            RecyclerView.ViewHolder(binding.root) {
 
         fun onBind(item: ResultModel) = with(binding) {
             result = item
