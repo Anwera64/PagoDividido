@@ -9,7 +9,9 @@ import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.ListItemDetailBinding
 import com.anwera64.pagodividido.domain.models.CompanionModel
 import com.anwera64.pagodividido.domain.models.ExpenditureModel
+import com.anwera64.pagodividido.utils.CompanionsUtil.companionsToStrings
 import com.anwera64.pagodividido.utils.DateFormatter
+import kotlin.math.exp
 
 class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
@@ -38,34 +40,8 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
     inner class ViewHolder(private val binding: ListItemDetailBinding) :
             RecyclerView.ViewHolder(binding.root) {
 
-        fun onBind(expenditure: ExpenditureModel) = with(binding) {
-            tvWhoPayed.text = expenditure.payer.name
-            tvAmountSpentDetail.text = expenditure.amountSpent.toString()
-            if (expenditure.detail.isNullOrEmpty()) {
-                tvDetail.visibility = View.GONE
-                tvDetailTitle.visibility = View.GONE
-            } else {
-                tvDetail.text = expenditure.detail
-            }
-            val debtors = companionsToStrings(expenditure.debtors)
-            if (debtors.isEmpty()) {
-                tvWhosInDebt.visibility = View.GONE
-                tvDebtorsTitle.visibility = View.GONE
-            } else {
-                tvWhosInDebt.visibility = View.VISIBLE
-                tvDebtorsTitle.visibility = View.VISIBLE
-                tvWhosInDebt.text = debtors
-            }
-            tvDate.text = DateFormatter.formatDate(expenditure.date)
-        }
-
-        private fun companionsToStrings(companions: List<CompanionModel>): String {
-            var result = ""
-            companions.forEachIndexed { index, companion ->
-                val separator = if (index < companions.size - 1) ", " else ""
-                result += "${companion.name}$separator"
-            }
-            return result.trim()
+        fun onBind(expenditure: ExpenditureModel) {
+            binding.expenditure = expenditure
         }
     }
 }
