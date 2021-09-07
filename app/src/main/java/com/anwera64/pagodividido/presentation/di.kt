@@ -11,6 +11,8 @@ import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActiv
 import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureViewModel
 import com.anwera64.pagodividido.presentation.newtrip.NewTripActivity
 import com.anwera64.pagodividido.presentation.newtrip.NewTripViewModel
+import com.anwera64.pagodividido.presentation.paymentdetail.PaymentDetailFragment
+import com.anwera64.pagodividido.presentation.paymentdetail.PaymentDetailViewModel
 import com.anwera64.pagodividido.presentation.trip.TripViewModel
 import com.anwera64.pagodividido.presentation.trip.companionresult.CompanionResultFragment
 import com.anwera64.pagodividido.presentation.trip.companionresult.CompanionResultViewModel
@@ -67,5 +69,8 @@ private val scopeModule = module {
     }
     scope(named<CompanionResultFragment>()) {
         viewModel { CompanionResultViewModel(get()) }
+    }
+    scope(named<PaymentDetailFragment>()) {
+        viewModel { PaymentDetailViewModel(get()) }
     }
 }

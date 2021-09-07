@@ -11,17 +11,19 @@ import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.FragmentTripDetailsBinding
 import com.anwera64.pagodividido.domain.models.ExpenditureModel
 import com.anwera64.pagodividido.presentation.base.BaseViewModelFragment
+import com.anwera64.pagodividido.presentation.paymentdetail.PaymentDetailFragment
 import com.anwera64.pagodividido.presentation.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.presentation.trip.TripActivity
 import com.anwera64.pagodividido.presentation.trip.TripViewModel
 
 class TripDetailFragment :
-        BaseViewModelFragment<TripViewModel, FragmentTripDetailsBinding>(TripViewModel::class) {
+    BaseViewModelFragment<TripViewModel, FragmentTripDetailsBinding>(TripViewModel::class),
+    AdapterTripDetail.PaymentInteractor {
 
     companion object {
         fun getInstance(tripId: Int): TripDetailFragment = TripDetailFragment().apply {
             arguments = bundleOf(
-                    TripActivity.TRIP_ID to tripId
+                TripActivity.TRIP_ID to tripId
             )
         }
     }
@@ -31,9 +33,9 @@ class TripDetailFragment :
     var tripUid: Int? = null
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
@@ -53,7 +55,7 @@ class TripDetailFragment :
 
     private fun setupUi() = with(binding) {
         btnNewExpenditure.setOnClickListener { createNewTrip() }
-        rvDetails.adapter = AdapterTripDetail()
+        rvDetails.adapter = AdapterTripDetail(this@TripDetailFragment)
     }
 
     private fun createNewTrip() {
@@ -66,5 +68,9 @@ class TripDetailFragment :
     private fun onTripDetailsReady(details: List<ExpenditureModel>?) {
         if (details == null) return
         (binding.rvDetails.adapter as AdapterTripDetail).details = details
+    }
+
+    override fun onPaymentSelected(id: String) {
+        PaymentDetailFragment.newInstance(id).show(parentFragmentManager, "bottom sheet $id")
     }
 }

@@ -13,7 +13,7 @@ import com.anwera64.pagodividido.utils.CompanionsUtil.companionsToStrings
 import com.anwera64.pagodividido.utils.DateFormatter
 import kotlin.math.exp
 
-class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
+class AdapterTripDetail(private val interactor: PaymentInteractor) : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
     var details: List<ExpenditureModel> = emptyList()
         set(value) {
@@ -42,6 +42,11 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
 
         fun onBind(expenditure: ExpenditureModel) {
             binding.expenditure = expenditure
+            binding.root.setOnClickListener { interactor.onPaymentSelected(expenditure.uid) }
         }
+    }
+
+    interface PaymentInteractor {
+        fun onPaymentSelected(id: String)
     }
 }

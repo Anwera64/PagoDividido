@@ -1,8 +1,10 @@
 package com.anwera64.pagodividido.domain.mappers
 
+import com.anwera64.pagodividido.data.composedclasses.DebtWithCompanion
 import com.anwera64.pagodividido.data.composedclasses.PayerWithExpendituresAndDebtors
 import com.anwera64.pagodividido.data.entities.Companion
 import com.anwera64.pagodividido.domain.models.CompanionModel
+import com.anwera64.pagodividido.domain.models.Debtor
 import com.anwera64.pagodividido.domain.models.ResultModel
 
 object CompanionMapper {
@@ -12,13 +14,21 @@ object CompanionMapper {
     }
 
     fun toModel(payerComposite: PayerWithExpendituresAndDebtors): ResultModel =
-            with(payerComposite) {
-                return ResultModel(
-                        companion = toModel(payer),
-                        totalPayed = getTotalPayment(),
-                        debts = getDebts()
-                )
-            }
+        with(payerComposite) {
+            return ResultModel(
+                companion = toModel(payer),
+                totalPayed = getTotalPayment(),
+                debts = getDebts()
+            )
+        }
+
+    fun toDebtor(entity: DebtWithCompanion): Debtor = with(entity) {
+        return Debtor(
+            uid = companion.id.toString(),
+            name = companion.name,
+            amount = debtors.amount
+        )
+    }
 
     fun makeCalculation(results: List<ResultModel>): List<ResultModel> {
         val resultMap = toHashMap(results.map(ResultModel::clone))
