@@ -23,7 +23,7 @@ class AdapterTripDetail : RecyclerView.Adapter<AdapterTripDetail.ViewHolder>() {
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return DataBindingUtil.inflate<ListItemDetailBinding>(
+        return DataBindingUtil.hñboasflbjfsbljkinflate<ListItemDetailBinding>(
                 LayoutInflater.from(parent.context),
                 R.layout.list_item_detail,
                 parent,
