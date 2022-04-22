@@ -14,7 +14,7 @@ class ExpenditureRepository(
     fun getExpenditures(tripId: Int) = expenditureDao.getAllFromTrip(tripId)
 
     @WorkerThread
-    suspend fun addExpenditure(expenditure: Expenditure, debtorIds: HashMap<Int, Double>) {
+    suspend fun addExpenditure(expenditure: Expenditure, debtorIds: Map<Int, Double>) {
         val id = expenditureDao.insert(expenditure)
         debtorIds.map { entry -> createDebtors(entry, id) }.forEach(debtorsDao::insert)
     }

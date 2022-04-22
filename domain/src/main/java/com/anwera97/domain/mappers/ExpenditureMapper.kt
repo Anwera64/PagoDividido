@@ -5,7 +5,7 @@ import com.anwera97.domain.models.ExpenditureModel
 
 object ExpenditureMapper {
 
-    fun toModel(entity: com.anwera97.data.composedclasses.ExpenditureWithDebtorsAndPayer): ExpenditureModel = with(entity) {
+    fun toModel(entity: ExpenditureWithDebtorsAndPayer): ExpenditureModel = with(entity) {
         return ExpenditureModel(
                 uid = expenditure.id.toString(),
                 payer = CompanionMapper.toModel(payer),

@@ -53,9 +53,9 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
 
     //Koin
-    implementation 'org.koin:koin-android:2.0.1'
-    implementation 'org.koin:koin-androidx-scope:2.0.1'
-    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+    implementation 'io.insert-koin:koin-android:2.0.1'
+    implementation 'io.insert-koin:koin-androidx-scope:2.0.1'
+    implementation 'io.insert-koin:koin-androidx-viewmodel:2.0.1'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

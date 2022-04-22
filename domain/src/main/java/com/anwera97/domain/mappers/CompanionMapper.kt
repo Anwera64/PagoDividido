@@ -7,11 +7,11 @@ import com.anwera97.domain.models.ResultModel
 
 object CompanionMapper {
 
-    fun toModel(companionEntity: com.anwera97.data.entities.Companion): CompanionModel = with(companionEntity) {
+    fun toModel(companionEntity: Companion): CompanionModel = with(companionEntity) {
         return CompanionModel(uid = id.toString(), name = name)
     }
 
-    fun toModel(payerComposite: com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors): ResultModel =
+    fun toModel(payerComposite: PayerWithExpendituresAndDebtors): ResultModel =
             with(payerComposite) {
                 return ResultModel(
                         companion = toModel(payer),
@@ -39,7 +39,7 @@ private fun toHashMap(results: List<ResultModel>): Map<String, ResultModel> {
     return map
 }
 
-private fun com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors.getTotalPayment(): Double {
+private fun PayerWithExpendituresAndDebtors.getTotalPayment(): Double {
     var totalAmount = 0.0
     expenditures.forEach { expenditure ->
         expenditure.debtors.forEach { debtor ->
@@ -49,7 +49,7 @@ private fun com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors.ge
     return totalAmount
 }
 
-private fun com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors.getDebts(): HashMap<String, Double> {
+private fun PayerWithExpendituresAndDebtors.getDebts(): HashMap<String, Double> {
     val map: HashMap<String, Double> = HashMap()
     expenditures.forEach { expenditure ->
         for (debtor in expenditure.debtors) {
