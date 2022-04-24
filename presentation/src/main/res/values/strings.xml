@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">PagoDividido</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="amount_spent">Amount Spent: </string>
+    <string name="companion_name">Companion name</string>
+    <string name="new_str">New Companion</string>
+    <string name="trip_name">Name of the trip</string>
+    <string name="create">Create</string>
+    <string name="details">Details</string>
+    <string name="general">General</string>
+    <string name="who_payed">Who payed:</string>
+    <string name="Debtors">Debtors:</string>
+    <string name="detail">Detail:</string>
+    <string name="monto">Amount</string>
+    <string name="quien_debe">Who benefitted?</string>
+    <string name="result">Result</string>
+    <string name="error_empty_amount">Tienes que ingresar un monto.</string>
+    <string name="error_non_numeral_amount">Tienes que ingresar un numero</string>
+    <string name="error_no_payer_selected">Selecciona a quien pago el gasto</string>
+    <string name="hint_amount_owed">Amount owed</string>
+    <string name="error_debtor_amount_0">Tienes que ingresar un monto mayor a 0</string>
+    <string name="error_debtor_amount_over_max">No puedes ingresar una deuda mayor al gasto total</string>
+    <string name="error_debtor_total_amount_maxed">La deuda total no puede superar el gasto total</string>
+    <string name="dialog_title_amount_not_reached">No llegaste al monto total</string>
+    <string name="dialog_message_amount_not_reached">La suma total de las deudas no es igual al gasto realizado. Te faltaron %.2f</string>
+    <string name="ok">Ok</string>
+    <string name="input_error_companion_name">Tienes que ingresar el nombre del compañero de viaje</string>
+    <string name="input_error_no_companions">Tienes que agregar al menos dos compañeros al viaje</string>
+    <string name="subtitle_total_expense">Gasto total: %.2f</string>
+    <string name="subtitle_they_owe">Le deben:</string>
+    <string name="bullet_point_name_amount">● %s: %.2f</string>
+    <string name="content_description_click_to_expand">Click to expand</string>
+    <string name="default_error">Error</string>
+</resources>

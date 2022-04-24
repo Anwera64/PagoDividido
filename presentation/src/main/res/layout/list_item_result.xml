@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="result"
+            type="com.anwera97.domain.models.ResultModel" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvPayerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@{result.companion.name}"
+                android:textAppearance="?android:textAppearanceLarge"
+                app:layout_constraintStart_toStartOf="@+id/gl_right"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Bruno" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="16dp" />
+
+            <TextView
+                android:id="@+id/tvPayed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceMedium"
+                app:layout_constraintStart_toStartOf="@+id/gl_right"
+                app:layout_constraintTop_toBottomOf="@+id/tvPayerName"
+                tools:text="@string/subtitle_total_expense" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/subtitle_they_owe"
+                android:textAppearance="?android:textAppearanceMedium"
+                app:layout_constraintStart_toStartOf="@+id/gl_right"
+                app:layout_constraintTop_toBottomOf="@+id/tvPayed" />
+
+            <LinearLayout
+                android:id="@+id/ll_debts"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toStartOf="@+id/gl_left"
+                app:layout_constraintStart_toStartOf="@+id/gl_right"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+            <ImageView
+                android:id="@+id/btnExtend"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_black_smooth"
+                android:contentDescription="@string/content_description_click_to_expand"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barrier_debtors"
+                app:srcCompat="@{result.extended ? @drawable/ic_chevron_up : @drawable/ic_chevron_down}" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_debtors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="textView4,ll_debts"
+                tools:layout_editor_absoluteY="70dp" />
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/gr_debts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="@{result.extended ? View.VISIBLE : View.GONE}"
+                app:constraint_referenced_ids="textView4,ll_debts"
+                tools:visibility="visible" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>

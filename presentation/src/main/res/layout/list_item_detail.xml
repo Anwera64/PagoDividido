@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.anwera64.pagodividido.utils.CompanionsUtil" />
+
+        <import type="android.view.View" />
+
+        <import type="com.anwera64.pagodividido.utils.DateFormatter" />
+
+        <variable
+            name="expenditure"
+            type="com.anwera97.domain.models.ExpenditureModel" />
+
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardCornerRadius="15dp"
+        card_view:cardElevation="10dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/tvAmountSpentDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:text="@{Double.toString(expenditure.amountSpent)}"
+                android:textColor="@color/colorPrimary"
+                android:textSize="48sp"
+                card_view:layout_constraintEnd_toStartOf="@id/barrier2"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="30.0" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/who_payed"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                card_view:layout_constraintStart_toEndOf="@+id/tvAmountSpentDetail"
+                card_view:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvDebtorsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/Debtors"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:visibility="@{CompanionsUtil.companionsToStrings(expenditure.debtors).empty ? View.GONE : View.VISIBLE}"
+                card_view:layout_constraintStart_toEndOf="@+id/tvAmountSpentDetail"
+                card_view:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+            <TextView
+                android:id="@+id/tvWhoPayed"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@{expenditure.payer.name}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/textView2"
+                card_view:layout_constraintTop_toTopOf="parent"
+                tools:text="Alonso" />
+
+            <TextView
+                android:id="@+id/tvWhosInDebt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:singleLine="false"
+                android:text="@{CompanionsUtil.companionsToStrings(expenditure.debtors)}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:visibility="@{CompanionsUtil.companionsToStrings(expenditure.debtors).empty ? View.GONE : View.VISIBLE}"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toEndOf="@+id/tvDebtorsTitle"
+                card_view:layout_constraintTop_toBottomOf="@+id/tvWhoPayed"
+                tools:text="Zea, Anton, Juan de Dios Cruzado" />
+
+            <TextView
+                android:id="@+id/tvDetailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/detail"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:textStyle="bold"
+                android:visibility="@{expenditure.detail == null ? View.GONE : View.VISIBLE}"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/barrier_detail" />
+
+            <TextView
+                android:id="@+id/tvDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@{expenditure.detail}"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                android:visibility="@{expenditure.detail == null ? View.GONE : View.VISIBLE}"
+                card_view:layout_constraintBottom_toBottomOf="@+id/tvDetailTitle"
+                card_view:layout_constraintStart_toEndOf="@+id/tvDetailTitle"
+                card_view:layout_constraintTop_toTopOf="@+id/tvDetailTitle"
+                card_view:layout_constraintVertical_bias="0.636"
+                tools:text="Pasajes" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{DateFormatter.formatDate(expenditure.date)}"
+                card_view:layout_constraintBottom_toBottomOf="parent"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/barrier_detail"
+                card_view:layout_constraintVertical_bias="1.0"
+                tools:text="24/07/2021" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:barrierDirection="left"
+                card_view:constraint_referenced_ids="textView2,tvDebtorsTitle"
+                tools:layout_editor_absoluteX="117dp"
+                tools:layout_editor_absoluteY="8dp" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                card_view:barrierDirection="bottom"
+                card_view:constraint_referenced_ids="tvWhosInDebt,tvAmountSpentDetail,tvDebtorsTitle"
+                tools:layout_editor_absoluteX="16dp"
+                tools:layout_editor_absoluteY="24dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</layout>
