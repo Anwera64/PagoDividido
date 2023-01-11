@@ -61,7 +61,6 @@
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
-            android:background="@color/colorPrimary"
             android:padding="8dp"
             android:text="@string/new_str"
             android:textColor="@android:color/white"

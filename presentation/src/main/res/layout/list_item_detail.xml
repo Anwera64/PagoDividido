@@ -44,7 +44,6 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:text="@{Double.toString(expenditure.amountSpent)}"
-                android:textColor="@color/colorPrimary"
                 android:textSize="48sp"
                 card_view:layout_constraintEnd_toStartOf="@id/barrier2"
                 card_view:layout_constraintStart_toStartOf="parent"

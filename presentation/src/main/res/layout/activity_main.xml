@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:title="Viajes" />
+                app:title="@string/title_trips" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

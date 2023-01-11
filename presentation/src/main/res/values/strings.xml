@@ -43,4 +43,6 @@
     <string name="bullet_point_name_amount">● %s: %.2f</string>
     <string name="content_description_click_to_expand">Click to expand</string>
     <string name="default_error">Error</string>
+    <string name="title_trips">Viajes</string>
+    <string name="add_new_trip">Add new trip</string>
 </resources>

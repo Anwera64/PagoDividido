@@ -2,9 +2,11 @@ package com.anwera64.pagodividido.main
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
 import com.anwera64.pagodividido.databinding.ActivityMainBinding
 import com.anwera97.domain.models.TripModel
 import com.anwera64.pagodividido.base.BaseViewModelActivity
@@ -13,29 +15,19 @@ import com.anwera64.pagodividido.trip.TripActivity
 import com.anwera64.pagodividido.utils.SwipeToDeleteCallback
 
 class MainActivity :
-        BaseViewModelActivity<MainViewModel, ActivityMainBinding>(MainViewModel::class),
+    BaseComposeViewModelActivity<MainViewModel>(MainViewModel::class),
     TripItemAdapter.Delegate {
-    override val layout: Int
-        get() = R.layout.activity_main
-
-    override val viewModelValue: Int?
-        get() = null
 
     private val adapter: TripItemAdapter = TripItemAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUi()
-        viewModel.trips.observe(this, Observer(this::onTripsLoaded))
     }
 
-    private fun setupUi() = with(binding) {
-        setSupportActionBar(toolbar)
-        rvTrips.adapter = adapter
+    private fun setupUi() {
         val swipeCallback = SwipeToDeleteCallback(::onSwipeToDelete)
         val itemTouchHelper = ItemTouchHelper(swipeCallback)
-        itemTouchHelper.attachToRecyclerView(rvTrips)
-        btnNewTrip.setOnClickListener { createNewTrip() }
     }
 
     private fun onSwipeToDelete(position: Int) {
@@ -60,6 +52,17 @@ class MainActivity :
     }
 
     override fun setupObservers() {
-        //TODO("Not yet implemented")
+        viewModel.trips.observe(this, Observer(this::onTripsLoaded))
     }
+
+    @Composable
+    override fun Content() {
+        TripsContent(
+            viewModel = viewModel,
+            createNewTripAction = ::createNewTrip,
+            onTripSelected = ::onTripPressed
+        )
+    }
+
+
 }

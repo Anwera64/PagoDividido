@@ -42,7 +42,6 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvAmountSpent"
@@ -75,8 +74,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/tvTotalSpentPreview"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_chevron_right"
-            app:tint="@color/colorAccent" />
+            app:srcCompat="@drawable/ic_chevron_right" />
 
         <View
             android:layout_width="0dp"
