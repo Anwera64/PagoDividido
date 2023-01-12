@@ -1,18 +1,15 @@
 package com.anwera64.pagodividido.newtrip
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anwera64.pagodividido.utils.EventWrapper
+import com.anwera64.pagodividido.utils.modifyLiveDataSet
 import com.anwera97.domain.models.TripShortModel
 import com.anwera97.domain.usecases.CreateTripUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.InvocationKind
-import kotlin.contracts.contract
 
 class NewTripViewModel(
     private val createTripUseCase: CreateTripUseCase
@@ -54,16 +51,4 @@ class NewTripViewModel(
 
     fun removeCompanion(name: String) = _companions.modifyLiveDataSet { remove(name) }
 
-    @OptIn(ExperimentalContracts::class)
-    private inline fun <T> MutableLiveData<Set<T>>.modifyLiveDataSet(
-        action: MutableSet<T>.() -> Unit
-    ) {
-        contract {
-            callsInPlace(action, InvocationKind.EXACTLY_ONCE)
-        }
-        val oldSet: Set<T>? = value
-        val newSet: MutableSet<T> = oldSet?.toMutableSet() ?: mutableSetOf()
-        newSet.action()
-        postValue(newSet)
-    }
 }

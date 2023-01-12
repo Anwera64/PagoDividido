@@ -27,53 +27,62 @@ fun NewTripContent(
 ) {
     var title by remember { mutableStateOf("") }
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = stringResource(id = R.string.title_new_trip))
-                },
-                navigationIcon = {
-                    IconButton(onClick = backNavigation) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(id = R.string.back)
-                        )
-                    }
-                }
-            )
-        },
+        topBar = { TopAppBar(backNavigation) },
         floatingActionButton = {
-            FloatingActionButton(onClick = { onCreateTrip(title, companions) }) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(id = R.string.create)
-                )
-            }
+            CreateTripButton(
+                createTrip = { onCreateTrip(title, companions) }
+            )
         },
         floatingActionButtonPosition = FabPosition.End,
         modifier = Modifier.fillMaxSize()
     ) { contentPadding ->
         Form(
-            modifier = Modifier.padding(contentPadding),
-            companions = companions,
-            onDeleteCompanion,
             tripTitle = title,
-            onTripTitleValueChange = { newTitle -> title = newTitle },
             errors = errors,
-            onCreateCompanion = onCreateCompanion
+            companions = companions,
+            onCreateCompanion = onCreateCompanion,
+            onDeleteCompanion = onDeleteCompanion,
+            modifier = Modifier.padding(contentPadding),
+            onTripTitleValueChange = { newTitle -> title = newTitle },
         )
     }
 }
 
 @Composable
+private fun CreateTripButton(createTrip: () -> Unit) {
+    FloatingActionButton(onClick = { createTrip() }) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = stringResource(id = R.string.create)
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun TopAppBar(backNavigation: () -> Unit) {
+    TopAppBar(
+        title = { Text(text = stringResource(id = R.string.title_new_trip)) },
+        navigationIcon = {
+            IconButton(onClick = backNavigation) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.back)
+                )
+            }
+        }
+    )
+}
+
+@Composable
 private fun Form(
-    modifier: Modifier = Modifier,
-    companions: List<String>,
-    onDeleteCompanion: (name: String) -> Unit,
     tripTitle: String,
     onTripTitleValueChange: (String) -> Unit,
     errors: Set<ErrorStates>,
-    onCreateCompanion: (name: String) -> Unit
+    companions: List<String>,
+    onCreateCompanion: (name: String) -> Unit,
+    onDeleteCompanion: (name: String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -83,8 +92,8 @@ private fun Form(
         TitleField(
             modifier = Modifier.padding(top = 24.dp),
             title = tripTitle,
-            onValueChange = onTripTitleValueChange,
-            errors = errors
+            errors = errors,
+            onValueChange = onTripTitleValueChange
         )
         CompanionField(
             modifier = Modifier.padding(top = 16.dp),
@@ -147,7 +156,6 @@ private fun CompanionField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CompanionChips(
     companions: List<String>,
@@ -155,29 +163,37 @@ private fun CompanionChips(
     modifier: Modifier = Modifier
 ) {
     FlowRow(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         mainAxisSpacing = 8.dp
     ) {
         companions.forEach { companion ->
-            AssistChip(
-                onClick = { },
-                trailingIcon = {
-                    IconButton(
-                        onClick = { onDeleteCompanion(companion) },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = stringResource(id = R.string.delete_companion),
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                },
-                label = { Text(text = companion) }
-            )
+            CompanionChip(onDeleteCompanion, companion)
         }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun CompanionChip(
+    onDeleteCompanion: (name: String) -> Unit,
+    companion: String
+) {
+    AssistChip(
+        onClick = { },
+        trailingIcon = {
+            IconButton(
+                onClick = { onDeleteCompanion(companion) },
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = stringResource(id = R.string.delete_companion),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        },
+        label = { Text(text = companion) }
+    )
 }
 
 @Composable
@@ -196,7 +212,9 @@ private fun TitleField(
         label = { Text(stringResource(id = R.string.trip_name)) },
         isError = isError,
         supportingText = {
-            if (isError) Text(text = stringResource(id = ErrorStates.EMPTY_TITLE.errorResource))
+            if (isError) {
+                Text(text = stringResource(id = ErrorStates.EMPTY_TITLE.errorResource))
+            }
         }
     )
 }

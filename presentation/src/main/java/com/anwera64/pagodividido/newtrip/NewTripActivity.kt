@@ -2,19 +2,15 @@ package com.anwera64.pagodividido.newtrip
 
 import android.content.Intent
 import android.util.Log
-import android.view.View
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.Observer
-import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
 import com.anwera64.pagodividido.trip.TripActivity
 import com.anwera64.pagodividido.utils.EventWrapper
 import com.anwera64.pagodividido.utils.nullOrHandled
 import com.anwera97.domain.models.TripShortModel
-import com.google.android.material.chip.Chip
-
 
 class NewTripActivity : BaseComposeViewModelActivity<NewTripViewModel>(NewTripViewModel::class) {
 
@@ -50,7 +46,7 @@ class NewTripActivity : BaseComposeViewModelActivity<NewTripViewModel>(NewTripVi
         val errorsState = viewModel.errors.observeAsState()
         val errors = errorsState.value ?: emptySet()
         NewTripContent(
-            companionList ?: emptyList(),
+            companions = companionList ?: emptyList(),
             onDeleteCompanion = viewModel::removeCompanion,
             onCreateTrip = viewModel::createTrip,
             onCreateCompanion = viewModel::addCompanion,

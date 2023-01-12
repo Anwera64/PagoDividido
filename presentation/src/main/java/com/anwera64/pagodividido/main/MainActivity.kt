@@ -21,20 +21,6 @@ class MainActivity :
 
     private val adapter: TripItemAdapter = TripItemAdapter(this)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setupUi()
-    }
-
-    private fun setupUi() {
-        val swipeCallback = SwipeToDeleteCallback(::onSwipeToDelete)
-        val itemTouchHelper = ItemTouchHelper(swipeCallback)
-    }
-
-    private fun onSwipeToDelete(position: Int) {
-        viewModel.delete(adapter.trips[position].uid.toInt())
-    }
-
     private fun createNewTrip() {
         Intent(this, NewTripActivity::class.java).also(this::startActivity)
     }
@@ -46,7 +32,6 @@ class MainActivity :
             startActivity(this)
         }
     }
-
 
     private fun onTripsLoaded(trips: List<TripModel>) {
         adapter.trips = trips
