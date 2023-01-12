@@ -3,6 +3,7 @@ package com.anwera64.pagodividido.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.anwera64.pagodividido.R
@@ -57,12 +58,11 @@ class MainActivity :
 
     @Composable
     override fun Content() {
+        val tripsState = viewModel.trips.observeAsState()
         TripsContent(
-            viewModel = viewModel,
+            trips = tripsState.value ?: emptyList(),
             createNewTripAction = ::createNewTrip,
             onTripSelected = ::onTripPressed
         )
     }
-
-
 }

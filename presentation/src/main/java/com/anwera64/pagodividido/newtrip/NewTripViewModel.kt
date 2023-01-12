@@ -1,6 +1,7 @@
 package com.anwera64.pagodividido.newtrip
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,9 @@ import com.anwera97.domain.models.TripShortModel
 import com.anwera97.domain.usecases.CreateTripUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind
+import kotlin.contracts.contract
 
 class NewTripViewModel(
     private val createTripUseCase: CreateTripUseCase
@@ -17,23 +21,49 @@ class NewTripViewModel(
     private val _createdTrip = MutableLiveData<EventWrapper<TripShortModel>>()
     val createdTrip: LiveData<EventWrapper<TripShortModel>> = _createdTrip
 
-    private val _companionLimitError = MutableLiveData<Boolean>()
-    val companionLimitError: LiveData<Boolean> = _companionLimitError
+    val errors: MutableLiveData<Set<ErrorStates>> = MutableLiveData()
 
-    private val _nameError = MutableLiveData<Boolean>()
-    val nameError: LiveData<Boolean> = _nameError
+    private val _companions = MutableLiveData<Set<String>>()
+    val companions: LiveData<Set<String>> = _companions
 
-    fun createTrip(companions: List<String>, name: String) {
+    fun createTrip(name: String, companions: List<String>) {
+        val errorStates: MutableSet<ErrorStates> = mutableSetOf()
         val nameCorrect = createTripUseCase.checkTripName(name)
-        _nameError.postValue(!nameCorrect)
+        if (!nameCorrect) {
+            errorStates.add(ErrorStates.EMPTY_TITLE)
+        } else {
+            errorStates.remove(ErrorStates.EMPTY_TITLE)
+        }
 
         val sizeCorrect = createTripUseCase.checkCompanionsSize(companions)
-        _companionLimitError.postValue(!sizeCorrect)
+        if (!sizeCorrect) {
+            errorStates.add(ErrorStates.NOT_ENOUGH_COMPANIONS)
+        } else {
+            errorStates.remove(ErrorStates.NOT_ENOUGH_COMPANIONS)
+        }
+        errors.postValue(errorStates)
 
-        if (!nameCorrect || !sizeCorrect) return
+        if (errorStates.isNotEmpty()) return
         viewModelScope.launch(Dispatchers.IO) {
             val trip = createTripUseCase.createTrip(companions, name)
             _createdTrip.postValue(EventWrapper(trip))
         }
+    }
+
+    fun addCompanion(name: String) = _companions.modifyLiveDataSet { add(name) }
+
+    fun removeCompanion(name: String) = _companions.modifyLiveDataSet { remove(name) }
+
+    @OptIn(ExperimentalContracts::class)
+    private inline fun <T> MutableLiveData<Set<T>>.modifyLiveDataSet(
+        action: MutableSet<T>.() -> Unit
+    ) {
+        contract {
+            callsInPlace(action, InvocationKind.EXACTLY_ONCE)
+        }
+        val oldSet: Set<T>? = value
+        val newSet: MutableSet<T> = oldSet?.toMutableSet() ?: mutableSetOf()
+        newSet.action()
+        postValue(newSet)
     }
 }

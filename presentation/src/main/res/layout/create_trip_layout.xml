@@ -62,7 +62,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
             android:padding="8dp"
-            android:text="@string/new_str"
+            android:text="@string/add_companion"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

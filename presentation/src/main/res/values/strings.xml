@@ -15,7 +15,7 @@
     </string>
     <string name="amount_spent">Amount Spent: </string>
     <string name="companion_name">Companion name</string>
-    <string name="new_str">New Companion</string>
+    <string name="add_companion">Add Companion</string>
     <string name="trip_name">Name of the trip</string>
     <string name="create">Create</string>
     <string name="details">Details</string>
@@ -36,7 +36,7 @@
     <string name="dialog_title_amount_not_reached">No llegaste al monto total</string>
     <string name="dialog_message_amount_not_reached">La suma total de las deudas no es igual al gasto realizado. Te faltaron %.2f</string>
     <string name="ok">Ok</string>
-    <string name="input_error_companion_name">Tienes que ingresar el nombre del compañero de viaje</string>
+    <string name="input_error_companion_name">You need to input the name of a companion.</string>
     <string name="input_error_no_companions">Tienes que agregar al menos dos compañeros al viaje</string>
     <string name="subtitle_total_expense">Gasto total: %.2f</string>
     <string name="subtitle_they_owe">Le deben:</string>
@@ -45,4 +45,7 @@
     <string name="default_error">Error</string>
     <string name="title_trips">Viajes</string>
     <string name="add_new_trip">Add new trip</string>
+    <string name="title_new_trip">New Trip</string>
+    <string name="delete_companion">Delete companion</string>
+    <string name="back">Back</string>
 </resources>

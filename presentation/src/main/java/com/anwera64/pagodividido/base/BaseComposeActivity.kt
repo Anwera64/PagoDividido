@@ -19,12 +19,4 @@ abstract class BaseComposeActivity : AppCompatActivity() {
 
     @Composable
     internal abstract fun Content()
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> finish()
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
 }

@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -31,53 +31,49 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripsContent(
-    viewModel: MainViewModel,
+    trips: List<TripModel>,
     createNewTripAction: () -> Unit,
     onTripSelected: (uid: String, name: String) -> Unit
 ) {
-    AppTheme() {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = stringResource(id = R.string.title_trips))
-                    },
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.title_trips))
+                },
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = createNewTripAction) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(id = R.string.add_new_trip)
                 )
-            },
-            floatingActionButton = {
-                FloatingActionButton(onClick = createNewTripAction) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.add_new_trip)
-                    )
-                }
-            },
-            floatingActionButtonPosition = FabPosition.End,
-            modifier = Modifier.fillMaxSize()
-        ) { contentPadding ->
-            val trips: State<List<TripModel>?> = viewModel.trips.observeAsState()
-            TripList(trips.value, onTripSelected, Modifier.padding(contentPadding))
-        }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        modifier = Modifier.fillMaxSize()
+    ) { contentPadding ->
+        TripList(trips, onTripSelected, Modifier.padding(contentPadding))
     }
 }
 
+
 @Composable
 private fun TripList(
-    trips: List<TripModel>?,
+    trips: List<TripModel>,
     onTripSelected: (uid: String, name: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberLazyListState()
     LazyColumn(modifier = modifier.fillMaxSize(), state = scrollState) {
-        if (!trips.isNullOrEmpty()) {
-            items(trips) { tripModel ->
-                TripItem(
-                    tripModel = tripModel,
-                    modifier = Modifier.clickable {
-                        onTripSelected(tripModel.uid, tripModel.name)
-                    }
-                )
-            }
+        items(trips) { tripModel ->
+            TripItem(
+                tripModel = tripModel,
+                modifier = Modifier.clickable {
+                    onTripSelected(tripModel.uid, tripModel.name)
+                }
+            )
         }
     }
 }
@@ -133,29 +129,27 @@ private fun buildCompanionString(tripModel: TripModel): String {
 @Composable
 @Preview
 fun Test() {
-    AppTheme() {
-        TripList(
-            trips = listOf(
-                TripModel(
-                    UUID.randomUUID().toString(),
-                    12.0,
-                    "Test Trip",
-                    listOf(
-                        CompanionModel(UUID.randomUUID().toString(), "Anton"),
-                        CompanionModel(UUID.randomUUID().toString(), "Zea")
-                    )
-                ),
-                TripModel(
-                    UUID.randomUUID().toString(),
-                    12.0,
-                    "Test Trip 2",
-                    listOf(
-                        CompanionModel(UUID.randomUUID().toString(), "Anton"),
-                        CompanionModel(UUID.randomUUID().toString(), "Zea")
-                    )
-                )
-            ),
-            onTripSelected = { _, _ -> }
+    val trips = listOf(
+        TripModel(
+            UUID.randomUUID().toString(),
+            12.0,
+            "Test Trip",
+            listOf(
+                CompanionModel(UUID.randomUUID().toString(), "Anton"),
+                CompanionModel(UUID.randomUUID().toString(), "Zea")
+            )
+        ),
+        TripModel(
+            UUID.randomUUID().toString(),
+            12.0,
+            "Test Trip 2",
+            listOf(
+                CompanionModel(UUID.randomUUID().toString(), "Anton"),
+                CompanionModel(UUID.randomUUID().toString(), "Zea")
+            )
         )
+    )
+    AppTheme() {
+        TripsContent(trips = trips, createNewTripAction = { }, onTripSelected = { _, _ -> })
     }
 }

@@ -12,11 +12,11 @@ class CreateTripUseCase(
 ) {
 
     fun checkCompanionsSize(list: List<String>): Boolean {
-        return !(list.isEmpty() || list.size < 2)
+        return list.isNotEmpty() && list.size >= 2
     }
 
     fun checkTripName(name: String): Boolean {
-        return !(name.isEmpty() || name.isBlank())
+        return name.isNotEmpty() && name.isNotBlank()
     }
 
     suspend fun createTrip(companions: List<String>, tripName: String): TripShortModel {
