@@ -100,6 +100,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.5.1'
     // Optional - Integration with LiveData
     implementation 'androidx.compose.runtime:runtime-livedata'
+
+    // Accompanist
     implementation "com.google.accompanist:accompanist-flowlayout:0.28.0"
 
     androidTestImplementation composeBom

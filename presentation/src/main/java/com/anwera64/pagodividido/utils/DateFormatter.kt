@@ -5,7 +5,7 @@ import java.util.*
 
 object DateFormatter {
 
-    private const val DEFAULT_FORMAT = "dd/MM/yyyy"
+    private const val DEFAULT_FORMAT = "MMM dd"
 
     @JvmStatic
     @JvmOverloads

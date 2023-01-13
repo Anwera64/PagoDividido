@@ -3,7 +3,6 @@ package com.anwera64.pagodividido.newtrip
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anwera64.pagodividido.R
+import com.anwera64.pagodividido.base.compose.BaseTopAppBar
 import com.google.accompanist.flowlayout.FlowRow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -27,7 +27,12 @@ fun NewTripContent(
 ) {
     var title by remember { mutableStateOf("") }
     Scaffold(
-        topBar = { TopAppBar(backNavigation) },
+        topBar = {
+            BaseTopAppBar(
+                backNavigation = backNavigation,
+                title = stringResource(id = R.string.title_new_trip)
+            )
+        },
         floatingActionButton = {
             CreateTripButton(
                 createTrip = { onCreateTrip(title, companions) }
@@ -56,22 +61,6 @@ private fun CreateTripButton(createTrip: () -> Unit) {
             contentDescription = stringResource(id = R.string.create)
         )
     }
-}
-
-@Composable
-@OptIn(ExperimentalMaterial3Api::class)
-private fun TopAppBar(backNavigation: () -> Unit) {
-    TopAppBar(
-        title = { Text(text = stringResource(id = R.string.title_new_trip)) },
-        navigationIcon = {
-            IconButton(onClick = backNavigation) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = stringResource(id = R.string.back)
-                )
-            }
-        }
-    )
 }
 
 @Composable

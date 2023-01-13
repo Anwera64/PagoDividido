@@ -21,7 +21,7 @@
     <string name="details">Details</string>
     <string name="general">General</string>
     <string name="who_payed">Who payed:</string>
-    <string name="Debtors">Debtors:</string>
+    <string name="debtors">Debtors:</string>
     <string name="detail">Detail:</string>
     <string name="monto">Amount</string>
     <string name="quien_debe">Who benefitted?</string>

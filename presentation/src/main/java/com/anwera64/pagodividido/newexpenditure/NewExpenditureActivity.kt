@@ -14,6 +14,7 @@ import com.anwera64.pagodividido.base.BaseViewModelActivity
 import com.anwera64.pagodividido.databinding.ActivityNewExpenditureBinding
 import com.anwera64.pagodividido.trip.TripActivity
 import com.anwera64.pagodividido.utils.EventWrapper
+import com.anwera64.pagodividido.utils.NOT_FOUND
 import com.anwera64.pagodividido.utils.ViewUtils
 import com.anwera64.pagodividido.utils.nullOrHandled
 import com.anwera64.pagodividido.utils.uicomponents.DebtorInputView
@@ -27,10 +28,6 @@ class NewExpenditureActivity :
     BaseViewModelActivity<NewExpenditureViewModel, ActivityNewExpenditureBinding>(
         NewExpenditureViewModel::class
     ) {
-
-    companion object {
-        private const val NOT_FOUND = -1
-    }
 
     override val viewModelValue: Int? = null
     override val layout: Int = R.layout.activity_new_expenditure
