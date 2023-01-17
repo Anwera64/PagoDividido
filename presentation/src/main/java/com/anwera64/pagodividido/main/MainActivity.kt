@@ -1,23 +1,22 @@
 package com.anwera64.pagodividido.main
 
 import android.content.Intent
-import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.ItemTouchHelper
-import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
-import com.anwera64.pagodividido.databinding.ActivityMainBinding
 import com.anwera97.domain.models.TripModel
-import com.anwera64.pagodividido.base.BaseViewModelActivity
 import com.anwera64.pagodividido.newtrip.NewTripActivity
 import com.anwera64.pagodividido.trip.TripActivity
-import com.anwera64.pagodividido.utils.SwipeToDeleteCallback
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity :
-    BaseComposeViewModelActivity<MainViewModel>(MainViewModel::class),
+    BaseComposeViewModelActivity<MainViewModel>(),
     TripItemAdapter.Delegate {
+
+    override val viewModel: MainViewModel by viewModels()
 
     private val adapter: TripItemAdapter = TripItemAdapter(this)
 

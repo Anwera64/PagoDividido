@@ -3,13 +3,11 @@ package com.anwera64.pagodividido.base
 import android.os.Bundle
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
-import org.koin.androidx.scope.currentScope
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.reflect.KClass
+import javax.inject.Inject
 
-abstract class BaseViewModelActivity<V : ViewModel, B : ViewDataBinding>(type: KClass<V>) : BaseActivity<B>() {
+abstract class BaseViewModelActivity<V : ViewModel, B : ViewDataBinding> : BaseActivity<B>() {
 
-    protected val viewModel: V by currentScope.viewModel(this, type)
+    abstract val viewModel: V
     abstract val viewModelValue: Int?
 
     override fun onCreate(savedInstanceState: Bundle?) {

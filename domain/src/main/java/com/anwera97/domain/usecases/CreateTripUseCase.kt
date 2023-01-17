@@ -5,8 +5,9 @@ import com.anwera97.data.entities.Trip
 import com.anwera97.data.repository.CompanionRepository
 import com.anwera97.data.repository.TripRepository
 import com.anwera97.domain.models.TripShortModel
+import javax.inject.Inject
 
-class CreateTripUseCase(
+class CreateTripUseCase @Inject constructor(
     private val tripRepository: TripRepository,
     private val companionRepository: CompanionRepository
 ) {

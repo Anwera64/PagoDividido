@@ -6,10 +6,15 @@ import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.DebtorInputError
 import com.anwera97.domain.models.InputErrorTypes
 import com.anwera97.domain.usecases.NewExpenditureUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewExpenditureViewModel(private val useCase: NewExpenditureUseCase) : ViewModel() {
+@HiltViewModel
+class NewExpenditureViewModel @Inject constructor(
+    private val useCase: NewExpenditureUseCase
+) : ViewModel() {
 
     private val _companions = MediatorLiveData<List<CompanionModel>>()
     var companions: LiveData<List<CompanionModel>> = _companions

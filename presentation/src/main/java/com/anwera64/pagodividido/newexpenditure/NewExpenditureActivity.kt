@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.Observer
@@ -23,12 +24,13 @@ import com.anwera97.domain.models.DebtorInputError
 import com.anwera97.domain.models.DebtorInputErrorReasons
 import com.anwera97.domain.models.InputErrorTypes
 import com.google.android.material.textfield.TextInputLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class NewExpenditureActivity :
-    BaseViewModelActivity<NewExpenditureViewModel, ActivityNewExpenditureBinding>(
-        NewExpenditureViewModel::class
-    ) {
+    BaseViewModelActivity<NewExpenditureViewModel, ActivityNewExpenditureBinding>() {
 
+    override val viewModel: NewExpenditureViewModel by viewModels()
     override val viewModelValue: Int? = null
     override val layout: Int = R.layout.activity_new_expenditure
     private val debtorInputs = ArrayList<DebtorInputView>()

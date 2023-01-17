@@ -7,8 +7,11 @@ import com.anwera97.domain.models.ExpenditureModel
 import com.anwera97.domain.models.ResultModel
 import com.anwera97.domain.usecases.CompanionResultUseCase
 import com.anwera97.domain.usecases.ExpenditureUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class TripViewModel(
+@HiltViewModel
+class TripViewModel @Inject constructor(
     private val expenditureUseCase: ExpenditureUseCase,
     private val useCase: CompanionResultUseCase
 ) : ViewModel() {

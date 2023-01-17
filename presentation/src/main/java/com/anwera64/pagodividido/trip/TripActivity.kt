@@ -2,13 +2,18 @@ package com.anwera64.pagodividido.trip
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
 import com.anwera64.pagodividido.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.utils.NOT_FOUND
+import dagger.hilt.android.AndroidEntryPoint
 
-class TripActivity : BaseComposeViewModelActivity<TripViewModel>(TripViewModel::class) {
+@AndroidEntryPoint
+class TripActivity : BaseComposeViewModelActivity<TripViewModel>() {
+
+    override val viewModel: TripViewModel by viewModels()
 
     companion object {
         const val TRIP_ID = "tripUid"

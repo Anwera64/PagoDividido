@@ -6,8 +6,9 @@ import com.anwera97.domain.mappers.CompanionMapper
 import com.anwera97.domain.models.ResultModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CompanionResultUseCase(private val companionRepository: CompanionRepository) {
+class CompanionResultUseCase @Inject constructor(private val companionRepository: CompanionRepository) {
 
     fun getPayersWithDebtors(tripId: Int): Flow<List<ResultModel>> {
         return companionRepository.getPayersWithDebtors(tripId).map(::transformResultEntities)

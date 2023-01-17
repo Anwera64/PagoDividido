@@ -6,8 +6,9 @@ import com.anwera97.domain.mappers.ExpenditureMapper
 import com.anwera97.domain.models.ExpenditureModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ExpenditureUseCase(private val expenditureRepository: ExpenditureRepository) {
+class ExpenditureUseCase @Inject constructor(private val expenditureRepository: ExpenditureRepository) {
 
     fun getExpenditures(tripUid: Int): Flow<List<ExpenditureModel>> {
         return expenditureRepository.getExpenditures(tripUid).map(::mapToExpenditureModels)

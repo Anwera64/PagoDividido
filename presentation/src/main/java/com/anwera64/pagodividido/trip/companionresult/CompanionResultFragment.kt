@@ -3,6 +3,7 @@ package com.anwera64.pagodividido.trip.companionresult
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.databinding.FragmentTripCompanionResultBinding
 import com.anwera97.domain.models.ResultModel
@@ -10,9 +11,9 @@ import com.anwera64.pagodividido.base.BaseViewModelFragment
 import com.anwera64.pagodividido.trip.TripActivity
 
 class CompanionResultFragment :
-        BaseViewModelFragment<CompanionResultViewModel, FragmentTripCompanionResultBinding>(
-                CompanionResultViewModel::class
-        ) {
+        BaseViewModelFragment<CompanionResultViewModel, FragmentTripCompanionResultBinding>() {
+
+    override val viewModel: CompanionResultViewModel by viewModels()
 
     companion object {
         fun getInstance(tripId: Int) = CompanionResultFragment().apply {

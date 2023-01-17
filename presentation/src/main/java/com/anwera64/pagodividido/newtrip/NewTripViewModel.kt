@@ -8,10 +8,13 @@ import com.anwera64.pagodividido.utils.EventWrapper
 import com.anwera64.pagodividido.utils.modifyLiveDataSet
 import com.anwera97.domain.models.TripShortModel
 import com.anwera97.domain.usecases.CreateTripUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewTripViewModel(
+@HiltViewModel
+class NewTripViewModel @Inject constructor(
     private val createTripUseCase: CreateTripUseCase
 ) : ViewModel() {
 
