@@ -2,6 +2,7 @@ package com.anwera64.pagodividido.newtrip
 
 import android.content.Intent
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.livedata.observeAsState
@@ -11,8 +12,12 @@ import com.anwera64.pagodividido.trip.TripActivity
 import com.anwera64.pagodividido.utils.EventWrapper
 import com.anwera64.pagodividido.utils.nullOrHandled
 import com.anwera97.domain.models.TripShortModel
+import dagger.hilt.android.AndroidEntryPoint
 
-class NewTripActivity : BaseComposeViewModelActivity<NewTripViewModel>(NewTripViewModel::class) {
+@AndroidEntryPoint
+class NewTripActivity : BaseComposeViewModelActivity<NewTripViewModel>() {
+
+    override val viewModel: NewTripViewModel by viewModels()
 
     private fun observeCreatedTrip(eventWrapper: EventWrapper<TripShortModel>?) {
         if (eventWrapper.nullOrHandled()) return

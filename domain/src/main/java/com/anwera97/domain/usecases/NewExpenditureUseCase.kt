@@ -12,8 +12,9 @@ import com.anwera97.domain.models.InputErrorTypes
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.*
+import javax.inject.Inject
 
-class NewExpenditureUseCase(
+class NewExpenditureUseCase @Inject constructor(
     private val companionRepository: CompanionRepository,
     private val expenditureRepository: ExpenditureRepository
 ) {
