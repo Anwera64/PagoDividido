@@ -20,9 +20,9 @@
     <string name="create">Create</string>
     <string name="details">Details</string>
     <string name="general">General</string>
-    <string name="who_payed">Who payed:</string>
+    <string name="who_paid">Who paid: %s</string>
     <string name="debtors">Debtors:</string>
-    <string name="detail">Detail:</string>
+    <string name="detail">Detail: %s</string>
     <string name="monto">Amount</string>
     <string name="quien_debe">Who benefitted?</string>
     <string name="result">Result</string>
@@ -35,7 +35,7 @@
     <string name="error_debtor_total_amount_maxed">La deuda total no puede superar el gasto total</string>
     <string name="dialog_title_amount_not_reached">No llegaste al monto total</string>
     <string name="dialog_message_amount_not_reached">La suma total de las deudas no es igual al gasto realizado. Te faltaron %.2f</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="input_error_companion_name">You need to input the name of a companion.</string>
     <string name="input_error_no_companions">Tienes que agregar al menos dos compañeros al viaje</string>
     <string name="subtitle_total_expense">Gasto total: %.2f</string>
@@ -48,4 +48,10 @@
     <string name="title_new_trip">New Trip</string>
     <string name="delete_companion">Delete companion</string>
     <string name="back">Back</string>
+    <string name="total_spent">Total spent: %.2f</string>
+    <string name="owes_you">%s owes you</string>
+    <string name="you_owe">You owe %s</string>
+    <string name="select_companion">Select Companion</string>
+    <string name="all_set">%s and you are all set</string>
+    <string name="no_detail">No detail</string>
 </resources>

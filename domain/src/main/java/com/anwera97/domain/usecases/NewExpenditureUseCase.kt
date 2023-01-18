@@ -1,21 +1,14 @@
 package com.anwera97.domain.usecases
 
-import com.anwera97.data.entities.Companion
 import com.anwera97.data.entities.Expenditure
-import com.anwera97.data.repository.CompanionRepository
 import com.anwera97.data.repository.ExpenditureRepository
-import com.anwera97.domain.mappers.CompanionMapper
-import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.DebtorInputError
 import com.anwera97.domain.models.DebtorInputErrorReasons
 import com.anwera97.domain.models.InputErrorTypes
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import java.util.*
 import javax.inject.Inject
 
 class NewExpenditureUseCase @Inject constructor(
-    private val companionRepository: CompanionRepository,
     private val expenditureRepository: ExpenditureRepository
 ) {
     suspend fun addExpenditure(
@@ -79,14 +72,6 @@ class NewExpenditureUseCase @Inject constructor(
             accumulatedDebt + amount > maxAmount -> DebtorInputErrorReasons.SUM_EXCEEDS_MAX_AMOUNT
             else -> null
         }
-    }
-
-    fun getTripCompanions(tripId: Int): Flow<List<CompanionModel>> {
-        return companionRepository.getTripCompanions(tripId).map(this::mapToCompanionList)
-    }
-
-    private fun mapToCompanionList(list: List<Companion>): List<CompanionModel> {
-        return list.map(CompanionMapper::toModel)
     }
 
     fun checkAmountInputError(amountString: String): InputErrorTypes {

@@ -30,7 +30,7 @@ object DomainModule {
 
     @Provides
     fun providesNewExpenditureUseCase(companionRepository: CompanionRepository, expenditureRepository: ExpenditureRepository) : NewExpenditureUseCase {
-        return NewExpenditureUseCase(companionRepository, expenditureRepository)
+        return NewExpenditureUseCase(expenditureRepository)
     }
 
     @Provides

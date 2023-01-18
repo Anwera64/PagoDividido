@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
 import com.anwera64.pagodividido.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.utils.NOT_FOUND
@@ -39,11 +40,18 @@ class TripActivity : BaseComposeViewModelActivity<TripViewModel>() {
         val expenses = viewModel.getExpenseList(tripId).observeAsState()
         val title = intent.getStringExtra(NAME)
         val sortedExpenses = expenses.value?.sortedByDescending { expense -> expense.date }
+        val companions = viewModel.getCompnaions(tripId).observeAsState()
+        val resultModel = viewModel.currentResult.observeAsState()
         TripView(
             backNavigation = ::finish,
             createNewExpenditure = ::createNewTrip,
             expenditures = sortedExpenses.orEmpty(),
-            topBarTitle = title.orEmpty()
+            topBarTitle = title.orEmpty(),
+            companionList = companions.value.orEmpty(),
+            requestCompanionResult = { id: String ->
+                viewModel.getResultsForCompanion(tripId, id.toInt())
+            },
+            resultModel = resultModel.value
         )
     }
 
