@@ -22,7 +22,7 @@ fun NewTripContent(
     onDeleteCompanion: (name: String) -> Unit,
     onCreateTrip: (tripName: String, companions: List<String>) -> Unit,
     onCreateCompanion: (name: String) -> Unit,
-    errors: Set<ErrorStates> = emptySet(),
+    errors: Set<NewTripErrorStates> = emptySet(),
     backNavigation: () -> Unit
 ) {
     var title by remember { mutableStateOf("") }
@@ -67,7 +67,7 @@ private fun CreateTripButton(createTrip: () -> Unit) {
 private fun Form(
     tripTitle: String,
     onTripTitleValueChange: (String) -> Unit,
-    errors: Set<ErrorStates>,
+    errors: Set<NewTripErrorStates>,
     companions: List<String>,
     onCreateCompanion: (name: String) -> Unit,
     onDeleteCompanion: (name: String) -> Unit,
@@ -101,10 +101,10 @@ private fun Form(
 @OptIn(ExperimentalMaterial3Api::class)
 private fun CompanionField(
     modifier: Modifier = Modifier,
-    errors: Set<ErrorStates>,
+    errors: Set<NewTripErrorStates>,
     onCreateCompanion: (name: String) -> Unit
 ) {
-    var isError: Boolean = errors.contains(ErrorStates.NOT_ENOUGH_COMPANIONS)
+    var isError: Boolean = errors.contains(NewTripErrorStates.NOT_ENOUGH_COMPANIONS)
     var companionName: String by remember { mutableStateOf("") }
     TextField(
         value = companionName,
@@ -136,7 +136,7 @@ private fun CompanionField(
             if (isError) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
-                    text = stringResource(id = ErrorStates.NOT_ENOUGH_COMPANIONS.errorResource),
+                    text = stringResource(id = NewTripErrorStates.NOT_ENOUGH_COMPANIONS.errorResource),
                     textAlign = TextAlign.End,
                 )
             }
@@ -191,9 +191,9 @@ private fun TitleField(
     modifier: Modifier = Modifier,
     title: String,
     onValueChange: (String) -> Unit,
-    errors: Set<ErrorStates>,
+    errors: Set<NewTripErrorStates>,
 ) {
-    val isError = errors.contains(ErrorStates.EMPTY_TITLE)
+    val isError = errors.contains(NewTripErrorStates.EMPTY_TITLE)
     TextField(
         value = title,
         onValueChange = onValueChange,
@@ -202,7 +202,7 @@ private fun TitleField(
         isError = isError,
         supportingText = {
             if (isError) {
-                Text(text = stringResource(id = ErrorStates.EMPTY_TITLE.errorResource))
+                Text(text = stringResource(id = NewTripErrorStates.EMPTY_TITLE.errorResource))
             }
         }
     )

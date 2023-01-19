@@ -21,25 +21,25 @@ class NewTripViewModel @Inject constructor(
     private val _createdTrip = MutableLiveData<EventWrapper<TripShortModel>>()
     val createdTrip: LiveData<EventWrapper<TripShortModel>> = _createdTrip
 
-    val errors: MutableLiveData<Set<ErrorStates>> = MutableLiveData()
+    val errors: MutableLiveData<Set<NewTripErrorStates>> = MutableLiveData()
 
     private val _companions = MutableLiveData<Set<String>>()
     val companions: LiveData<Set<String>> = _companions
 
     fun createTrip(name: String, companions: List<String>) {
-        val errorStates: MutableSet<ErrorStates> = mutableSetOf()
+        val errorStates: MutableSet<NewTripErrorStates> = mutableSetOf()
         val nameCorrect = createTripUseCase.checkTripName(name)
         if (!nameCorrect) {
-            errorStates.add(ErrorStates.EMPTY_TITLE)
+            errorStates.add(NewTripErrorStates.EMPTY_TITLE)
         } else {
-            errorStates.remove(ErrorStates.EMPTY_TITLE)
+            errorStates.remove(NewTripErrorStates.EMPTY_TITLE)
         }
 
         val sizeCorrect = createTripUseCase.checkCompanionsSize(companions)
         if (!sizeCorrect) {
-            errorStates.add(ErrorStates.NOT_ENOUGH_COMPANIONS)
+            errorStates.add(NewTripErrorStates.NOT_ENOUGH_COMPANIONS)
         } else {
-            errorStates.remove(ErrorStates.NOT_ENOUGH_COMPANIONS)
+            errorStates.remove(NewTripErrorStates.NOT_ENOUGH_COMPANIONS)
         }
         errors.postValue(errorStates)
 

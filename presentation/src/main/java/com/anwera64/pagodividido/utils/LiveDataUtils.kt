@@ -17,3 +17,16 @@ inline fun <T> MutableLiveData<Set<T>>.modifyLiveDataSet(
     newSet.action()
     postValue(newSet)
 }
+
+@OptIn(ExperimentalContracts::class)
+inline fun <T, K> MutableLiveData<Map<T, K>>.modifyLiveDataMap(
+    action: MutableMap<T, K>.() -> Unit
+) {
+    contract {
+        callsInPlace(action, InvocationKind.EXACTLY_ONCE)
+    }
+    val oldSet: Map<T, K>? = value
+    val newSet: MutableMap<T, K> = oldSet?.toMutableMap() ?: mutableMapOf()
+    newSet.action()
+    postValue(newSet)
+}

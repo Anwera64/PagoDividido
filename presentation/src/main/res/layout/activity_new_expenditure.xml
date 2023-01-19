@@ -21,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:title="Nuevo Gasto" />
+                app:title="@string/new_expense" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -50,7 +50,7 @@
                         android:id="@+id/tiAmount"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/monto"
+                        android:hint="@string/amount"
                         android:inputType="number" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -73,7 +73,7 @@
                         android:id="@+id/tiPayer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/who_paid"
+                        android:hint="@string/who_paid_placeholder"
                         android:inputType="none" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -95,7 +95,7 @@
                         android:id="@+id/tiDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/detail" />
+                        android:hint="@string/detail_placeholder" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

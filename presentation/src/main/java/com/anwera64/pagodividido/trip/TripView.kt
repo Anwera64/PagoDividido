@@ -97,7 +97,7 @@ private fun ResultPage(
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         item {
             val selectorHint = stringResource(R.string.select_companion)
-            var textFieldValue: String by remember { mutableStateOf(selectorHint) }
+            var textFieldValue: String by remember { mutableStateOf("") }
             if (resultModel !== null) textFieldValue = resultModel.companion.name
             CompanionSelector(
                 companionList = companionList,
@@ -105,7 +105,11 @@ private fun ResultPage(
                 requestCompanionResult = { companion ->
                     requestCompanionResult(companion.uid)
                     textFieldValue = companion.name
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                label = selectorHint
             )
             TotalSpentText(resultModel)
         }
@@ -164,18 +168,20 @@ private fun DebtItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CompanionSelector(
+fun CompanionSelector(
     companionList: List<CompanionModel>,
     textFieldValue: String,
-    requestCompanionResult: (companion: CompanionModel) -> Unit
+    requestCompanionResult: (companion: CompanionModel) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    isError: Boolean = false,
+    errorText: @Composable () -> Unit = {}
 ) {
     var isExpanded: Boolean by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = isExpanded,
         onExpandedChange = { isExpanded = !isExpanded },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 12.dp)
+        modifier = modifier
     ) {
         OutlinedTextField(
             value = textFieldValue,
@@ -189,7 +195,10 @@ private fun CompanionSelector(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "Open companion list"
                 )
-            }
+            },
+            label = { Text(text = label) },
+            isError = isError,
+            supportingText = errorText
         )
         ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
             companionList.forEach { companion ->
@@ -261,7 +270,7 @@ private fun PaymentItem(expenditure: ExpenditureModel) {
 private fun DetailText(expenditure: ExpenditureModel) {
     val detailString = expenditure.detail ?: stringResource(R.string.no_detail)
     Text(
-        text = stringResource(R.string.detail, detailString),
+        text = stringResource(R.string.detail_placeholder, detailString),
         style = MaterialTheme.typography.titleSmall
     )
 }
@@ -269,7 +278,7 @@ private fun DetailText(expenditure: ExpenditureModel) {
 @Composable
 private fun PayerText(expenditure: ExpenditureModel) {
     Text(
-        stringResource(R.string.who_paid, expenditure.payer.name),
+        stringResource(R.string.who_paid_placeholder, expenditure.payer.name),
         style = MaterialTheme.typography.bodySmall
     )
 }
