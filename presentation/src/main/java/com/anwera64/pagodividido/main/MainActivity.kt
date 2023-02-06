@@ -13,18 +13,15 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity :
-    BaseComposeViewModelActivity<MainViewModel>(),
-    TripItemAdapter.Delegate {
+    BaseComposeViewModelActivity<MainViewModel>() {
 
     override val viewModel: MainViewModel by viewModels()
-
-    private val adapter: TripItemAdapter = TripItemAdapter(this)
 
     private fun createNewTrip() {
         Intent(this, NewTripActivity::class.java).also(this::startActivity)
     }
 
-    override fun onTripPressed(uid: String, name: String) {
+    private fun onTripPressed(uid: String, name: String) {
         Intent(this, TripActivity::class.java).run {
             putExtra(TripActivity.TRIP_ID, uid)
             putExtra(TripActivity.NAME, name)
@@ -32,12 +29,8 @@ class MainActivity :
         }
     }
 
-    private fun onTripsLoaded(trips: List<TripModel>) {
-        adapter.trips = trips
-    }
-
     override fun setupObservers() {
-        viewModel.trips.observe(this, Observer(this::onTripsLoaded))
+        // Not used
     }
 
     @Composable

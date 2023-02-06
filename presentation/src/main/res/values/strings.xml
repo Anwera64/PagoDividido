@@ -10,7 +10,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="amount_spent">Amount Spent: </string>
+    <string name="amount_spent">Amount Spent: %.2f</string>
     <string name="companion_name">Companion name</string>
     <string name="add_companion">Add Companion</string>
     <string name="trip_name">Name of the trip</string>
