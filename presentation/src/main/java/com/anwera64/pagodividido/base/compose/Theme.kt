@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.base
+package com.anwera64.pagodividido.base.compose
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

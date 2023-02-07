@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
+import com.anwera64.pagodividido.expensedetail.ExpenseDetailActivity
 import com.anwera64.pagodividido.newexpenditure.NewExpenditureActivity
 import com.anwera64.pagodividido.utils.NOT_FOUND
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,6 +35,12 @@ class TripActivity : BaseComposeViewModelActivity<TripViewModel>() {
         }
     }
 
+    private fun openExpenseDetail(id: Int) {
+        val intent = Intent(this, ExpenseDetailActivity::class.java)
+            .putExtra(ExpenseDetailActivity.EXPENSE_ID, id)
+        startActivity(intent)
+    }
+
     @Composable
     override fun Content() {
         val expenses = viewModel.getExpenseList(tripId).observeAsState()
@@ -51,7 +57,8 @@ class TripActivity : BaseComposeViewModelActivity<TripViewModel>() {
             requestCompanionResult = { id: String ->
                 viewModel.getResultsForCompanion(tripId, id.toInt())
             },
-            resultModel = resultModel.value
+            resultModel = resultModel.value,
+            onExpenseSelected = ::openExpenseDetail
         )
     }
 

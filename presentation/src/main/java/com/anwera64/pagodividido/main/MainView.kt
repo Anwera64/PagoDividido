@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anwera64.pagodividido.R
-import com.anwera64.pagodividido.base.AppTheme
+import com.anwera64.pagodividido.base.compose.AppTheme
 import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.TripModel
 import java.util.*
@@ -97,7 +97,7 @@ private fun TripItem(tripModel: TripModel, onTripSelected: (uid: String, name: S
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = stringResource(id = R.string.amount_spent, tripModel.totalSpent),
+                text = stringResource(id = R.string.amount_spent_placeholder, tripModel.totalSpent),
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.bodySmall
             )

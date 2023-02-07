@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import com.anwera64.pagodividido.R
 
 @Composable
@@ -16,7 +17,7 @@ fun BaseTopAppBar(
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
-        title = { Text(text = title) },
+        title = { Text(text = title, overflow = TextOverflow.Ellipsis) },
         navigationIcon = {
             IconButton(onClick = backNavigation) {
                 Icon(

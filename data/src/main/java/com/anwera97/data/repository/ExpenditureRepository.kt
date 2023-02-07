@@ -13,6 +13,8 @@ class ExpenditureRepository(
 
     fun getExpenditures(tripId: Int) = expenditureDao.getAllFromTrip(tripId)
 
+    fun getExpenditure(id: Int) = expenditureDao.getExpenditure(id)
+
     @WorkerThread
     suspend fun addExpenditure(expenditure: Expenditure, debtorIds: Map<Int, Double>) {
         val id = expenditureDao.insert(expenditure)

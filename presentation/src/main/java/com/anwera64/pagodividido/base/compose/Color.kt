@@ -1,4 +1,4 @@
-package com.anwera64.pagodividido.base
+package com.anwera64.pagodividido.base.compose
 
 import androidx.compose.ui.graphics.Color
 

@@ -10,7 +10,7 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="amount_spent">Amount Spent: %.2f</string>
+    <string name="amount_spent_placeholder">Amount Spent: %.2f</string>
     <string name="companion_name">Companion name</string>
     <string name="add_companion">Add Companion</string>
     <string name="trip_name">Name of the trip</string>
@@ -38,7 +38,7 @@
     <string name="input_error_no_companions">Tienes que agregar al menos dos compañeros al viaje</string>
     <string name="subtitle_total_expense">Gasto total: %.2f</string>
     <string name="subtitle_they_owe">Le deben:</string>
-    <string name="bullet_point_name_amount">● %s: %.2f</string>
+    <string name="companion_benefited_placeholder">%s used %.2f</string>
     <string name="content_description_click_to_expand">Click to expand</string>
     <string name="default_error">Error</string>
     <string name="title_trips">Viajes</string>
@@ -58,4 +58,5 @@
     <string name="equals">Equals</string>
     <string name="detailed_amounts">Detailed Amounts</string>
     <string name="amount_placeholder">%.2f</string>
+    <string name="payer_placeholder">Payer: %s</string>
 </resources>

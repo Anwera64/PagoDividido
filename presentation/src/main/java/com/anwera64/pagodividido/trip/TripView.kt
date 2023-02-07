@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anwera64.pagodividido.R
-import com.anwera64.pagodividido.base.AppTheme
+import com.anwera64.pagodividido.base.compose.AppTheme
 import com.anwera64.pagodividido.base.compose.BaseTopAppBar
 import com.anwera64.pagodividido.utils.DateFormatter
 import com.anwera97.domain.models.CompanionModel
@@ -37,6 +37,7 @@ fun TripView(
     resultModel: ResultModel?,
     createNewExpenditure: () -> Unit,
     requestCompanionResult: (uid: String) -> Unit,
+    onExpenseSelected: (id: Int) -> Unit,
     startingTab: Int = indexOfDetailsTab()
 ) {
     var selectedTabIndex by remember { mutableStateOf(startingTab) }
@@ -74,7 +75,8 @@ fun TripView(
         if (selectedTabIndex == indexOfDetailsTab()) {
             PaymentsList(
                 modifier = paddingModifier,
-                expenditures = expenditures
+                expenditures = expenditures,
+                onExpenseSelected = onExpenseSelected
             )
         } else {
             ResultPage(
@@ -232,19 +234,23 @@ private fun indexOfDetailsTab() = tabs.indexOf(R.string.details)
 private fun indexOfResultsTab() = tabs.indexOf(R.string.result)
 
 @Composable
-private fun PaymentsList(modifier: Modifier = Modifier, expenditures: List<ExpenditureModel>) {
+private fun PaymentsList(
+    modifier: Modifier = Modifier,
+    expenditures: List<ExpenditureModel>,
+    onExpenseSelected: (id: Int) -> Unit
+) {
     LazyColumn(modifier = modifier.fillMaxWidth()) {
         items(expenditures) { expenditure ->
-            PaymentItem(expenditure)
+            PaymentItem(expenditure, onExpenseSelected)
         }
     }
 }
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-private fun PaymentItem(expenditure: ExpenditureModel) {
+private fun PaymentItem(expenditure: ExpenditureModel, onExpenseSelected: (id: Int) -> Unit) {
     ElevatedCard(
-        onClick = { /*TODO This should open the expense detail*/ },
+        onClick = { onExpenseSelected(expenditure.uid.toInt()) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -313,12 +319,6 @@ private fun PreviewDetails() {
                         uid = UUID.randomUUID().toString(),
                         name = "Anton"
                     ),
-                    debtors = listOf(
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Zea"
-                        ),
-                    ),
                     detail = "Test payment",
                     amountSpent = 10.0,
                     date = Date()
@@ -329,20 +329,6 @@ private fun PreviewDetails() {
                         uid = UUID.randomUUID().toString(),
                         name = "Anton"
                     ),
-                    debtors = listOf(
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Zea"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Jaz"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Tongo"
-                        )
-                    ),
                     detail = "Test payment",
                     amountSpent = 10.0,
                     date = Date()
@@ -352,32 +338,6 @@ private fun PreviewDetails() {
                     payer = CompanionModel(
                         uid = UUID.randomUUID().toString(),
                         name = "Anton"
-                    ),
-                    debtors = listOf(
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Zea"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Jaz"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Tongo"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Zea"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Jaz"
-                        ),
-                        CompanionModel(
-                            uid = UUID.randomUUID().toString(),
-                            name = "Tongo"
-                        )
                     ),
                     detail = "Test payment",
                     amountSpent = 10.0,
@@ -387,6 +347,7 @@ private fun PreviewDetails() {
             createNewExpenditure = {},
             companionList = emptyList(),
             requestCompanionResult = {},
+            onExpenseSelected = {},
             topBarTitle = "Trip to Miami",
             resultModel = null
         )
@@ -429,7 +390,8 @@ private fun PreviewResult() {
                     "Tongo" to 54.0,
                     "Jaz" to 42.0
                 )
-            )
+            ),
+            onExpenseSelected = {}
         )
     }
 }

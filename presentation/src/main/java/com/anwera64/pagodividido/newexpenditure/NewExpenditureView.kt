@@ -23,7 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anwera64.pagodividido.R
-import com.anwera64.pagodividido.base.AppTheme
+import com.anwera64.pagodividido.base.compose.AppTheme
 import com.anwera64.pagodividido.base.compose.BaseTopAppBar
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorModel
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorStates
