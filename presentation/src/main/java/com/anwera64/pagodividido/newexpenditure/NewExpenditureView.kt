@@ -15,6 +15,8 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,6 +29,7 @@ import com.anwera64.pagodividido.base.AppTheme
 import com.anwera64.pagodividido.base.compose.BaseTopAppBar
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorModel
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorStates
+import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseFormData
 import com.anwera64.pagodividido.newexpenditure.utils.PaymentOptions
 import com.anwera64.pagodividido.trip.CompanionSelector
 import com.anwera97.domain.models.CompanionModel
@@ -38,20 +41,14 @@ private val tabs = listOf(R.string.details, R.string.payment_info)
 @Composable
 fun NewExpenditureContent(
     companionList: List<CompanionModel>,
-    backNavigation: () -> Unit,
-    payerChosen: Int? = null,
-    paymentOption: PaymentOptions? = null,
     errorModel: NewExpenseErrorModel? = null,
-    onAmountSet: (Pair<Int, Double>) -> Unit,
-    onPayerChosen: (id: Int) -> Unit,
-    onOptionChanged: (option: PaymentOptions) -> Unit,
-    createExpense: (detail: String?, amountString: String) -> Unit,
+    backNavigation: () -> Unit,
+    createExpense: (formData: NewExpenseFormData) -> Unit,
     startingTab: Int = indexOfDetailsTab(),
 ) {
-    var selectedTabIndex by remember { mutableStateOf(startingTab) }
-    var amountString: String by remember { mutableStateOf("") }
-    var detailText: String by remember { mutableStateOf("") }
-    val selectedPayer = companionList.find { companion -> companion.uid == payerChosen.toString() }
+    var formData by rememberSaveable { mutableStateOf(NewExpenseFormData()) }
+    var selectedTabIndex by rememberSaveable { mutableStateOf(startingTab) }
+    val selectedPayer = companionList.find { companion -> companion.uid == formData.payerId }
     var selectedPayerText: String by remember { mutableStateOf(selectedPayer?.name.orEmpty()) }
     Scaffold(
         topBar = {
@@ -65,7 +62,7 @@ fun NewExpenditureContent(
                 },
                 title = stringResource(id = R.string.new_expense),
                 actions = {
-                    IconButton(onClick = { createExpense(detailText, amountString) }) {
+                    IconButton(onClick = { createExpense(formData) }) {
                         Icon(Icons.Default.Add, stringResource(id = R.string.create))
                     }
                 }
@@ -100,27 +97,31 @@ fun NewExpenditureContent(
             FirstForm(
                 modifier = contentPaddingModifier,
                 companionList = companionList,
-                amountString = amountString,
-                detailText = detailText,
+                amountString = formData.amount.orEmpty(),
+                detailText = formData.detail.orEmpty(),
                 selectorText = selectedPayerText,
                 errorModel = errorModel,
-                onDetailChanged = { newValue -> detailText = newValue },
+                onDetailChanged = { newValue -> formData = formData.copy(detail = newValue) },
                 onSelectorChanged = { selectedCompanion ->
                     selectedPayerText = selectedCompanion.name
-                    val companionId = selectedCompanion.uid.toInt()
-                    onPayerChosen(companionId)
+                    formData = formData.copy(payerId = selectedCompanion.uid)
                 },
-                onAmountChanged = { newAmountString -> amountString = newAmountString }
+                onAmountChanged = { newAmountString ->
+                    formData = formData.copy(amount = newAmountString)
+                }
             )
         } else {
             PaymentInfo(
                 errorModel = errorModel,
                 modifier = contentPaddingModifier,
                 companionList = companionList,
-                totalAmount = amountString.toDoubleOrNull() ?: 0.0,
-                selectedOption = paymentOption,
-                onOptionChanged = onOptionChanged,
-                onAmountSet = onAmountSet
+                formData = formData,
+                onOptionChanged = { option -> formData = formData.copy(paymentOption = option) },
+                onAmountSet = { (id: Int, amount: Double) ->
+                    val payingRelationship = formData.payingRelationship.toMutableMap()
+                    payingRelationship[id] = amount
+                    formData = formData.copy(payingRelationship = payingRelationship)
+                }
             )
         }
     }
@@ -203,8 +204,7 @@ private fun FirstForm(
 private fun PaymentInfo(
     modifier: Modifier = Modifier,
     companionList: List<CompanionModel>,
-    totalAmount: Double,
-    selectedOption: PaymentOptions?,
+    formData: NewExpenseFormData,
     errorModel: NewExpenseErrorModel? = null,
     onOptionChanged: (option: PaymentOptions) -> Unit,
     onAmountSet: (Pair<Int, Double>) -> Unit
@@ -215,7 +215,7 @@ private fun PaymentInfo(
             val paymentWayHasErrors = errorModel?.paymentWayError != null
             PaymentOptionSelector(
                 options = paymentOptions,
-                selectedOption = selectedOption,
+                selectedOption = formData.paymentOption,
                 requestCompanionResult = onOptionChanged,
                 isError = paymentWayHasErrors,
                 errorText = {
@@ -225,11 +225,10 @@ private fun PaymentInfo(
                 }
             )
         }
-        if (selectedOption == null) return@LazyColumn
+        if (formData.paymentOption == null) return@LazyColumn
         items(companionList) { companion ->
             PaymentInput(
-                selectedOption = selectedOption,
-                totalAmount = totalAmount,
+                formData = formData,
                 companionList = companionList,
                 errorModel = errorModel,
                 companion = companion,
@@ -242,21 +241,24 @@ private fun PaymentInfo(
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 private fun PaymentInput(
-    selectedOption: PaymentOptions?,
-    totalAmount: Double,
+    formData: NewExpenseFormData,
     companionList: List<CompanionModel>,
     errorModel: NewExpenseErrorModel?,
     companion: CompanionModel,
     onAmountSet: (Pair<Int, Double>) -> Unit
 ) {
-    var amountText by remember { mutableStateOf("") }
-    val equalsEnabled = selectedOption == PaymentOptions.EQUALS
+    val companionId: Int = companion.uid.toInt()
+    val totalAmount = formData.amount?.toDoubleOrNull() ?: 0.0
+    var amountText by rememberSaveable {
+        val amountText: String = formData.payingRelationship[companionId]?.toString().orEmpty()
+        mutableStateOf(amountText)
+    }
+    val equalsEnabled = formData.paymentOption == PaymentOptions.EQUALS
     val textFieldValue = if (equalsEnabled) {
         stringResource(id = R.string.amount_placeholder, totalAmount / companionList.size)
     } else {
         amountText
     }
-    val companionId: Int = companion.uid.toInt()
     val errorState: NewExpenseErrorStates? = errorModel?.paymentRelationshipErrors?.get(companionId)
     val errorEnabled: Boolean = errorState != null
     OutlinedTextField(
@@ -357,10 +359,7 @@ fun PreviewDetails() {
                     name = "Tongo"
                 )
             ),
-            onAmountSet = {},
-            onPayerChosen = {},
-            onOptionChanged = {},
-            createExpense = { _, _ -> }
+            createExpense = {}
         )
     }
 }
@@ -385,10 +384,7 @@ fun PreviewPaymentInfo() {
                     name = "Tongo"
                 )
             ),
-            onAmountSet = {},
-            onPayerChosen = {},
-            onOptionChanged = {},
-            createExpense = { _, _ -> },
+            createExpense = {},
             startingTab = indexOfPaymentsTab(),
         )
     }

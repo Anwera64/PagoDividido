@@ -44,20 +44,11 @@ class NewExpenditureActivity : BaseComposeViewModelActivity<NewExpenditureViewMo
     @Composable
     override fun Content() {
         val companionListState = viewModel.companions.observeAsState()
-        val chosenPayerIdState = viewModel.payerId.observeAsState()
-        val paymentOption = viewModel.paymentOption.observeAsState()
         val errorModel = viewModel.errors.observeAsState()
         NewExpenditureContent(
             companionList = companionListState.value.orEmpty(),
-            payerChosen = chosenPayerIdState.value,
-            paymentOption = paymentOption.value,
             errorModel = errorModel.value,
-            onPayerChosen = viewModel::setPayerId,
-            onAmountSet = viewModel::addToPaymentRelationship,
-            onOptionChanged = viewModel::setPaymentOption,
-            createExpense = { detail, amount ->
-                viewModel.createExpenditure(getTripId(), detail, amount)
-            },
+            createExpense = { formData -> viewModel.createExpenditure(getTripId(), formData) },
             backNavigation = { finish() }
         )
     }

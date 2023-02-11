@@ -4,9 +4,9 @@ import androidx.lifecycle.*
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorModel
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorStates
 import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseErrorStates.Companion.toErrorState
+import com.anwera64.pagodividido.newexpenditure.utils.NewExpenseFormData
 import com.anwera64.pagodividido.newexpenditure.utils.PaymentOptions
 import com.anwera64.pagodividido.utils.EventWrapper
-import com.anwera64.pagodividido.utils.modifyLiveDataMap
 import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.DebtorInputError
 import com.anwera97.domain.models.InputErrorType
@@ -27,14 +27,6 @@ class NewExpenditureViewModel @Inject constructor(
     private val _companions = MediatorLiveData<List<CompanionModel>>()
     var companions: LiveData<List<CompanionModel>> = _companions
 
-    private val paymentRelationship = MutableLiveData<Map<Int, Double>>(emptyMap())
-
-    private val _payerId = MutableLiveData<Int>()
-    val payerId: LiveData<Int> = _payerId
-
-    private val _paymentOption = MutableLiveData<PaymentOptions>()
-    val paymentOption = _paymentOption
-
     // Errors
     private val _errors = MutableLiveData<NewExpenseErrorModel>()
     val errors: LiveData<NewExpenseErrorModel> = _errors
@@ -48,24 +40,24 @@ class NewExpenditureViewModel @Inject constructor(
 
     fun createExpenditure(
         tripId: Int,
-        detail: String?,
-        amountString: String
+        formData: NewExpenseFormData
     ) {
-        val payerId: Int? = _payerId.value
+        val payerId = formData.payerId?.toInt()
         val payerIdError = newExpenditureUseCase.checkPayerInputError(payerId)
 
+        val amountString = formData.amount.orEmpty()
         val amountInputError = newExpenditureUseCase.checkAmountInputError(amountString)
         val amountSpent: Double = amountString.toDoubleOrNull() ?: 0.0
 
-        val paymentOption: PaymentOptions? = paymentOption.value
 
-        val paymentOptionError: InputErrorType = newExpenditureUseCase.checkPaymentOptionError(paymentOption != null)
+        val paymentOptionError: InputErrorType =
+            newExpenditureUseCase.checkPaymentOptionError(formData.paymentOption != null)
 
         val companions: List<CompanionModel> = _companions.value.orEmpty()
-        val debtors: Map<Int, Double> = if (paymentOption == PaymentOptions.EQUALS) {
+        val debtors: Map<Int, Double> = if (formData.paymentOption == PaymentOptions.EQUALS) {
             newExpenditureUseCase.createEqualPayments(companions, amountSpent)
         } else {
-            newExpenditureUseCase.completeDebtMap(paymentRelationship.value.orEmpty(), companions)
+            newExpenditureUseCase.completeDebtMap(formData.payingRelationship, companions)
         }
         val debtorErrors: List<DebtorInputError> = newExpenditureUseCase.lookForDebtorInputErrors(
             totalAmount = amountSpent,
@@ -88,7 +80,13 @@ class NewExpenditureViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            newExpenditureUseCase.addExpenditure(tripId, payerId!!, debtors, detail, amountSpent)
+            newExpenditureUseCase.addExpenditure(
+                tripId,
+                payerId!!,
+                debtors,
+                formData.detail,
+                amountSpent
+            )
             _insertionDone.postValue(EventWrapper(true))
         }
     }
@@ -118,18 +116,4 @@ class NewExpenditureViewModel @Inject constructor(
             Observer(_companions::postValue)
         )
     }
-
-    /**
-     * Add a user ID with an amount to the payment relationship for the expense.
-     */
-    fun addToPaymentRelationship(pair: Pair<Int, Double>) {
-        val (id: Int, amount: Double) = pair
-        paymentRelationship.modifyLiveDataMap {
-            this[id] = amount
-        }
-    }
-
-    fun setPayerId(id: Int) = _payerId.postValue(id)
-
-    fun setPaymentOption(paymentOption: PaymentOptions) = _paymentOption.postValue(paymentOption)
 }
