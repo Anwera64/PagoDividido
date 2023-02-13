@@ -15,28 +15,10 @@ object CompanionMapper {
             with(payerComposite) {
                 return ResultModel(
                         companion = toModel(payer),
-                        totalPayed = getTotalPayment(),
+                        totalPaid = getTotalPayment(),
                         debts = getDebts()
                 )
             }
-
-    fun makeCalculation(results: List<ResultModel>): List<ResultModel> {
-        val resultMap = toHashMap(results.map(ResultModel::clone))
-        results.forEachIndexed { index, result ->
-            result.debts.entries.forEach { entry ->
-                //key -> name, value -> amount
-                val amount = resultMap[entry.key]?.debts?.get(result.companion.name) ?: 0.0
-                results[index].debts[entry.key] = (result.debts[entry.key] ?: 0.0) - amount
-            }
-        }
-        return results
-    }
-}
-
-private fun toHashMap(results: List<ResultModel>): Map<String, ResultModel> {
-    val map = HashMap<String, ResultModel>()
-    results.forEach { resultModel -> map[resultModel.companion.name] = resultModel }
-    return map
 }
 
 private fun PayerWithExpendituresAndDebtors.getTotalPayment(): Double {

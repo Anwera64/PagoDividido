@@ -8,7 +8,7 @@ class CompanionRepository(private val companionDao: CompanionDao) {
 
     fun getTripCompanions(tripId: Int) = companionDao.getAllFromTrip(tripId)
 
-    fun getPayersWithDebtors(tripId: Int) = companionDao.getPayersWithDebtors(tripId)
+    fun getResultInfoFor(tripId: Int) = companionDao.getPayersWithDebtors(tripId)
 
     @WorkerThread
     suspend fun insert(companion: Companion) {

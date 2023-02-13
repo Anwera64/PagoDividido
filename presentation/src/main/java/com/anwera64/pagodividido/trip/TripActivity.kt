@@ -1,44 +1,61 @@
 package com.anwera64.pagodividido.trip
 
+import android.content.Intent
 import android.os.Bundle
-import com.anwera64.pagodividido.R
-import com.anwera64.pagodividido.databinding.ActivityTripBinding
-import com.anwera64.pagodividido.base.BaseActivity
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
+import androidx.activity.viewModels
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.anwera64.pagodividido.base.BaseComposeViewModelActivity
+import com.anwera64.pagodividido.newexpenditure.NewExpenditureActivity
+import com.anwera64.pagodividido.utils.NOT_FOUND
+import dagger.hilt.android.AndroidEntryPoint
 
-class TripActivity : BaseActivity<ActivityTripBinding>() {
+@AndroidEntryPoint
+class TripActivity : BaseComposeViewModelActivity<TripViewModel>() {
+
+    override val viewModel: TripViewModel by viewModels()
 
     companion object {
-        const val DETAIL_TAB_POSITION = 0
-        const val RESULT_TAB_POSITION = 1
         const val TRIP_ID = "tripUid"
         const val NAME = "name"
     }
 
-    override val layout: Int = R.layout.activity_trip
+    private var tripId: Int = NOT_FOUND
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.run {
-            setDisplayHomeAsUpEnabled(true)
-            title = intent.getStringExtra(NAME)
-        }
-        val tripId = intent.getStringExtra(TRIP_ID) ?: return
-        binding.vpTrip.adapter = TripFragmentAdapter(this, tripId)
-        TabLayoutMediator(binding.tabLayoutTrips, binding.vpTrip, this::setupTabs).attach()
+        tripId = intent.getStringExtra(TRIP_ID)?.toInt() ?: NOT_FOUND
     }
 
-    private fun setupTabs(tab: TabLayout.Tab, position: Int) {
-        if (position == DETAIL_TAB_POSITION) {
-            tab.text = getString(R.string.details)
-            tab.setIcon(R.drawable.ic_money)
+    private fun createNewTrip() {
+        Intent(this, NewExpenditureActivity::class.java).run {
+            putExtra(TRIP_ID, tripId)
+            startActivity(this)
         }
+    }
 
-        if (position == RESULT_TAB_POSITION) {
-            tab.text = getString(R.string.result)
-            tab.setIcon(R.drawable.ic_people)
-        }
+    @Composable
+    override fun Content() {
+        val expenses = viewModel.getExpenseList(tripId).observeAsState()
+        val title = intent.getStringExtra(NAME)
+        val sortedExpenses = expenses.value?.sortedByDescending { expense -> expense.date }
+        val companions = viewModel.getCompnaions(tripId).observeAsState()
+        val resultModel = viewModel.currentResult.observeAsState()
+        TripView(
+            backNavigation = ::finish,
+            createNewExpenditure = ::createNewTrip,
+            expenditures = sortedExpenses.orEmpty(),
+            topBarTitle = title.orEmpty(),
+            companionList = companions.value.orEmpty(),
+            requestCompanionResult = { id: String ->
+                viewModel.getResultsForCompanion(tripId, id.toInt())
+            },
+            resultModel = resultModel.value
+        )
+    }
+
+    override fun setupObservers() {
+        //Not used
     }
 }

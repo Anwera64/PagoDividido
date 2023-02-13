@@ -1,20 +1,15 @@
 package com.anwera97.domain.usecases
 
-import com.anwera97.data.entities.Companion
 import com.anwera97.data.entities.Expenditure
-import com.anwera97.data.repository.CompanionRepository
 import com.anwera97.data.repository.ExpenditureRepository
-import com.anwera97.domain.mappers.CompanionMapper
 import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.DebtorInputError
 import com.anwera97.domain.models.DebtorInputErrorReasons
-import com.anwera97.domain.models.InputErrorTypes
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import com.anwera97.domain.models.InputErrorType
 import java.util.*
+import javax.inject.Inject
 
-class NewExpenditureUseCase(
-    private val companionRepository: CompanionRepository,
+class NewExpenditureUseCase @Inject constructor(
     private val expenditureRepository: ExpenditureRepository
 ) {
     suspend fun addExpenditure(
@@ -80,28 +75,52 @@ class NewExpenditureUseCase(
         }
     }
 
-    fun getTripCompanions(tripId: Int): Flow<List<CompanionModel>> {
-        return companionRepository.getTripCompanions(tripId).map(this::mapToCompanionList)
-    }
-
-    private fun mapToCompanionList(list: List<Companion>): List<CompanionModel> {
-        return list.map(CompanionMapper::toModel)
-    }
-
-    fun checkAmountInputError(amountString: String): InputErrorTypes {
+    fun checkAmountInputError(amountString: String): InputErrorType {
         return when {
-            amountString.isEmpty() -> InputErrorTypes.INPUT_AMOUNT
+            amountString.isEmpty() -> InputErrorType.INPUT_AMOUNT
             //we check if we can cast it to double first to avoid errors
-            amountString.toDoubleOrNull() == null -> InputErrorTypes.INPUT_NUMBER
-            else -> InputErrorTypes.NO_ERROR
+            amountString.toDoubleOrNull() == null -> InputErrorType.INPUT_NUMBER
+            else -> InputErrorType.NO_ERROR
         }
     }
 
-    fun checkPayerInputError(id: Int): InputErrorTypes {
-        return if (id == -1) {
-            InputErrorTypes.INEXISTENT_ID
-        } else {
-            InputErrorTypes.NO_ERROR
+    fun checkPaymentOptionError(exists: Boolean): InputErrorType {
+        return when {
+            !exists -> InputErrorType.MISSING_FIELD
+            else -> InputErrorType.NO_ERROR
         }
+    }
+
+    fun checkPayerInputError(id: Int?): InputErrorType {
+        return when (id) {
+            -1 -> InputErrorType.INEXISTENT_ID
+            null -> InputErrorType.MISSING_FIELD
+            else -> InputErrorType.NO_ERROR
+        }
+    }
+
+    fun createEqualPayments(
+        companions: List<CompanionModel>,
+        amountSpent: Double
+    ): MutableMap<Int, Double> {
+        val equalizedMap = mutableMapOf<Int, Double>()
+        companions.forEach { companionModel ->
+            equalizedMap[companionModel.uid.toInt()] = amountSpent / companions.size
+        }
+        return equalizedMap
+    }
+
+    fun completeDebtMap(
+        paymentRelationship: Map<Int, Double>,
+        companions: List<CompanionModel>,
+    ): MutableMap<Int, Double> {
+        val completeMap = paymentRelationship.toMutableMap()
+        for (companion in companions) {
+            val companionId = companion.uid.toInt()
+            val entryExists = completeMap[companionId] != null
+            if (entryExists) continue
+            completeMap[companionId] = 0.0
+        }
+        return completeMap
     }
 }
