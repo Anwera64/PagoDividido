@@ -1,12 +1,10 @@
 package com.anwera97.data
 
 import android.content.Context
-import com.anwera97.data.AppDatabase
 import com.anwera97.data.dao.CompanionDao
 import com.anwera97.data.dao.DebtorsDao
 import com.anwera97.data.dao.ExpenditureDao
 import com.anwera97.data.dao.TripDao
-import com.anwera97.domain.repositories.TripRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
