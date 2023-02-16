@@ -5,9 +5,9 @@ import com.anwera97.data.dao.CompanionDao
 import com.anwera97.data.dao.DebtorsDao
 import com.anwera97.data.dao.ExpenditureDao
 import com.anwera97.data.dao.TripDao
-import com.anwera97.data.repository.CompanionRepository
-import com.anwera97.data.repository.ExpenditureRepository
-import com.anwera97.data.repository.TripRepository
+import com.anwera97.data.repository.CompanionRepositoryImpl
+import com.anwera97.data.repository.ExpenditureRepositoryImpl
+import com.anwera97.data.repository.TripRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,14 +42,14 @@ object DataModule {
     fun providesDebtorsDao(database: AppDatabase) : DebtorsDao = database.debtorsDao()
 
     @Provides
-    fun providesTripRepository(tripDao: TripDao): TripRepository = TripRepository(tripDao)
+    fun providesTripRepository(tripDao: TripDao): TripRepositoryImpl = TripRepositoryImpl(tripDao)
 
     @Provides
-    fun providesCompanionRepository(companionDao: CompanionDao) : CompanionRepository = CompanionRepository(companionDao)
+    fun providesCompanionRepository(companionDao: CompanionDao) : CompanionRepositoryImpl = CompanionRepositoryImpl(companionDao)
 
     @Provides
-    fun providesExpenditureRepository(expenditureDao: ExpenditureDao, debtorsDao: DebtorsDao) : ExpenditureRepository {
-        return ExpenditureRepository(expenditureDao, debtorsDao)
+    fun providesExpenditureRepository(expenditureDao: ExpenditureDao, debtorsDao: DebtorsDao) : ExpenditureRepositoryImpl {
+        return ExpenditureRepositoryImpl(expenditureDao, debtorsDao)
     }
 
 }

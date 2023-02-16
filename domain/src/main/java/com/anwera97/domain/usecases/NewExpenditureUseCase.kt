@@ -1,11 +1,7 @@
 package com.anwera97.domain.usecases
 
-import com.anwera97.data.entities.Expenditure
-import com.anwera97.data.repository.ExpenditureRepository
-import com.anwera97.domain.models.CompanionModel
-import com.anwera97.domain.models.DebtorInputError
-import com.anwera97.domain.models.DebtorInputErrorReasons
-import com.anwera97.domain.models.InputErrorType
+import com.anwera97.domain.models.*
+import com.anwera97.domain.repositories.ExpenditureRepository
 import java.util.*
 import javax.inject.Inject
 
@@ -19,15 +15,14 @@ class NewExpenditureUseCase @Inject constructor(
         detail: String?,
         amountSpent: Double
     ) {
-        val expenditure = Expenditure(
+        val expenditure = ExpenseCreationData(
             expense = amountSpent,
-            imageRef = null,
             date = Date(),
             tripId = tripId,
             payerId = payerId,
             detail = if (detail.isNullOrEmpty()) null else detail
         )
-        expenditureRepository.addExpenditure(expenditure = expenditure, debtorIds = debtors)
+        expenditureRepository.addExpense(expense = expenditure, debtorIds = debtors)
     }
 
     fun lookForDebtorInputErrors(

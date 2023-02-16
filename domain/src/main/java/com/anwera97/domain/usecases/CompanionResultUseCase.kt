@@ -1,9 +1,7 @@
 package com.anwera97.domain.usecases
 
-import com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors
-import com.anwera97.data.repository.CompanionRepository
-import com.anwera97.domain.mappers.CompanionMapper
 import com.anwera97.domain.models.ResultModel
+import com.anwera97.domain.repositories.CompanionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -11,17 +9,9 @@ import javax.inject.Inject
 class CompanionResultUseCase @Inject constructor(private val companionRepository: CompanionRepository) {
 
     fun getPayersWithDebtors(tripId: Int, companionId: Int): Flow<ResultModel?> {
-        return companionRepository.getResultInfoFor(tripId).map { listOfDebts ->
-            getResultForCompanion(listOfDebts, companionId)
+        return companionRepository.getResultInfoFor(tripId).map { resultModels ->
+            calculateEndResultForCompanion(resultModels, companionId.toString())
         }
-    }
-
-    private fun getResultForCompanion(
-        list: List<PayerWithExpendituresAndDebtors>,
-        companionId: Int
-    ): ResultModel? {
-        val resultModels: List<ResultModel> = list.map(CompanionMapper::toModel)
-        return calculateEndResultForCompanion(resultModels, companionId.toString())
     }
 
     /**

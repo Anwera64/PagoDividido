@@ -1,10 +1,8 @@
 package com.anwera97.domain.usecases
 
-import com.anwera97.data.entities.Companion
-import com.anwera97.data.entities.Trip
-import com.anwera97.data.repository.CompanionRepository
-import com.anwera97.data.repository.TripRepository
 import com.anwera97.domain.models.TripShortModel
+import com.anwera97.domain.repositories.CompanionRepository
+import com.anwera97.domain.repositories.TripRepository
 import javax.inject.Inject
 
 class CreateTripUseCase @Inject constructor(
@@ -21,10 +19,8 @@ class CreateTripUseCase @Inject constructor(
     }
 
     suspend fun createTrip(companions: List<String>, tripName: String): TripShortModel {
-        val tripId = tripRepository.insert(Trip(tripName)).toInt()
-        companions.forEach { name ->
-            companionRepository.insert(Companion(name, tripId))
-        }
+        val tripId = tripRepository.insert(tripName).toInt()
+        companionRepository.insert(tripId, *companions.toTypedArray())
         return TripShortModel(tripName, tripId)
     }
 }

@@ -1,4 +1,4 @@
-package com.anwera97.domain.mappers
+package com.anwera97.data.mappers
 
 import com.anwera97.data.composedclasses.TripWithCompanions
 import com.anwera97.data.entities.Expenditure
