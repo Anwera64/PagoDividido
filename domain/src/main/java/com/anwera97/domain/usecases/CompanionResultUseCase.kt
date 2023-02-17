@@ -9,9 +9,11 @@ import javax.inject.Inject
 class CompanionResultUseCase @Inject constructor(private val companionRepository: CompanionRepository) {
 
     fun getPayersWithDebtors(tripId: Int, companionId: Int): Flow<ResultModel?> {
-        return companionRepository.getResultInfoFor(tripId).map { resultModels ->
-            calculateEndResultForCompanion(resultModels, companionId.toString())
-        }
+        return companionRepository
+            .getResultInfoFor(tripId)
+            .map { resultModels ->
+                calculateEndResultForCompanion(resultModels, companionId.toString())
+            }
     }
 
     /**
