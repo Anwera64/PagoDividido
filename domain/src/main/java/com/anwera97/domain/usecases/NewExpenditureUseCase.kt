@@ -15,14 +15,14 @@ class NewExpenditureUseCase @Inject constructor(
         detail: String?,
         amountSpent: Double
     ) {
-        val expenditure = ExpenseCreationData(
+        val expense = ExpenseCreationData(
             expense = amountSpent,
             date = Date(),
             tripId = tripId,
             payerId = payerId,
             detail = if (detail.isNullOrEmpty()) null else detail
         )
-        expenditureRepository.addExpense(expense = expenditure, debtorIds = debtors)
+        expenditureRepository.addExpense(expense = expense, debtorIds = debtors)
     }
 
     fun lookForDebtorInputErrors(
@@ -34,11 +34,18 @@ class NewExpenditureUseCase @Inject constructor(
         debtors.forEach { entry ->
             val reason = checkDebtorInput(entry.value, accumulatedDebt, totalAmount)
             addDebtorInputError(reason, entry, reasons)
-            accumulatedDebt = entry.value
+            accumulatedDebt += entry.value
         }
         return reasons
     }
 
+    /**
+     * Checks if the used amounts equal the total amount. A positive value returned means the used
+     * amounts require more currency.
+     *
+     * This should be called after all the checks for totalAmount and debtors exceeding the total
+     * amount with {@link lookForDebtorInputErrors}
+     */
     fun checkAmountsDifference(totalAmount: Double, debtors: Map<Int, Double>): Double {
         var accumulatedDebt = 0.0
         debtors.forEach { entry ->
@@ -97,7 +104,7 @@ class NewExpenditureUseCase @Inject constructor(
     fun createEqualPayments(
         companions: List<CompanionModel>,
         amountSpent: Double
-    ): MutableMap<Int, Double> {
+    ): Map<Int, Double> {
         val equalizedMap = mutableMapOf<Int, Double>()
         companions.forEach { companionModel ->
             equalizedMap[companionModel.uid.toInt()] = amountSpent / companions.size
