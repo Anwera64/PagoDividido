@@ -2,7 +2,7 @@ package com.anwera97.domain.models
 
 import java.util.*
 
-class ExpenseCreationData(
+data class ExpenseCreationData(
     val id: Int = 0,
     val expense: Double,
     val date: Date,
