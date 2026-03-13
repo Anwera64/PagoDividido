@@ -13,7 +13,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anwera64.pagodividido.R
 import com.anwera64.pagodividido.base.compose.BaseTopAppBar
-import com.google.accompanist.flowlayout.FlowRow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -145,6 +144,7 @@ private fun CompanionField(
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun CompanionChips(
     companions: List<String>,
@@ -153,7 +153,7 @@ private fun CompanionChips(
 ) {
     FlowRow(
         modifier = modifier.fillMaxWidth(),
-        mainAxisSpacing = 8.dp
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         companions.forEach { companion ->
             CompanionChip(onDeleteCompanion, companion)

@@ -312,7 +312,7 @@ private fun PaymentOptionSelector(
             onValueChange = { },
             readOnly = true,
             modifier = Modifier
-                .menuAnchor()
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
                 .fillMaxWidth(),
             trailingIcon = {
                 Icon(

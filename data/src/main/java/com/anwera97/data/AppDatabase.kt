@@ -8,13 +8,13 @@ import com.anwera97.data.dao.CompanionDao
 import com.anwera97.data.dao.DebtorsDao
 import com.anwera97.data.dao.ExpenditureDao
 import com.anwera97.data.dao.TripDao
-import com.anwera97.data.entities.Companion
+import com.anwera97.data.entities.CompanionEntity
 import com.anwera97.data.entities.Debtors
 import com.anwera97.data.entities.Expenditure
 import com.anwera97.data.entities.Trip
 
 @Database(
-        entities = [Trip::class, Companion::class, Expenditure::class, Debtors::class],
+        entities = [Trip::class, CompanionEntity::class, Expenditure::class, Debtors::class],
         version = 1,
         exportSchema = false
 )
