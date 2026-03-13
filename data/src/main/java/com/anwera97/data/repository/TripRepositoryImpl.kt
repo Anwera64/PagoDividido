@@ -8,8 +8,9 @@ import com.anwera97.domain.models.TripModel
 import com.anwera97.domain.repositories.TripRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class TripRepositoryImpl(private val tripDao: TripDao) : TripRepository {
+class TripRepositoryImpl @Inject constructor(private val tripDao: TripDao) : TripRepository {
 
     override fun getAllTrips(): Flow<List<TripModel>> {
         return tripDao.getAll().map { list -> list.map(TripMapper::toModel) }
