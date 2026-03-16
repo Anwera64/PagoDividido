@@ -1,13 +1,13 @@
 package com.anwera97.data.mappers
 
 import com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors
-import com.anwera97.data.entities.Companion
+import com.anwera97.data.entities.CompanionEntity
 import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.ResultModel
 
 object CompanionMapper {
 
-    fun toModel(companionEntity: Companion): CompanionModel = with(companionEntity) {
+    fun toModel(companionEntity: CompanionEntity): CompanionModel = with(companionEntity) {
         return CompanionModel(uid = id.toString(), name = name)
     }
 

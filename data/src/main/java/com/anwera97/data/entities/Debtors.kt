@@ -7,7 +7,7 @@ import androidx.room.ForeignKey
 @Entity(
         primaryKeys = ["companion_id", "expenditure_id"],
         foreignKeys = [ForeignKey(
-                entity = Companion::class,
+                entity = CompanionEntity::class,
                 parentColumns = arrayOf("id"),
                 childColumns = arrayOf("companion_id"),
                 onDelete = ForeignKey.CASCADE

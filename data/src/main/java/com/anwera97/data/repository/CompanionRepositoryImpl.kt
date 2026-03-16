@@ -3,7 +3,7 @@ package com.anwera97.data.repository
 import androidx.annotation.WorkerThread
 import com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors
 import com.anwera97.data.dao.CompanionDao
-import com.anwera97.data.entities.Companion
+import com.anwera97.data.entities.CompanionEntity
 import com.anwera97.data.mappers.CompanionMapper
 import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.ResultModel
@@ -25,11 +25,11 @@ class CompanionRepositoryImpl(private val companionDao: CompanionDao) : Companio
 
     @WorkerThread
     override suspend fun insert(tripId: Int, vararg companionName: String) {
-        val companionEntities = companionName.map { name -> Companion(name, tripId) }
+        val companionEntities = companionName.map { name -> CompanionEntity(name, tripId) }
         companionDao.insertAll(*companionEntities.toTypedArray())
     }
 
-    private fun mapToCompanionList(list: List<Companion>): List<CompanionModel> {
+    private fun mapToCompanionList(list: List<CompanionEntity>): List<CompanionModel> {
         return list.map(CompanionMapper::toModel)
     }
 }

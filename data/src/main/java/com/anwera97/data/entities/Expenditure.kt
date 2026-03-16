@@ -13,7 +13,7 @@ import java.util.*
                         onDelete = ForeignKey.CASCADE
                 ),
                 ForeignKey(
-                        entity = Companion::class,
+                        entity = CompanionEntity::class,
                         parentColumns = arrayOf("id"),
                         childColumns = arrayOf("payer_id"),
                         onDelete = ForeignKey.CASCADE
