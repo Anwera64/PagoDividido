@@ -2,6 +2,7 @@ package com.anwera97.data.repository
 
 import androidx.annotation.WorkerThread
 import com.anwera97.data.dao.CompanionDao
+import com.anwera97.data.dao.ResultDao
 import com.anwera97.data.entities.CompanionEntity
 import com.anwera97.data.mappers.CompanionMapper
 import com.anwera97.data.mappers.ResultMapper
@@ -12,13 +13,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class CompanionRepositoryImpl @Inject constructor(private val companionDao: CompanionDao) : CompanionRepository {
+class CompanionRepositoryImpl @Inject constructor(
+    private val companionDao: CompanionDao,
+    private val resultDao: ResultDao
+) : CompanionRepository {
 
     override fun getTripCompanions(tripId: Int): Flow<List<CompanionModel>> =
         companionDao.getAllFromTrip(tripId).map(::mapToCompanionList)
 
     override fun getResultInfoFor(tripId: Int): Flow<List<ResultModel>> {
-        return companionDao.getAggregatedDebts(tripId)
+        return resultDao.getAggregatedDebts(tripId)
             .map(ResultMapper::toModel)
     }
 
