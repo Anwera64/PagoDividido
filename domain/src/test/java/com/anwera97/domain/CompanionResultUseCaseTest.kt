@@ -27,28 +27,27 @@ class CompanionResultUseCaseTest {
         // Data
         val tripId = 1
         val payerId = 1
-        val payerName = "Name 1"
-        val payer = CompanionModel(payerId.toString(), payerName)
-        val debtorName = "Name 2"
-        val debtor = CompanionModel("", debtorName)
+        val payer = CompanionModel(payerId.toString(), "Name 1")
+        val debtor = CompanionModel("2", "Name 2")
+        
         val debtList = listOf(
             ResultModel(
                 companion = payer,
                 totalPaid = 0.0,
-                debts = mutableMapOf(debtorName to 10.0),
+                debts = mutableMapOf(debtor to 10.0),
                 isExtended = false
             ),
             ResultModel(
                 companion = debtor,
                 totalPaid = 0.0,
-                debts = mutableMapOf(payerName to 5.0),
+                debts = mutableMapOf(payer to 5.0),
                 isExtended = false
             )
         )
         val expectedResult = ResultModel(
             companion = payer,
             totalPaid = 0.0,
-            debts = mutableMapOf(debtorName to 5.0),
+            debts = mutableMapOf(debtor to 5.0),
             isExtended = false
         )
 
@@ -65,12 +64,12 @@ class CompanionResultUseCaseTest {
         // Data
         val tripId = 1
         val payerId = 1
-        val payer = CompanionModel("2", "")
+        val someCompanion = CompanionModel("2", "Other")
         val debtList = listOf(
             ResultModel(
-                companion = payer,
+                companion = someCompanion,
                 totalPaid = 0.0,
-                debts = mutableMapOf("" to 10.0),
+                debts = mutableMapOf(CompanionModel("3", "Third") to 10.0),
                 isExtended = false
             ),
         )
@@ -103,32 +102,30 @@ class CompanionResultUseCaseTest {
         // Data
         val tripId = 1
         val payerId = 1
-        val payerName = "Name 1"
-        val payer = CompanionModel(payerId.toString(), payerName)
-        val firstDebtorName = "Name 2"
-        val firstDebtor = CompanionModel("", firstDebtorName)
-        val secondDebtorName = "Name 3"
-        val secondDebtor = CompanionModel("", secondDebtorName)
+        val payer = CompanionModel(payerId.toString(), "Name 1")
+        val firstDebtor = CompanionModel("2", "Name 2")
+        val secondDebtor = CompanionModel("3", "Name 3")
+        
         val debtList = listOf(
             ResultModel(
                 companion = payer,
                 totalPaid = 0.0,
                 debts = mutableMapOf(
-                    firstDebtorName to 10.0,
-                    secondDebtorName to 5.0
+                    firstDebtor to 10.0,
+                    secondDebtor to 5.0
                 ),
                 isExtended = false
             ),
             ResultModel(
                 companion = firstDebtor,
                 totalPaid = 0.0,
-                debts = mutableMapOf(payerName to 5.0),
+                debts = mutableMapOf(payer to 5.0),
                 isExtended = false
             ),
             ResultModel(
                 companion = secondDebtor,
                 totalPaid = 0.0,
-                debts = mutableMapOf(payerName to 10.0),
+                debts = mutableMapOf(payer to 10.0),
                 isExtended = false
             )
         )
@@ -136,8 +133,8 @@ class CompanionResultUseCaseTest {
             companion = payer,
             totalPaid = 0.0,
             debts = mutableMapOf(
-                firstDebtorName to 5.0,
-                secondDebtorName to -5.0
+                firstDebtor to 5.0,
+                secondDebtor to -5.0
             ),
             isExtended = false
         )

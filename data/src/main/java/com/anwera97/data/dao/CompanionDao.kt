@@ -13,6 +13,7 @@ interface CompanionDao {
     @Query("""
         SELECT 
             c_payer.*,
+            c_debtor.id AS debtorId,
             c_debtor.name AS debtorName,
             SUM(d.amount) AS amount
         FROM companion AS c_payer

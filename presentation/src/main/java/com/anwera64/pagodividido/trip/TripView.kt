@@ -113,8 +113,8 @@ private fun ResultPage(
             )
             TotalSpentText(resultModel)
         }
-        items(resultModel?.debts?.toList().orEmpty()) { (name, amount) ->
-            DebtItem(name, amount)
+        items(resultModel?.debts?.toList().orEmpty()) { (companion, amount) ->
+            DebtItem(companion.name, amount)
         }
     }
 }
@@ -425,9 +425,9 @@ private fun PreviewResult() {
                 ),
                 totalPaid = 100.0,
                 debts = mutableMapOf(
-                    "Zea" to 12.0,
-                    "Tongo" to 54.0,
-                    "Jaz" to 42.0
+                    CompanionModel(uid = UUID.randomUUID().toString(), name = "Zea") to 12.0,
+                    CompanionModel(uid = UUID.randomUUID().toString(), name = "Tongo") to 54.0,
+                    CompanionModel(uid = UUID.randomUUID().toString(), name = "Jaz") to 42.0
                 )
             )
         )
