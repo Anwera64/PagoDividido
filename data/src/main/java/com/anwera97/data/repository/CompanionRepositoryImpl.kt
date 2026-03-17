@@ -1,10 +1,10 @@
 package com.anwera97.data.repository
 
 import androidx.annotation.WorkerThread
-import com.anwera97.data.composedclasses.PayerWithExpendituresAndDebtors
 import com.anwera97.data.dao.CompanionDao
 import com.anwera97.data.entities.CompanionEntity
 import com.anwera97.data.mappers.CompanionMapper
+import com.anwera97.data.mappers.ResultMapper
 import com.anwera97.domain.models.CompanionModel
 import com.anwera97.domain.models.ResultModel
 import com.anwera97.domain.repositories.CompanionRepository
@@ -18,10 +18,8 @@ class CompanionRepositoryImpl @Inject constructor(private val companionDao: Comp
         companionDao.getAllFromTrip(tripId).map(::mapToCompanionList)
 
     override fun getResultInfoFor(tripId: Int): Flow<List<ResultModel>> {
-        return companionDao.getPayersWithDebtors(tripId)
-            .map { listOfEntities: List<PayerWithExpendituresAndDebtors> ->
-                listOfEntities.map(CompanionMapper::toModel)
-            }
+        return companionDao.getAggregatedDebts(tripId)
+            .map(ResultMapper::toModel)
     }
 
     @WorkerThread
