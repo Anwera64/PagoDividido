@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace 'com.anwera64.infra'
+    namespace 'com.anwera97.infra'
     compileSdk 35
 
     defaultConfig {
