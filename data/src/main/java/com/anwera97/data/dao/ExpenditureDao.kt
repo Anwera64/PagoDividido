@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenditureDao {
-    @Query("SELECT * FROM expenditure WHERE trip_id = :tripId")
+    @Query("SELECT * FROM expenditure WHERE trip_id = :tripId ORDER BY date DESC")
     fun getAllFromTrip(tripId: Int): Flow<List<ExpenditureWithDebtorsAndPayer>>
 
     @Insert

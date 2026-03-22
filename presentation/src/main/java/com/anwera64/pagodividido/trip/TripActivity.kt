@@ -45,7 +45,7 @@ class TripActivity : BaseComposeViewModelActivity<TripViewModel>() {
         TripView(
             backNavigation = ::finish,
             createNewExpenditure = ::createNewTrip,
-            expenditures = expenses.sortedByDescending { it.date },
+            expenditures = expenses,
             topBarTitle = title.orEmpty(),
             companionList = companions,
             requestCompanionResult = { id: String ->
