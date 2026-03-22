@@ -1,6 +1,7 @@
 package com.anwera97.data
 
 import android.content.Context
+import androidx.room.Room
 import com.anwera97.data.dao.CompanionDao
 import com.anwera97.data.dao.DebtorsDao
 import com.anwera97.data.dao.ExpenditureDao
@@ -19,7 +20,7 @@ object DataModule {
     @Singleton
     @Provides
     fun providesDatabase(@ApplicationContext context: Context): AppDatabase {
-        return AppDatabase.getDatabase(context)
+        return Room.databaseBuilder(context, AppDatabase::class.java, "app_database").build()
     }
 
     @Singleton

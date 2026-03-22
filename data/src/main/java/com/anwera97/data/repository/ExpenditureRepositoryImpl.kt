@@ -11,8 +11,9 @@ import com.anwera97.domain.models.ExpenseCreationData
 import com.anwera97.domain.repositories.ExpenditureRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class ExpenditureRepositoryImpl(
+class ExpenditureRepositoryImpl @Inject constructor(
     private val expenditureDao: ExpenditureDao,
     private val debtorsDao: DebtorsDao
 ) : ExpenditureRepository {

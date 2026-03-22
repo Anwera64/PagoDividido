@@ -10,8 +10,9 @@ import com.anwera97.domain.models.ResultModel
 import com.anwera97.domain.repositories.CompanionRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
-class CompanionRepositoryImpl(private val companionDao: CompanionDao) : CompanionRepository {
+class CompanionRepositoryImpl @Inject constructor(private val companionDao: CompanionDao) : CompanionRepository {
 
     override fun getTripCompanions(tripId: Int): Flow<List<CompanionModel>> =
         companionDao.getAllFromTrip(tripId).map(::mapToCompanionList)
