@@ -116,7 +116,7 @@ object AndroidConfig {
 | `:data` | `pagodividido.android.library` · `pagodividido.android.hilt` |
 | `:presentation` | `pagodividido.android.application` · `pagodividido.android.hilt` · `pagodividido.android.compose` |
 
-> Note: `:infra` currently exists in the repository but is not included in `settings.gradle`.
+> Note: `:infra` has been removed; active modules are `:presentation`, `:data`, and `:domain`.
 
 ---
 

@@ -21,7 +21,7 @@ there is an explicit architectural decision to change direction.
 ## Current Gradle architecture
 
 - Included modules in `settings.gradle`: `:presentation`, `:data`, `:domain`.
-- `:infra` exists in the repository but is currently not included in `settings.gradle`.
+- `:infra` has been removed from the repository.
 - Convention plugins are implemented in `build-logic/src/main/kotlin`.
 - Shared versions come from `gradle/libs.versions.toml`.
 - `build-logic` imports the root version catalog via `build-logic/settings.gradle.kts`.
