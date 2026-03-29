@@ -156,12 +156,191 @@ configuration logic to evaluate.
 
 ---
 
+## Hilt dependency injection best practices
+
+This project follows official Hilt patterns and modern Android DI conventions. The following
+ensures clean dependency resolution and avoids common Hilt pitfalls:
+
+### 1. **Module structure and dependency flow**
+
+```
+domain/              (pure Kotlin, no Android)
+  ├── models/
+  ├── repositories/  (interfaces only)
+  └── usecases/      (@Inject-ready, depend on repositories)
+
+data/                (Android library, provides implementations)
+  ├── entities/
+  ├── dao/
+  ├── repository/    (@Inject constructors implementing domain interfaces)
+  └── RepositoryModule.kt  (@Binds - maps interfaces → implementations)
+
+presentation/        (Android app, uses everything)
+  └── ui/activities, viewmodels, etc.
+```
+
+**Key principle:** presentation depends on `data`, not vice versa. This allows
+presentation's Hilt component to discover and wire `RepositoryModule` bindings.
+
+### 2. **Repository binding pattern**
+
+Use abstract `@Binds` methods (not `@Provides`) for interface→implementation mapping.
+This is more efficient (no instance creation in the module itself):
+
+```kotlin
+// data/src/main/java/com/anwera97/data/RepositoryModule.kt
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    abstract fun bindTripRepository(impl: TripRepositoryImpl): TripRepository
+
+    @Binds
+    abstract fun bindCompanionRepository(impl: CompanionRepositoryImpl): CompanionRepository
+
+    @Binds
+    abstract fun bindExpenditureRepository(impl: ExpenditureRepositoryImpl): ExpenditureRepository
+}
+```
+
+Each implementation must have an `@Inject` constructor:
+
+```kotlin
+class TripRepositoryImpl @Inject constructor(
+    private val tripDao: TripDao
+) : TripRepository { … }
+```
+
+### 3. **Hilt components and scopes**
+
+- **SingletonComponent** (app lifetime) — Use for repositories, DAOs, database instances.
+- **ActivityRetainedComponent** (across configuration changes) — For business logic.
+- **ActivityComponent** (per activity) — For activity-scoped services.
+- **ViewModelComponent** — Automatically used by `@HiltViewModel` for lifecycle-aware injection.
+
+**Current project setup:**
+- Database + DAOs: `@Singleton` in `DataModule` → `SingletonComponent`
+- Repositories: `@Singleton` via `@Binds` in `RepositoryModule` → `SingletonComponent`
+- UseCases: `@Inject` constructor, scoped by their consumer (usually `@HiltViewModel`)
+- ViewModels: `@HiltViewModel` → `ViewModelComponent` (provides lifecycle awareness)
+
+### 4. **ViewModel injection**
+
+All ViewModels in `:presentation` are annotated with `@HiltViewModel` and use Hilt's
+built-in `ViewModelComponent` scope:
+
+```kotlin
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val tripsUseCase: TripsUseCase  // injected by Hilt
+) : ViewModel() {
+    val trips: LiveData<List<TripModel>> by lazy {
+        tripsUseCase.getAllTrips().asLiveData(viewModelScope.coroutineContext)
+    }
+}
+```
+
+Activities retrieve these via `val viewModel: MainViewModel by viewModels()` — Hilt
+automatically creates and retains them.
+
+### 5. **Android entry point**
+
+The application class must be annotated with `@HiltAndroidApp`:
+
+```kotlin
+// presentation/src/main/java/com/anwera97/pagodividido/PagoDivididoApp.kt
+@HiltAndroidApp
+class PagoDivididoApp : Application()
+```
+
+This triggers Hilt code generation and initialises the dependency graph at app startup.
+
+### 6. **Common issues and fixes**
+
+#### Issue: "Cannot be provided without an @Provides-annotated method"
+
+This means Hilt cannot find a way to construct the requested type. Common causes:
+
+1. **Missing dependency** — Module is not in the dependency path. Example:
+   - `:presentation` depended only on `:domain`, not `:data`.
+   - `:data/RepositoryModule` was never discovered.
+   - **Fix:** Ensure presentation depends on data: `implementation project(':data')`
+
+2. **Missing @Inject constructor** — Repository implementation lacks it.
+   - **Fix:** Add `@Inject constructor(…)` to implementation class.
+
+3. **Missing @Binds method** — Interface has no mapping to implementation.
+   - **Fix:** Add abstract `@Binds` method in a `@Module` in the provider module.
+
+4. **Wrong scope** — Binding installed in wrong component.
+   - **Fix:** Ensure `@InstallIn(SingletonComponent::class)` for app-level bindings.
+
+#### Issue: "Multiple binding solutions"
+
+Hilt found more than one way to provide a type.
+
+- **Fix:** Remove duplicate `@Provides` or `@Binds` methods, or disambiguate with
+  `@Qualifier` annotations.
+
+### 7. **Testing considerations**
+
+For unit/integration tests, use `@HiltAndroidTest` and inject test fakes:
+
+```kotlin
+@HiltAndroidTest
+class RepositoryTest {
+    @get:Rule
+    val hiltRule = HiltAndroidRule(this)
+
+    @Inject
+    lateinit var tripRepository: TripRepository
+
+    @Before
+    fun setup() { hiltRule.inject() }
+
+    @Test
+    fun testInsertTrip() { … }
+}
+```
+
+For module replacement in tests, use `@UninstallModules` and custom test modules
+via `@TestInstallIn`.
+
+### 8. **Future enhancements**
+
+Consider these when expanding the project:
+
+- **@Qualifier annotations** — If multiple implementations of the same interface are needed.
+  ```kotlin
+  @Qualifier annotation class Local
+  @Qualifier annotation class Remote
+  
+  @Binds @Local
+  abstract fun bindLocalTripRepository(…): TripRepository
+  ```
+- **Factory pattern** — For complex object creation beyond constructor injection.
+  ```kotlin
+  @Module
+  @InstallIn(SingletonComponent::class)
+  object ComplexModule {
+      @Provides
+      @Singleton
+      fun provideComplexService(…): ComplexService = ComplexService(…)
+  }
+  ```
+- **@EntryPoint** — For injecting into objects not constructed by Hilt (e.g., plugins).
+
+---
+
 ## Future improvements
 
 The following items are natural next steps to expand and harden this setup:
 
 ### Short-term
 
+- [x] **Fixed: Presentation depends on data** — `:presentation` now correctly depends on
+      `:data`, allowing Hilt to discover `RepositoryModule` bindings at compile time.
+      Previously, Hilt could not resolve repository implementations, causing DI failures.
 - [ ] **Kotlin version constant in `AndroidConfig`** — Add `KOTLIN_JVM_TARGET` alongside
       the SDK constants so `compileOptions` source/target compatibility is also a
       single source of truth.
