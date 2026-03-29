@@ -18,8 +18,6 @@ class CompanionResultUseCase @Inject constructor(private val companionRepository
 
     /**
      * Returns the amount owed to and from for a single Companion.
-     *
-     * TODO() Add a unit test for this
      */
     private fun calculateEndResultForCompanion(
         results: List<ResultModel>,
@@ -29,18 +27,17 @@ class CompanionResultUseCase @Inject constructor(private val companionRepository
         val requestedResult: ResultModel = results.find { resultModel ->
             resultModel.companion.uid == requestedId
         } ?: return null
-        val requestedName: String = requestedResult.companion.name
+        val requestedCompanion = requestedResult.companion
 
         // Remove the requested result to avoid nulling their own debt
         val companionResults = results.toMutableList()
         companionResults.remove(requestedResult)
 
         companionResults.forEach { companionResult ->
-            // Names are unique, so we can use them as ID
-            val companionName = companionResult.companion.name
-            val currentDebt: Double = requestedResult.debts[companionName] ?: 0.0
-            val amountOwed: Double = companionResult.debts[requestedName] ?: 0.0
-            requestedResult.debts[companionName] = currentDebt - amountOwed
+            val otherCompanion = companionResult.companion
+            val currentDebt: Double = requestedResult.debts[otherCompanion] ?: 0.0
+            val amountOwed: Double = companionResult.debts[requestedCompanion] ?: 0.0
+            requestedResult.debts[otherCompanion] = currentDebt - amountOwed
         }
         return requestedResult
     }

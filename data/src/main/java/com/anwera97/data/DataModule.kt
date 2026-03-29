@@ -2,10 +2,7 @@ package com.anwera97.data
 
 import android.content.Context
 import androidx.room.Room
-import com.anwera97.data.dao.CompanionDao
-import com.anwera97.data.dao.DebtorsDao
-import com.anwera97.data.dao.ExpenditureDao
-import com.anwera97.data.dao.TripDao
+import com.anwera97.data.dao.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,4 +35,8 @@ object DataModule {
     @Singleton
     @Provides
     fun providesDebtorsDao(database: AppDatabase): DebtorsDao = database.debtorsDao()
+
+    @Singleton
+    @Provides
+    fun providesResultDao(database: AppDatabase): ResultDao = database.resultDao()
 }
