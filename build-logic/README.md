@@ -1,6 +1,6 @@
 # build-logic — Convention Plugins
 
-> For AI-assisted Gradle changes, read `build-logic/AI_CONTEXT.md` first.
+> AI context docs: `build-logic/GRADLE_AI_CONTEXT.md` (Gradle/conventions) and `build-logic/UNIT_TEST_AI_CONTEXT.md` (unit tests).
 
 This included build centralises all Android Gradle configuration for **PagoDividido**.
 Instead of repeating `android {}` blocks, plugin aliases, and dependency declarations in
@@ -12,6 +12,8 @@ every module, each module simply applies one or more lightweight convention plug
 
 ```
 build-logic/
+├── GRADLE_AI_CONTEXT.md             # AI guide for Gradle and convention-plugin changes
+├── UNIT_TEST_AI_CONTEXT.md          # AI guide for unit-test changes and test quality rules
 ├── build.gradle.kts                  # kotlin-dsl + plugin classpath deps
 ├── settings.gradle.kts               # repositories for build-logic itself
 └── src/main/kotlin/
