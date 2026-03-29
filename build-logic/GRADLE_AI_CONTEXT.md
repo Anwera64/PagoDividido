@@ -20,7 +20,7 @@ there is an explicit architectural decision to change direction.
 
 ## Current Gradle architecture
 
-- Included modules in `settings.gradle`: `:presentation`, `:data`, `:domain`.
+- Included modules in `settings.gradle`: `:app`, `:presentation`, `:data`, `:domain`.
 - `:infra` has been removed from the repository.
 - Convention plugins are implemented in `build-logic/src/main/kotlin`.
 - Shared versions come from `gradle/libs.versions.toml`.
@@ -43,8 +43,12 @@ there is an explicit architectural decision to change direction.
 ## Module policy
 
 - `:presentation`
-  - Plugins: `application`, `hilt`, `compose` conventions.
-  - Must depend on `:data` (required for Hilt bindings from data modules).
+  - Plugins: `library`, `hilt`, `compose` conventions.
+  - Depends on `:domain` and exposes UI layer code.
+- `:app`
+  - Plugins: `application`, `hilt` conventions.
+  - Owns launcher manifest and `@HiltAndroidApp`.
+  - Must depend on `:data` and `:presentation` to compose the runtime DI graph.
 - `:data`
   - Plugins: `library`, `hilt` conventions.
   - Owns Room database/DAO/providers and repository bindings.
@@ -58,8 +62,8 @@ there is an explicit architectural decision to change direction.
 `TripRepository`, `CompanionRepository`, and `ExpenditureRepository` bindings are declared in
 `data/src/main/java/com/anwera97/data/RepositoryModule.kt`.
 
-Because of this, `:presentation` must keep `implementation project(':data')` to allow Hilt to
-resolve repository bindings for ViewModels.
+Because of this, `:app` must keep `implementation project(':data')` to allow Hilt to
+resolve repository bindings used by ViewModels in `:presentation`.
 
 ## Build-logic policy
 
@@ -73,7 +77,7 @@ resolve repository bindings for ViewModels.
 - Migrated modules to convention plugins (application/library/hilt/compose).
 - Extracted SDK values into `AndroidConfig.kt`.
 - Extracted Hilt + KSP setup into `pagodividido.android.hilt` convention.
-- Fixed Hilt missing bindings by restoring `:presentation -> :data` dependency.
+- Fixed Hilt missing bindings by enforcing `:app -> :data` dependency.
 - Reduced domain overhead by removing unnecessary Hilt plugin from `:domain`.
 - Added explicit `javax.inject` and `kotlinx.coroutines.core` in `:domain`.
 - Centralized build-logic plugin classpath versions using the root version catalog.
@@ -84,7 +88,7 @@ resolve repository bindings for ViewModels.
 Use the smallest command that validates your change:
 
 - App + DI sanity:
-  - `./gradlew :presentation:assembleDebug --no-daemon`
+  - `./gradlew :app:assembleDebug --no-daemon`
 - Domain compile/tests:
   - `./gradlew :domain:test --no-daemon`
 - Full project check (heavier):

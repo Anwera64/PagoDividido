@@ -1,0 +1,26 @@
+plugins {
+    id 'pagodividido.android.application'
+    id 'pagodividido.android.hilt'
+}
+
+android {
+    defaultConfig {
+        applicationId "com.anwera97.pagodividido"
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+    }
+    namespace 'com.anwera97.pagodividido.app'
+    lint {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation project(':presentation')
+    implementation project(':data')
+
+    testImplementation libs.junit
+    androidTestImplementation libs.bundles.android.test
+}
+

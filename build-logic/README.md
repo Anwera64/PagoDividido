@@ -76,7 +76,7 @@ ksp libs.hilt.compiler
 id 'pagodividido.android.hilt'
 ```
 
-> **Note:** Hilt is applied only where needed (`:data`, `:presentation`).
+> **Note:** Hilt is applied only where needed (`:app`, `:data`, `:presentation`).
 > `:domain` keeps constructor injection via `javax.inject` without Hilt plugin overhead.
 
 ---
@@ -114,11 +114,12 @@ object AndroidConfig {
 
 | Module | Convention plugins applied |
 |---|---|
+| `:app` | `pagodividido.android.application` · `pagodividido.android.hilt` |
 | `:domain` | `pagodividido.android.library` |
 | `:data` | `pagodividido.android.library` · `pagodividido.android.hilt` |
-| `:presentation` | `pagodividido.android.application` · `pagodividido.android.hilt` · `pagodividido.android.compose` |
+| `:presentation` | `pagodividido.android.library` · `pagodividido.android.hilt` · `pagodividido.android.compose` |
 
-> Note: `:infra` has been removed; active modules are `:presentation`, `:data`, and `:domain`.
+> Note: `:infra` has been removed; active modules are `:app`, `:presentation`, `:data`, and `:domain`.
 
 ---
 
@@ -180,12 +181,16 @@ data/                (Android library, provides implementations)
   ├── repository/    (@Inject constructors implementing domain interfaces)
   └── RepositoryModule.kt  (@Binds - maps interfaces → implementations)
 
-presentation/        (Android app, uses everything)
+presentation/        (Android library with UI)
   └── ui/activities, viewmodels, etc.
+
+app/                 (Android app composition root)
+  ├── AndroidManifest.xml
+  └── @HiltAndroidApp Application
 ```
 
-**Key principle:** presentation depends on `data`, not vice versa. This allows
-presentation's Hilt component to discover and wire `RepositoryModule` bindings.
+**Key principle:** `:app` depends on `:data` and `:presentation` to compose the
+final runtime graph. `:presentation` depends on `:domain` only.
 
 ### 2. **Repository binding pattern**
 
@@ -253,7 +258,7 @@ automatically creates and retains them.
 The application class must be annotated with `@HiltAndroidApp`:
 
 ```kotlin
-// presentation/src/main/java/com/anwera97/pagodividido/PagoDivididoApp.kt
+// app/src/main/java/com/anwera97/pagodividido/PagoDivididoApp.kt
 @HiltAndroidApp
 class PagoDivididoApp : Application()
 ```
@@ -267,9 +272,9 @@ This triggers Hilt code generation and initialises the dependency graph at app s
 This means Hilt cannot find a way to construct the requested type. Common causes:
 
 1. **Missing dependency** — Module is not in the dependency path. Example:
-   - `:presentation` depended only on `:domain`, not `:data`.
+   - `:app` depended only on `:presentation`, not `:data`.
    - `:data/RepositoryModule` was never discovered.
-   - **Fix:** Ensure presentation depends on data: `implementation project(':data')`
+   - **Fix:** Ensure app depends on data: `implementation project(':data')`
 
 2. **Missing @Inject constructor** — Repository implementation lacks it.
    - **Fix:** Add `@Inject constructor(…)` to implementation class.
@@ -343,9 +348,9 @@ The following items are natural next steps to expand and harden this setup:
 
 ### Short-term
 
-- [x] **Fixed: Presentation depends on data** — `:presentation` now correctly depends on
-      `:data`, allowing Hilt to discover `RepositoryModule` bindings at compile time.
-      Previously, Hilt could not resolve repository implementations, causing DI failures.
+- [x] **Fixed: App composition root depends on data** — `:app` now depends on `:data`,
+      allowing Hilt to discover `RepositoryModule` bindings at compile time while
+      `:presentation` remains a UI library.
 - [ ] **Kotlin version constant in `AndroidConfig`** — Add `KOTLIN_JVM_TARGET` alongside
       the SDK constants so `compileOptions` source/target compatibility is also a
       single source of truth.

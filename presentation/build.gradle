@@ -1,16 +1,10 @@
 plugins {
-    id 'pagodividido.android.application'
+    id 'pagodividido.android.library'
     id 'pagodividido.android.hilt'
     id 'pagodividido.android.compose'
 }
 
 android {
-    defaultConfig {
-        applicationId "com.anwera97.pagodividido"
-        versionCode 1
-        versionName "1.0"
-        vectorDrawables.useSupportLibrary = true
-    }
     namespace 'com.anwera97.pagodividido'
     lint {
         abortOnError false
@@ -18,7 +12,6 @@ android {
 }
 
 dependencies {
-    implementation project(':data')
     implementation project(':domain')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
