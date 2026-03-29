@@ -1,7 +1,7 @@
 plugins {
-    id 'anwera97.android.application'
-    id 'anwera97.android.hilt'
-    id 'anwera97.android.compose'
+    id 'pagodividido.android.application'
+    id 'pagodividido.android.hilt'
+    id 'pagodividido.android.compose'
 }
 
 android {
@@ -33,8 +33,8 @@ dependencies {
     testImplementation libs.androidx.arch.core.testing
 
     // Coroutines
-    api libs.kotlinx.coroutines.core
-    api libs.kotlinx.coroutines.android
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.android
 
     // KTX
     implementation libs.androidx.core.ktx

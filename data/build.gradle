@@ -1,6 +1,6 @@
 plugins {
-    id 'anwera97.android.library'
-    id 'anwera97.android.hilt'
+    id 'pagodividido.android.library'
+    id 'pagodividido.android.hilt'
 }
 
 android {

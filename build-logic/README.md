@@ -1,5 +1,7 @@
 # build-logic — Convention Plugins
 
+> For AI-assisted Gradle changes, read `build-logic/AI_CONTEXT.md` first.
+
 This included build centralises all Android Gradle configuration for **PagoDividido**.
 Instead of repeating `android {}` blocks, plugin aliases, and dependency declarations in
 every module, each module simply applies one or more lightweight convention plugins.
@@ -14,17 +16,17 @@ build-logic/
 ├── settings.gradle.kts               # repositories for build-logic itself
 └── src/main/kotlin/
     ├── AndroidConfig.kt                        # SDK version constants (single source of truth)
-    ├── anwera97.android.library.gradle.kts     # Base Android library convention
-    ├── anwera97.android.application.gradle.kts # Base Android application convention
-    ├── anwera97.android.hilt.gradle.kts        # Hilt + KSP plugin & dependencies
-    └── anwera97.android.compose.gradle.kts     # Compose compiler plugin + buildFeatures
+    ├── pagodividido.android.library.gradle.kts     # Base Android library convention
+    ├── pagodividido.android.application.gradle.kts # Base Android application convention
+    ├── pagodividido.android.hilt.gradle.kts        # Hilt + KSP plugin & dependencies
+    └── pagodividido.android.compose.gradle.kts     # Compose compiler plugin + buildFeatures
 ```
 
 ---
 
 ## Convention plugins
 
-### `anwera97.android.library`
+### `pagodividido.android.library`
 Applies `com.android.library` and sets shared defaults for every library module.
 
 | Centralised config | Value |
@@ -40,7 +42,7 @@ Each library module retains only its `namespace` (and `targetSdk` where intentio
 
 ---
 
-### `anwera97.android.application`
+### `pagodividido.android.application`
 Applies `com.android.application` and sets shared defaults for the app module.
 
 | Centralised config | Value |
@@ -56,7 +58,7 @@ The app module retains only `applicationId`, `versionCode`, `versionName`, `name
 
 ---
 
-### `anwera97.android.hilt`
+### `pagodividido.android.hilt`
 Applies `com.google.dagger.hilt.android` **and** `com.google.devtools.ksp`, then
 injects the Hilt runtime and compiler dependencies via the version catalog.
 
@@ -69,15 +71,15 @@ implementation libs.hilt.android
 ksp libs.hilt.compiler
 
 // After — one line
-id 'anwera97.android.hilt'
+id 'pagodividido.android.hilt'
 ```
 
-> **Note:** `domain` and `infra` were previously missing the Hilt Gradle plugin.
-> This convention retroactively corrected that gap.
+> **Note:** Hilt is applied only where needed (`:data`, `:presentation`).
+> `:domain` keeps constructor injection via `javax.inject` without Hilt plugin overhead.
 
 ---
 
-### `anwera97.android.compose`
+### `pagodividido.android.compose`
 Applies `org.jetbrains.kotlin.plugin.compose` and enables `buildFeatures.compose = true`.
 Compatible with both `ApplicationExtension` and `LibraryExtension` (AGP 9+).
 
@@ -87,7 +89,7 @@ alias(libs.plugins.kotlin.compose)
 android { buildFeatures { compose true } }
 
 // After
-id 'anwera97.android.compose'
+id 'pagodividido.android.compose'
 ```
 
 ---
@@ -110,10 +112,11 @@ object AndroidConfig {
 
 | Module | Convention plugins applied |
 |---|---|
-| `:domain` | `anwera97.android.library` · `anwera97.android.hilt` |
-| `:data` | `anwera97.android.library` · `anwera97.android.hilt` |
-| `:infra` | `anwera97.android.library` · `anwera97.android.hilt` |
-| `:presentation` | `anwera97.android.application` · `anwera97.android.hilt` · `anwera97.android.compose` |
+| `:domain` | `pagodividido.android.library` |
+| `:data` | `pagodividido.android.library` · `pagodividido.android.hilt` |
+| `:presentation` | `pagodividido.android.application` · `pagodividido.android.hilt` · `pagodividido.android.compose` |
+
+> Note: `:infra` currently exists in the repository but is not included in `settings.gradle`.
 
 ---
 
@@ -344,11 +347,11 @@ The following items are natural next steps to expand and harden this setup:
 - [ ] **Kotlin version constant in `AndroidConfig`** — Add `KOTLIN_JVM_TARGET` alongside
       the SDK constants so `compileOptions` source/target compatibility is also a
       single source of truth.
-- [ ] **`anwera97.android.testing` convention** — Centralise the repeated test dependency
+- [ ] **`pagodividido.android.testing` convention** — Centralise the repeated test dependency
       blocks (`junit`, `mockito-core`, `mockito-kotlin`, `coroutines-test`,
       `arch-core-testing`) that appear across `:domain`, `:data`, and `:presentation`.
-- [ ] **`anwera97.android.library.hilt` composite** — A combined plugin that applies
-      both `anwera97.android.library` + `anwera97.android.hilt` for the common case
+- [ ] **`pagodividido.android.library.hilt` composite** — A combined plugin that applies
+      both `pagodividido.android.library` + `pagodividido.android.hilt` for the common case
       where every library module uses Hilt. Reduces each library to a single plugin line.
 
 ### Medium-term
@@ -356,10 +359,9 @@ The following items are natural next steps to expand and harden this setup:
 - [ ] **Migrate `build.gradle` → `build.gradle.kts`** — Convert all module build files
       from Groovy DSL to Kotlin DSL for full IDE support (auto-complete, refactoring,
       type safety) and consistency with build-logic.
-- [ ] **Version catalog access in build-logic** — Wire `../gradle/libs.versions.toml`
-      into `build-logic/settings.gradle.kts` via `versionCatalogs { from(files(…)) }`
-      so build-logic classpath dependencies (`agp`, `ksp`, `hilt` versions) can also
-      be read from the catalog instead of being hardcoded strings.
+- [x] **Version catalog access in build-logic** — `build-logic` now imports
+      `../gradle/libs.versions.toml` and reads `agp`, `ksp`, `hilt`, and
+      `kotlin-compose-plugin` versions from the shared catalog.
 - [ ] **Enable Gradle configuration cache** — The project is already close to compatible.
       Add `org.gradle.configuration-cache=true` to `gradle.properties` and fix any
       remaining violations to unlock significant configuration-phase speedups.
@@ -368,7 +370,7 @@ The following items are natural next steps to expand and harden this setup:
 
 - [ ] **Build scan / CI build metrics** — Baseline the build times in CI with
       Develocity (or the free Gradle Build Scan) so regressions are caught automatically.
-- [ ] **`anwera97.android.room` convention** — If more modules adopt Room in the future,
+- [ ] **`pagodividido.android.room` convention** — If more modules adopt Room in the future,
       extract the Room dependency bundle + KSP compiler declaration into its own plugin.
 - [ ] **Strict dependency visibility** (`moduleDependencies` / `DependencyGuard`) —
       Enforce which modules can depend on which, preventing accidental coupling between

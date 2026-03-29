@@ -1,6 +1,5 @@
 plugins {
-    id 'anwera97.android.library'
-    id 'anwera97.android.hilt'
+    id 'pagodividido.android.library'
 }
 
 android {
@@ -9,6 +8,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation libs.javax.inject
+    implementation libs.kotlinx.coroutines.core
 
 
     testImplementation libs.junit

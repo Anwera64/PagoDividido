@@ -1,6 +1,11 @@
+import org.gradle.api.artifacts.VersionCatalogsExtension
+
 plugins {
     `kotlin-dsl`
 }
+
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+fun version(name: String) = libs.findVersion(name).get().requiredVersion
 
 repositories {
     google()
@@ -9,9 +14,9 @@ repositories {
 }
 
 dependencies {
-    implementation("com.android.tools.build:gradle:9.1.0")
-    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.3.6")
-    implementation("com.google.dagger:hilt-android-gradle-plugin:2.59.2")
-    implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:2.2.10")
+    implementation("com.android.tools.build:gradle:${version("agp")}")
+    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:${version("ksp")}")
+    implementation("com.google.dagger:hilt-android-gradle-plugin:${version("hilt")}")
+    implementation("org.jetbrains.kotlin:compose-compiler-gradle-plugin:${version("kotlin-compose-plugin")}")
 }
 
