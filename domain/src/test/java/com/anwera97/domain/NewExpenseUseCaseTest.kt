@@ -1,16 +1,22 @@
 package com.anwera97.domain
 
-import com.anwera97.domain.models.*
+import com.anwera97.domain.models.CompanionModel
+import com.anwera97.domain.models.DebtorInputError
+import com.anwera97.domain.models.DebtorInputErrorReasons
+import com.anwera97.domain.models.ExpenseCreationData
+import com.anwera97.domain.models.InputErrorType
 import com.anwera97.domain.repositories.ExpenditureRepository
 import com.anwera97.domain.usecases.NewExpenditureUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewExpenseUseCaseTest {
@@ -24,13 +30,6 @@ class NewExpenseUseCaseTest {
         val debtors = emptyMap<Int, Double>()
         val detail = "detail"
         val amountSpent = 10.0
-        val expectedExpenseData = ExpenseCreationData(
-            expense = amountSpent,
-            date = Date(),
-            tripId = id,
-            payerId = id,
-            detail = detail
-        )
 
         newExpenditureUseCase.addExpenditure(
             tripId = id,
@@ -40,7 +39,14 @@ class NewExpenseUseCaseTest {
             amountSpent = amountSpent
         )
 
-        verify(expenditureRepository).addExpense(expectedExpenseData, debtors)
+        val expenseCaptor = argumentCaptor<ExpenseCreationData>()
+        verify(expenditureRepository).addExpense(expenseCaptor.capture(), eq(debtors))
+
+        val capturedExpense = expenseCaptor.firstValue
+        assertEquals(amountSpent, capturedExpense.expense, 0.0)
+        assertEquals(id, capturedExpense.tripId)
+        assertEquals(id, capturedExpense.payerId)
+        assertEquals(detail, capturedExpense.detail)
     }
 
     @Test
@@ -49,13 +55,6 @@ class NewExpenseUseCaseTest {
         val debtors = emptyMap<Int, Double>()
         val detail = ""
         val amountSpent = 10.0
-        val expectedExpenseData = ExpenseCreationData(
-            expense = amountSpent,
-            date = Date(),
-            tripId = id,
-            payerId = id,
-            detail = null
-        )
 
         newExpenditureUseCase.addExpenditure(
             tripId = id,
@@ -65,7 +64,14 @@ class NewExpenseUseCaseTest {
             amountSpent = amountSpent
         )
 
-        verify(expenditureRepository).addExpense(expectedExpenseData, debtors)
+        val expenseCaptor = argumentCaptor<ExpenseCreationData>()
+        verify(expenditureRepository).addExpense(expenseCaptor.capture(), eq(debtors))
+
+        val capturedExpense = expenseCaptor.firstValue
+        assertEquals(amountSpent, capturedExpense.expense, 0.0)
+        assertEquals(id, capturedExpense.tripId)
+        assertEquals(id, capturedExpense.payerId)
+        assertNull(capturedExpense.detail)
     }
 
     @Test
@@ -74,13 +80,6 @@ class NewExpenseUseCaseTest {
         val debtors = emptyMap<Int, Double>()
         val detail = null
         val amountSpent = 10.0
-        val expectedExpenseData = ExpenseCreationData(
-            expense = amountSpent,
-            date = Date(),
-            tripId = id,
-            payerId = id,
-            detail = null
-        )
 
         newExpenditureUseCase.addExpenditure(
             tripId = id,
@@ -90,7 +89,14 @@ class NewExpenseUseCaseTest {
             amountSpent = amountSpent
         )
 
-        verify(expenditureRepository).addExpense(expectedExpenseData, debtors)
+        val expenseCaptor = argumentCaptor<ExpenseCreationData>()
+        verify(expenditureRepository).addExpense(expenseCaptor.capture(), eq(debtors))
+
+        val capturedExpense = expenseCaptor.firstValue
+        assertEquals(amountSpent, capturedExpense.expense, 0.0)
+        assertEquals(id, capturedExpense.tripId)
+        assertEquals(id, capturedExpense.payerId)
+        assertNull(capturedExpense.detail)
     }
 
     @Test

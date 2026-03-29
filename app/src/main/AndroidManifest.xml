@@ -2,11 +2,34 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:name=".PagoDividioApp"
+        android:name="com.anwera97.pagodividido.PagoDivididoApp"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" />
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="com.anwera97.pagodividido.main.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.anwera97.pagodividido.newtrip.NewTripActivity"
+            android:exported="false"
+            android:noHistory="true" />
+        <activity
+            android:name="com.anwera97.pagodividido.trip.TripActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.anwera97.pagodividido.newexpenditure.NewExpenditureActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+    </application>
 
 </manifest>
+
