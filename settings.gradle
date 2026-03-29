@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 include ':presentation'
 include ':data'
 include ':domain'
-include ':infra'

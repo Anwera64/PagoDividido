@@ -1,8 +1,6 @@
 package com.anwera97.data
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.anwera97.data.dao.CompanionDao
 import com.anwera97.data.dao.DebtorsDao
@@ -24,26 +22,4 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun companionDao(): CompanionDao
     abstract fun expenditureDao(): ExpenditureDao
     abstract fun debtorsDao(): DebtorsDao
-
-    //TODO Temporal. Migrate to Dagger next
-    companion object {
-        // Singleton prevents multiple instances of database opening at the
-        // same time.
-        @Volatile
-        private var INSTANCE: AppDatabase? = null
-        private const val DATABASE_NAME = "app_database"
-
-        fun getDatabase(context: Context): AppDatabase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        DATABASE_NAME
-                )
-                        .build()
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }
