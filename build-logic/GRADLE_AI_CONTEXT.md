@@ -48,7 +48,8 @@ there is an explicit architectural decision to change direction.
 - `:app`
   - Plugins: `application`, `hilt` conventions.
   - Owns launcher manifest and `@HiltAndroidApp`.
-  - Must depend on `:data` and `:presentation` to compose the runtime DI graph.
+  - Dependencies: `:presentation`, `:data`.
+  - Must depend on `:data` and `:presentation` to compose the runtime DI graph and resolve repository bindings.
 - `:data`
   - Plugins: `library`, `hilt` conventions.
   - Owns Room database/DAO/providers and repository bindings.
@@ -61,9 +62,6 @@ there is an explicit architectural decision to change direction.
 
 `TripRepository`, `CompanionRepository`, and `ExpenditureRepository` bindings are declared in
 `data/src/main/java/com/anwera97/data/RepositoryModule.kt`.
-
-Because of this, `:app` must keep `implementation project(':data')` to allow Hilt to
-resolve repository bindings used by ViewModels in `:presentation`.
 
 ## Build-logic policy
 
