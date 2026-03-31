@@ -1,6 +1,6 @@
 # Android CI — Workflow Explanation
 
-> Last updated: 2026-03-31 — removed `gradle-home-cache-cleanup` (incompatible with project's Gradle version); added XML check guard before `dorny/test-reporter` to handle modules with no unit tests
+> Last updated: 2026-03-31 — removed `gradle-home-cache-cleanup` (incompatible with project's Gradle version); added XML check guard before `dorny/test-reporter` to handle modules with no unit tests; recorded first real pipeline run results
 
 This document explains every job and decision in `android.yml` so future developers can understand, maintain, and extend the pipeline safely.
 
@@ -224,4 +224,30 @@ matrix:
 ```
 
 That's it — the new module automatically gets its own parallel test runner, its own Check entry on PRs, and its own downloadable HTML report.
+
+---
+
+## Real pipeline results (2026-03-31)
+
+First successful run recorded after the warm build cache strategy was fully applied.  
+All 11 checks passed on a pull request.
+
+| Job | Result | Duration |
+|---|---|---|
+| Compile (warm build cache) | ✅ Successful | 4 min |
+| Lint | ✅ Successful | 3 min |
+| Tests · :domain | ✅ Successful | 2 min |
+| Tests · :data | ✅ Successful | 2 min |
+| Tests · :presentation | ✅ Successful | 3 min |
+| Tests · :app | ✅ Successful | 3 min |
+| Build Debug APK | ✅ Successful | 4 min |
+| Cleanup Gradle Caches | ✅ Successful | 2 sec |
+
+### Observations
+
+- **`compile` took 4 min** — this is the only job doing a full cold build. Every other job restored compiled outputs from its cache and skipped recompilation.
+- **`lint` and all 4 test runners ran in parallel** (2–3 min each) while sharing the same warm cache. Without the cache each would have spent ~4 min compiling before even starting its actual work.
+- **`build` also took 4 min** — `assembleDebug` was `UP-TO-DATE` from the cache; the time was dominated by the GitHub Actions runner setup and Gradle daemon startup, not actual compilation.
+- **`cleanup` took 2 sec** — deleting the branch caches via the GitHub API is near-instant.
+- **Total wall-clock time ≈ 4 min + 3 min + 4 min = ~11 min** (compile → parallel jobs → build → cleanup in sequence), compared to an estimated ~24 min (6 × 4 min) if every job compiled independently with no cache.
 
