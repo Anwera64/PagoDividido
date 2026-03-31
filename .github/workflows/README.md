@@ -1,6 +1,6 @@
 # Android CI — Workflow Explanation
 
-> Last updated: 2026-03-31 — removed `gradle-home-cache-cleanup` (incompatible with project's Gradle version)
+> Last updated: 2026-03-31 — removed `gradle-home-cache-cleanup` (incompatible with project's Gradle version); added XML check guard before `dorny/test-reporter` to handle modules with no unit tests
 
 This document explains every job and decision in `android.yml` so future developers can understand, maintain, and extend the pipeline safely.
 
@@ -99,12 +99,25 @@ unit-tests:
       module: [ domain, data, presentation, app ]
   steps:
     - run: ./gradlew :${{ matrix.module }}:test --build-cache
+
+    - name: Check for test result files · :${{ matrix.module }}
+      id: check_results
+      if: always()
+      run: |
+        if find "${{ matrix.module }}/build/test-results" -name "*.xml" -type f 2>/dev/null | grep -q .; then
+          echo "found=true" >> $GITHUB_OUTPUT
+        else
+          echo "found=false" >> $GITHUB_OUTPUT
+        fi
+
     - uses: dorny/test-reporter@v1
+      if: always() && steps.check_results.outputs.found == 'true'
       with:
         name: "Unit Tests · :${{ matrix.module }}"
         path: "${{ matrix.module }}/build/test-results/**/*.xml"
         reporter: java-junit
         fail-on-error: true
+
     - uses: actions/upload-artifact@v4
       with:
         name: test-reports-${{ matrix.module }}
@@ -115,8 +128,9 @@ unit-tests:
 - `fail-fast: false` → if `:data` tests fail, `:presentation`, `:domain`, and `:app` **keep running**. You see all failures at once instead of stopping at the first one.
 - `cache-read-only: true` → same as lint — restores compiled classes but does not write.
 - `./gradlew :module:test` → only runs tests for that specific module. Because production classes are already in the build cache, Gradle only needs to compile the test sources for that module — much faster.
-- `dorny/test-reporter@v1` → reads the JUnit XML files and publishes them as a **GitHub Check** on the commit/PR. Each module gets its own named Check entry in the Checks tab with pass/fail per individual test method. Runs with `if: always()` so reports are published even when tests fail.
-- `upload-artifact` → also saves the richer HTML report per module as a downloadable artifact (`test-reports-domain`, `test-reports-data`, etc.) with `if: always()`.
+- **Check step** → probes `build/test-results` for XML files before running the reporter. `dorny/test-reporter@v1` has no built-in tolerance for an empty result set — it crashes with *"No test report files were found"* if a module has no tests (e.g. `:app`). The `found` output gates the reporter so it is silently skipped for empty modules and runs normally for modules that have tests.
+- `dorny/test-reporter@v1` → reads the JUnit XML files and publishes them as a **GitHub Check** on the commit/PR. Each module gets its own named Check entry in the Checks tab with pass/fail per individual test method.
+- `upload-artifact` → saves the richer HTML report per module as a downloadable artifact (`test-reports-domain`, `test-reports-data`, etc.) with `if: always()`.
 
 ---
 
