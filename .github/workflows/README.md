@@ -1,6 +1,6 @@
 # Android CI — Workflow Explanation
 
-> Last updated: 2026-03-31 — removed `gradle-home-cache-cleanup` (incompatible with project's Gradle version); added XML check guard before `dorny/test-reporter` to handle modules with no unit tests; recorded first real pipeline run results
+> Last updated: 2026-03-31 — removed warm build cache (`compile` job) after benchmarking proved it increases wall-clock time; current pipeline starts all jobs in parallel immediately
 
 This document explains every job and decision in `android.yml` so future developers can understand, maintain, and extend the pipeline safely.
 
@@ -39,40 +39,15 @@ These are declared at the **workflow level** so every job inherits them.
 
 ---
 
-## Job 1 — `compile` (warm build cache)
+## Job 1 — `lint`
 
 ```yaml
-compile:
+lint:
   runs-on: ubuntu-latest
   steps:
     - uses: gradle/actions/setup-gradle@v3
       with:
         cache-read-only: false
-    - run: ./gradlew assembleDebug --build-cache
-```
-
-**This is the most important job.** It runs before everything else and its sole purpose is to compile the whole project once and save the results to the GitHub Actions cache.
-
-- `cache-read-only: false` → this is the **only** job allowed to **write** to the cache. All others are read-only.
-- `--build-cache` → tells Gradle to store every task's output in the build cache (keyed by its inputs hash). Downstream jobs that restore this cache will see all compilation tasks as `UP-TO-DATE` and skip them.
-- `assembleDebug` → compiles all 4 modules (`:domain` → `:data` → `:presentation` → `:app`) in dependency order.
-
-> **Why `gradle-home-cache-cleanup` is not used:** this option injects an init script that reads the `removeUnusedEntriesOlderThan` property, which is **write-only** in the Gradle version this project uses — causing an immediate build failure. It is also unnecessary here because the `cleanup` job already deletes all caches after every run, leaving nothing to prune.
-
-**Without this job**: each of the 4 test runners + lint + build job would each recompile the whole tree = 6× redundant work.  
-**With this job**: compiled once, reused 6× from cache.
-
----
-
-## Job 2 — `lint`
-
-```yaml
-lint:
-  needs: compile
-  steps:
-    - uses: gradle/actions/setup-gradle@v3
-      with:
-        cache-read-only: true
     - run: ./gradlew lintDebug --build-cache
     - uses: actions/upload-artifact@v4
       with:
@@ -81,18 +56,17 @@ lint:
         if-no-files-found: warn
 ```
 
-- `needs: compile` → waits for the warm cache before starting.
-- `cache-read-only: true` → restores the cache written by `compile` but **does not write** back. This prevents cache key collisions between parallel jobs.
+- Starts immediately on push/PR — no dependency on any other job.
+- `cache-read-only: false` → each job manages its own Gradle home cache (downloaded dependencies). There is no shared pre-warmed cache.
 - `lintDebug` → runs Android Lint on the `debug` variant for all modules.
-- The HTML reports from every module (`**/build/reports/lint-results-*.html`) are uploaded as a downloadable artifact named `lint-reports`. You can grab them from the GitHub Actions run page.
+- HTML reports from every module are uploaded as a downloadable artifact named `lint-reports`.
 
 ---
 
-## Job 3 — `unit-tests` (matrix, parallel)
+## Job 2 — `unit-tests` (matrix, parallel)
 
 ```yaml
 unit-tests:
-  needs: compile
   strategy:
     fail-fast: false
     matrix:
@@ -124,17 +98,17 @@ unit-tests:
         path: "${{ matrix.module }}/build/reports/tests/"
 ```
 
-- **Matrix strategy** → GitHub spins up **4 separate runners simultaneously**, one per module. They all start as soon as `compile` finishes.
+- Also starts immediately — **no dependency on any other job**, runs fully in parallel with `lint`.
+- **Matrix strategy** → GitHub spins up **4 separate runners simultaneously**, one per module.
 - `fail-fast: false` → if `:data` tests fail, `:presentation`, `:domain`, and `:app` **keep running**. You see all failures at once instead of stopping at the first one.
-- `cache-read-only: true` → same as lint — restores compiled classes but does not write.
-- `./gradlew :module:test` → only runs tests for that specific module. Because production classes are already in the build cache, Gradle only needs to compile the test sources for that module — much faster.
+- `./gradlew :module:test` → only runs tests for that specific module.
 - **Check step** → probes `build/test-results` for XML files before running the reporter. `dorny/test-reporter@v1` has no built-in tolerance for an empty result set — it crashes with *"No test report files were found"* if a module has no tests (e.g. `:app`). The `found` output gates the reporter so it is silently skipped for empty modules and runs normally for modules that have tests.
-- `dorny/test-reporter@v1` → reads the JUnit XML files and publishes them as a **GitHub Check** on the commit/PR. Each module gets its own named Check entry in the Checks tab with pass/fail per individual test method.
-- `upload-artifact` → saves the richer HTML report per module as a downloadable artifact (`test-reports-domain`, `test-reports-data`, etc.) with `if: always()`.
+- `dorny/test-reporter@v1` → publishes results as a **GitHub Check** on the commit/PR with pass/fail per individual test method.
+- `upload-artifact` → saves the HTML report per module as a downloadable artifact with `if: always()`.
 
 ---
 
-## Job 4 — `build`
+## Job 3 — `build`
 
 ```yaml
 build:
@@ -148,12 +122,11 @@ build:
 ```
 
 - `needs: [lint, unit-tests]` → this is the **gate**. The APK is only produced when both lint is clean and all 4 module test suites pass.
-- Because `compile` already ran `assembleDebug` and the cache is restored, Gradle sees all tasks as `UP-TO-DATE` → this step completes in **seconds**.
 - The resulting `.apk` is uploaded as a `debug-apk` artifact available on the run page.
 
 ---
 
-## Job 5 — `cleanup`
+## Job 4 — `cleanup`
 
 ```yaml
 cleanup:
@@ -184,20 +157,15 @@ cleanup:
 ```
 push / PR
     │
-    ▼
- compile  ──────────────────────────────────────────────────────┐
- (writes cache)                                                 │
-    │                                                           │
-    ├──────────┬──────────────┬──────────────┬──────────────┐  │
-    ▼          ▼              ▼              ▼              ▼  │
+    ├──────────┬──────────────┬──────────────┬──────────────┐
+    ▼          ▼              ▼              ▼              ▼
   lint    tests·domain   tests·data   tests·presentation  tests·app
-             (all read-only cache, run in parallel)
+          (all start immediately in parallel, no waiting)
     │          │              │              │              │
     └──────────┴──────────────┴──────────────┴──────────────┘
                                    │
                                    ▼
                                  build
-                          (read cache → ~instant)
                                    │
                                    ▼
                                 cleanup
@@ -208,7 +176,15 @@ push / PR
 
 ## Key tradeoff to know
 
-Deleting the cache after every run means each pipeline **always does a full cold compile** in the `compile` job. This is intentional — it is your guarantee of a clean state. If you ever want to trade that guarantee for faster `compile` times (by reusing the previous run's cache for incremental builds), remove the `cleanup` job.
+> **Why there is no `compile` (warm build cache) job**
+>
+> A `compile` job was benchmarked (see results below) and **removed** because it increased total
+> wall-clock time. The compile job forced all parallel jobs to wait ~4 min before starting.
+> Since each module compiles fast on its own runner, starting everything in parallel immediately
+> is faster end-to-end, even though each runner does its own compilation.
+>
+> If modules grow significantly in size and compilation time per runner exceeds ~5 min,
+> re-introducing the `compile` job should be reconsidered.
 
 ---
 
@@ -227,12 +203,11 @@ That's it — the new module automatically gets its own parallel test runner, it
 
 ---
 
-## Real pipeline results
+## Real pipeline results & benchmark
 
-### Run 1 — With warm build cache (2026-03-31)
+### Run 1 — With warm build cache
 
-First successful run recorded after the warm build cache strategy was fully applied.  
-All 11 checks passed on a pull request.
+A `compile` job ran first, wrote the Gradle build cache, then all downstream jobs restored from it.
 
 | Job | Result | Duration |
 |---|---|---|
@@ -247,33 +222,35 @@ All 11 checks passed on a pull request.
 
 **Total wall-clock time ≈ 11 min** (compile 4m → parallel jobs 3m → build 4m → cleanup 2s)
 
-#### Observations
-
-- **`compile` took 4 min** — this is the only job doing a full cold build. Every other job restored compiled outputs from its cache and skipped recompilation.
-- **`lint` and all 4 test runners ran in parallel** (2–3 min each) while sharing the same warm cache. Without the cache each would have spent ~4 min compiling before even starting its actual work.
-- **`build` also took 4 min** — `assembleDebug` was `UP-TO-DATE` from the cache; the time was dominated by the GitHub Actions runner setup and Gradle daemon startup, not actual compilation.
-- **`cleanup` took 2 sec** — deleting the branch caches via the GitHub API is near-instant.
-
 ---
 
-### Run 2 — Without warm build cache (benchmarking)
+### Run 2 — Without warm build cache ✅ current approach
 
-Warm build cache (`compile` job) removed. Every job compiles the full module tree independently.  
-Results pending — fill in after CI run completes.
+`compile` job removed. All jobs start immediately in parallel from the first second of the run.
 
 | Job | Result | Duration |
 |---|---|---|
-| Lint | ⏳ pending | — |
-| Tests · :domain | ⏳ pending | — |
-| Tests · :data | ⏳ pending | — |
-| Tests · :presentation | ⏳ pending | — |
-| Tests · :app | ⏳ pending | — |
-| Build Debug APK | ⏳ pending | — |
-| Cleanup Gradle Caches | ⏳ pending | — |
+| Lint | ✅ Successful | 3 min |
+| Tests · :domain | ✅ Successful | 2 min |
+| Tests · :data | ✅ Successful | 2 min |
+| Tests · :presentation | ✅ Successful | 3 min |
+| Tests · :app | ✅ Successful | 3 min |
+| Build Debug APK | ✅ Successful | 4 min |
+| Cleanup Gradle Caches | ✅ Successful | 4 sec |
 
-**Total wall-clock time ≈ pending**
+**Total wall-clock time ≈ 7 min** (parallel jobs 3m → build 4m → cleanup 4s)
 
-> **Expected**: each job now does a full compile (~4 min overhead each) before doing its actual work.
-> Predicted total: ~8 min wall-clock (parallel jobs ~7 min + build ~4 min) but with significantly
-> more total runner-minutes consumed across all 6 runners running in parallel.
+---
 
+### Conclusion
+
+| | With warm cache | Without warm cache |
+|---|---|---|
+| Wall-clock time | ~11 min | ~7 min ✅ |
+| Individual job times | 2–3 min (cache restored) | 2–3 min (same) |
+| Total runner-minutes | ~1 runner × 4m + 5 × 3m + 4m = ~23 min | 5 × 3m + 4m = ~19 min ✅ |
+| Complexity | Higher (cache read/write coordination) | Lower ✅ |
+
+**The warm cache added 4 min of forced sequential waiting without reducing individual job times.**
+Each module is small enough that its own compilation fits comfortably inside the job's runtime.
+The no-warm-cache approach wins on both wall-clock time and total runner-minute consumption.
