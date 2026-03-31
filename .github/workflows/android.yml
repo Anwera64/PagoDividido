@@ -33,8 +33,7 @@ jobs:
       - name: Setup Gradle (write cache)
         uses: gradle/actions/setup-gradle@v3
         with:
-          cache-read-only: false          # this job is the sole cache writer
-          gradle-home-cache-cleanup: true  # prune unused entries before saving
+          cache-read-only: false   # this job is the sole cache writer
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew

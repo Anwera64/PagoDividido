@@ -1,6 +1,6 @@
 # Android CI — Workflow Explanation
 
-> Last updated: 2026-03-31
+> Last updated: 2026-03-31 — removed `gradle-home-cache-cleanup` (incompatible with project's Gradle version)
 
 This document explains every job and decision in `android.yml` so future developers can understand, maintain, and extend the pipeline safely.
 
@@ -48,16 +48,16 @@ compile:
     - uses: gradle/actions/setup-gradle@v3
       with:
         cache-read-only: false
-        gradle-home-cache-cleanup: true
     - run: ./gradlew assembleDebug --build-cache
 ```
 
 **This is the most important job.** It runs before everything else and its sole purpose is to compile the whole project once and save the results to the GitHub Actions cache.
 
 - `cache-read-only: false` → this is the **only** job allowed to **write** to the cache. All others are read-only.
-- `gradle-home-cache-cleanup: true` → before saving the cache snapshot, Gradle removes stale/unused entries from `~/.gradle/caches`. Prevents the cache from growing unboundedly across pushes.
 - `--build-cache` → tells Gradle to store every task's output in the build cache (keyed by its inputs hash). Downstream jobs that restore this cache will see all compilation tasks as `UP-TO-DATE` and skip them.
 - `assembleDebug` → compiles all 4 modules (`:domain` → `:data` → `:presentation` → `:app`) in dependency order.
+
+> **Why `gradle-home-cache-cleanup` is not used:** this option injects an init script that reads the `removeUnusedEntriesOlderThan` property, which is **write-only** in the Gradle version this project uses — causing an immediate build failure. It is also unnecessary here because the `cleanup` job already deletes all caches after every run, leaving nothing to prune.
 
 **Without this job**: each of the 4 test runners + lint + build job would each recompile the whole tree = 6× redundant work.  
 **With this job**: compiled once, reused 6× from cache.
