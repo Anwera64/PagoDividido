@@ -227,7 +227,9 @@ That's it — the new module automatically gets its own parallel test runner, it
 
 ---
 
-## Real pipeline results (2026-03-31)
+## Real pipeline results
+
+### Run 1 — With warm build cache (2026-03-31)
 
 First successful run recorded after the warm build cache strategy was fully applied.  
 All 11 checks passed on a pull request.
@@ -243,11 +245,35 @@ All 11 checks passed on a pull request.
 | Build Debug APK | ✅ Successful | 4 min |
 | Cleanup Gradle Caches | ✅ Successful | 2 sec |
 
-### Observations
+**Total wall-clock time ≈ 11 min** (compile 4m → parallel jobs 3m → build 4m → cleanup 2s)
+
+#### Observations
 
 - **`compile` took 4 min** — this is the only job doing a full cold build. Every other job restored compiled outputs from its cache and skipped recompilation.
 - **`lint` and all 4 test runners ran in parallel** (2–3 min each) while sharing the same warm cache. Without the cache each would have spent ~4 min compiling before even starting its actual work.
 - **`build` also took 4 min** — `assembleDebug` was `UP-TO-DATE` from the cache; the time was dominated by the GitHub Actions runner setup and Gradle daemon startup, not actual compilation.
 - **`cleanup` took 2 sec** — deleting the branch caches via the GitHub API is near-instant.
-- **Total wall-clock time ≈ 4 min + 3 min + 4 min = ~11 min** (compile → parallel jobs → build → cleanup in sequence), compared to an estimated ~24 min (6 × 4 min) if every job compiled independently with no cache.
+
+---
+
+### Run 2 — Without warm build cache (benchmarking)
+
+Warm build cache (`compile` job) removed. Every job compiles the full module tree independently.  
+Results pending — fill in after CI run completes.
+
+| Job | Result | Duration |
+|---|---|---|
+| Lint | ⏳ pending | — |
+| Tests · :domain | ⏳ pending | — |
+| Tests · :data | ⏳ pending | — |
+| Tests · :presentation | ⏳ pending | — |
+| Tests · :app | ⏳ pending | — |
+| Build Debug APK | ⏳ pending | — |
+| Cleanup Gradle Caches | ⏳ pending | — |
+
+**Total wall-clock time ≈ pending**
+
+> **Expected**: each job now does a full compile (~4 min overhead each) before doing its actual work.
+> Predicted total: ~8 min wall-clock (parallel jobs ~7 min + build ~4 min) but with significantly
+> more total runner-minutes consumed across all 6 runners running in parallel.
 
